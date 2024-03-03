@@ -17,7 +17,7 @@ public class DecoracionServiceImp implements DecoracionService {
 
     @Override
     public List<Decoracion> getAllDecoraciones() {
-        return (List<Decoracion>) decoracionRepository.findAll();
+        return decoracionRepository.findAll();
     }
 
     @Override

@@ -11,12 +11,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class RolServiceImp implements RolService{
+public class RolServiceImp implements RolService {
     @Autowired
     private RolRepository rolRepository;
+
     @Override
     public List<Rol> getAllRol() {
-        return (List<Rol>)rolRepository.findAll() ;
+        return rolRepository.findAll();
     }
 
     @Override

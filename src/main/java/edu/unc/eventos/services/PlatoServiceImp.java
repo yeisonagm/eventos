@@ -11,12 +11,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PlatoServiceImp implements PlatoService{
+public class PlatoServiceImp implements PlatoService {
     @Autowired
     private PlatoRepository platoRepository;
+
     @Override
     public List<Plato> getAllPlato() {
-        return (List<Plato>)platoRepository.findAll() ;
+        return platoRepository.findAll();
     }
 
     @Override

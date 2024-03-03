@@ -10,12 +10,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class LocalServiceImp implements LocalService{
+public class LocalServiceImp implements LocalService {
     @Autowired
     private LocalRepository localRepository;
+
     @Override
     public List<Local> getAllLocal() {
-        return (List<Local>) localRepository.findAll() ;
+        return localRepository.findAll();
     }
 
     @Override

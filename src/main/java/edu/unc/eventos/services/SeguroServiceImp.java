@@ -10,12 +10,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class SeguroServiceImp implements SeguroService{
+public class SeguroServiceImp implements SeguroService {
     @Autowired
     private SeguroRepository seguroRepository;
+
     @Override
     public List<Seguro> getAllSeguro() {
-        return (List<Seguro>) seguroRepository.findAll();
+        return seguroRepository.findAll();
     }
 
     @Override

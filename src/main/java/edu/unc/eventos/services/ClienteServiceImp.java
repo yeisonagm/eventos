@@ -14,9 +14,10 @@ public class ClienteServiceImp implements ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
     @Override
     public List<Cliente> getAllClientes() {
-        return (List<Cliente>) clienteRepository.findAll();
+        return clienteRepository.findAll();
     }
 
     @Override
