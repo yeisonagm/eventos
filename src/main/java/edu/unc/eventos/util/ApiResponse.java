@@ -1,6 +1,6 @@
 /**
  * @file: ApiResponse.java
- * @author: (c)2024 rocasari
+ * @author: (c)2024 Roberto Salazar (rocasari)
  * @created: Mar 02, 2024 11:53:00 PM
  */
 package edu.unc.eventos.util;
