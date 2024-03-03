@@ -35,8 +35,10 @@ public class Empleado {
     @Pattern(regexp = "^[0-9]*$", message = "El Documento de identidad solo puede contener números.")
     private String dni;
 
+    /** Fecha de nacimiento del empleado. */
     @Temporal(TemporalType.DATE)
     @PastOrPresent(message = "Debe tener al menos 18 años")
+    @Past(message = "La fecha de inscripción debe ser en el pasado")
     private Date fechaNacimiento;
 
     /** Dirección del empleado. */
@@ -50,6 +52,7 @@ public class Empleado {
     @Pattern(regexp = "^[0-9]*$", message = "El número de teléfono solo puede contener números.")
     private String telefono;
 
+    /** Email del empleado. */
     @Email(message = "El formato del correo electrónico no es válido")
     @Size(max = 30, message = "El email debe tener menos de 30 caracteres.")
     private String email;
