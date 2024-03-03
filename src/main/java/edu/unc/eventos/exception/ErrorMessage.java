@@ -1,7 +1,7 @@
 /**
  * @file: ErrorMessage.java
  * @author: (c)2024 Yeison García
- * @created: Mar 03, 2024 03:32:04 AN
+ * @created: Mar 03, 2024 01:32:04 AM
  */
 package edu.unc.eventos.exception;
 
