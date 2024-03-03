@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/platos")
+@RequestMapping(value = "/api/platos", headers = "Api-Version=1")
 public class PlatoController {
+    
 }
