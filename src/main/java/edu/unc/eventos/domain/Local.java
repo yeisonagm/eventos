@@ -1,10 +1,10 @@
 package edu.unc.eventos.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -18,5 +18,6 @@ public class Local {
     private String referencia;
 
     // Relación con Evento
-
+    @OneToMany(mappedBy = "local")
+    private List<Evento> eventos = new ArrayList<>();
 }

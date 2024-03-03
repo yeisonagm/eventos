@@ -1,10 +1,9 @@
 package edu.unc.eventos.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -17,5 +16,6 @@ public class Decoracion {
     private String color;
 
     // Relación con Evento
-
+    @OneToMany(mappedBy = "decoracion", cascade = CascadeType.ALL)
+    private List<Evento> eventos;
 }

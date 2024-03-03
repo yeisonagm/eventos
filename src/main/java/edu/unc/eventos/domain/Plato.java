@@ -1,10 +1,10 @@
 package edu.unc.eventos.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -17,5 +17,7 @@ public class Plato {
     private String tipo;
 
     // Relación con Evento
+    @ManyToMany(mappedBy = "platos")
+    private List<Evento> eventos = new ArrayList<>();
 
 }

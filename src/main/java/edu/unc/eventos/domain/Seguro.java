@@ -1,9 +1,6 @@
 package edu.unc.eventos.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -16,5 +13,7 @@ public class Seguro {
     private String fechaIncripcion;
 
     // Relación con Empleado
-
+    @OneToOne
+    @JoinColumn(name = "id_empleado")
+    private Empleado empleado;
 }

@@ -3,6 +3,8 @@ package edu.unc.eventos.domain;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Entity
 @Data
 public class Cliente {
@@ -17,5 +19,6 @@ public class Cliente {
     private String telefono;
 
     // Relación con Evento
-
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    private List<Evento> eventos;
 }

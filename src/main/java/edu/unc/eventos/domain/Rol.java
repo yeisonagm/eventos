@@ -1,10 +1,9 @@
 package edu.unc.eventos.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -15,5 +14,7 @@ public class Rol {
     private String nombre;
 
     // Relación con Empleado
+    @OneToMany(mappedBy = "rol")
+    private List<Empleado> empleados;
 
 }
