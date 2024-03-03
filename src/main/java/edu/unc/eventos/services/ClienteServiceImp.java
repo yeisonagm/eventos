@@ -14,23 +14,19 @@ public class ClienteServiceImp implements ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
-
     @Override
     public List<Cliente> getAllClientes() {
-
         return (List<Cliente>) clienteRepository.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<Cliente> getClienteById(Long idCliente) {
-
         return clienteRepository.findById(idCliente);
     }
 
     @Override
     public Cliente saveCliente(Cliente cliente) {
-
         return clienteRepository.save(cliente);
     }
 
