@@ -1,3 +1,8 @@
+/**
+ * @file: Evento.java
+ * @author: (c)2024 Roberto Salazar (rocasari)
+ * @created: Mar 03, 2024 00:39:54 AM
+ */
 package edu.unc.eventos.domain;
 
 import jakarta.persistence.*;
