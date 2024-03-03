@@ -4,7 +4,6 @@
  * @created: Mar 03, 2024 00:10:00 AM
  */
 package edu.unc.eventos.domain;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

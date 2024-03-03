@@ -1,5 +1,5 @@
 /**
- * @file: Local.java
+ * @file: Plato.java
  * @author: (c)2024 Peter Vásquez
  * @created: Mar 03, 2024 00:48:00 AM
  * @description: Esta clase es parte del dominio del sistema y representa un plato que puede ser servido en un evento.
@@ -49,7 +49,6 @@ public class Plato {
     @NotEmpty(message = "La descripción no puede estar vacía")
     @Size(min = 5, max = 15, message = "La descripción del plato debe tener entre 5 a 15 caracteres.")
     private String tipo;
-
 
     /** Relación con Evento.
      * Representa la lista de eventos en los que se puede servir el plato.
