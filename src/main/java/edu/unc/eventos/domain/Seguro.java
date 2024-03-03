@@ -1,8 +1,7 @@
 /**
  * @file: Seguro.java
  * @author: (c)2024 Aldo Pereyra (AldoPM1305)
- * @created: Mar 03, 2024 17:26:00 PM
- *
+ * @created: Mar 03, 2024 17:28:00 PM
  * Representa a un seguro en el contexto de un dominio específico.
  * Esta clase está anotada para persistencia y validación mediante anotaciones JPA.
  */
