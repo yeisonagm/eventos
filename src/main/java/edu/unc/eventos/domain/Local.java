@@ -29,6 +29,7 @@ public class Local {
      */
     @NotBlank(message = "El Nombre no puede estar vacío.")
     @Size(min = 6, max = 50, message = "El nombre debe tener entre 6 a 50 caracteres.")
+    @Column(unique = true)
     private String nombre;
 
     /** Ubicaión del Local.
@@ -37,6 +38,7 @@ public class Local {
      */
     @NotBlank(message = "La Ubicación no puede estar vacío.")
     @Size(min = 10, max = 50, message = "La ubicación debe tener entre 10 a 50 caracteres.")
+    @Column(unique = true)
     private String ubicacion;
 
     /** Aforo del local.

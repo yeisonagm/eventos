@@ -31,6 +31,7 @@ public class Plato {
      */
     @NotBlank(message = "El Nombre no puede estar vacío.")
     @Size(min = 4, max = 25, message = "El nombre debe tener entre 4 a 25 caracteres.")
+    @Column(unique = true)
     private String nombre;
 
     /** Descripción del plato.
@@ -45,8 +46,8 @@ public class Plato {
      * El campo tipo es una descripción textual del plato, representa el tipo o categoría del plato.
      * Este campo es obligatorio y debe tener entre 5 y 15 caracteres.
      */
-    @NotEmpty(message = "La descripción no puede estar vacía")
-    @Size(min = 5, max = 15, message = "La descripción del plato debe tener entre 5 a 15 caracteres.")
+    @NotEmpty(message = "El tipo no puede estar vacío")
+    @Size(min = 5, max = 15, message = "La tipo del plato debe tener entre 5 a 15 caracteres.")
     private String tipo;
 
     /** Relación con Evento.
@@ -54,4 +55,5 @@ public class Plato {
      */
     @ManyToMany(mappedBy = "platos")
     private List<Evento> eventos = new ArrayList<>();
+
 }

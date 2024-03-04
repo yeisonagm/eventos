@@ -1,16 +1,20 @@
 package edu.unc.eventos.services;
 
 import edu.unc.eventos.domain.Local;
+import edu.unc.eventos.exception.EntityNotFoundException;
+import edu.unc.eventos.exception.IllegalOperationException;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface LocalService {
-    List<Local> getAllLocal();
+    List<Local> getAll() ;
 
-    Optional<Local> getLocalById(Long idLocal);
+    Local getById(Long idLocal) throws EntityNotFoundException;
 
-    Local saveLocal(Local local);
+    Local save(Local local)throws IllegalOperationException;
 
-    void deleteLocal(Long idLocal);
+    Local update(Long idLocal, Local local)throws EntityNotFoundException, IllegalOperationException;
+
+    void delete(Long idLocal) throws EntityNotFoundException, IllegalOperationException;
 }
