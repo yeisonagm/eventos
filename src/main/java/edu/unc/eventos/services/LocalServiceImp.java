@@ -1,5 +1,12 @@
-package edu.unc.eventos.services;
+/**
+ * @file: LocalServiceImp.java
+ * @author:(c)2024 Peter Vásquez
+ * @created: Mar 04, 2024 00:40:00 AM
+ * @description: Implementación concreta de la interfaz {@link LocalService}, que proporciona métodos para la gestión de locales en el sistema.
+ * Esta clase realiza la implementación de los servicios definidos en la interfaz {@link LocalService}, incluyendo operaciones como la recuperación, creación, actualización y eliminación de locales.
+*/
 
+package edu.unc.eventos.services;
 
 import edu.unc.eventos.domain.Local;
 import edu.unc.eventos.exception.EntityNotFoundException;

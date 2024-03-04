@@ -1,7 +1,12 @@
+/**
+ * @file: PlatoServiceImp.java
+ * @author:(c)2024 Peter Vásquez
+ * @created: Mar 04, 2024 00:42:00 AM
+ * @description: Implementación concreta de la interfaz {@link PlatoService}, que proporciona métodos para la gestión de platos en el sistema.
+ * Esta clase realiza la implementación de los servicios definidos en la interfaz {@link PlatoService}, incluyendo operaciones como la recuperación, creación, actualización y eliminación de platos.
+ */
 package edu.unc.eventos.services;
 
-
-import edu.unc.eventos.domain.Local;
 import edu.unc.eventos.domain.Plato;
 import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
@@ -64,7 +69,7 @@ public class PlatoServiceImp implements PlatoService {
             throw new IllegalOperationException("El nombre del plato no puede estar vacio");
         }
         if (platoRepository.findByNombre(plato.getNombre()) != null) {
-            throw new IllegalOperationException("El nombre del local ya existe en la base de datos");
+            throw new IllegalOperationException("El nombre del plato ya existe en la base de datos");
         }
         return platoRepository.save(plato);
     }
@@ -84,7 +89,7 @@ public class PlatoServiceImp implements PlatoService {
             throw new EntityNotFoundException("El plato con el id proporcionado no fue encontrado");
         }
         if (platoRepository.findByNombre(plato.getNombre()) != null) {
-            throw new IllegalOperationException("El nombre del local ya existe en la base de datos");
+            throw new IllegalOperationException("El nombre del plato ya existe en la base de datos");
         }
         plato.setIdPlato(idPlato);
         return platoRepository.save(plato);
