@@ -1,16 +1,20 @@
 package edu.unc.eventos.services;
 
 import edu.unc.eventos.domain.Decoracion;
+import edu.unc.eventos.exception.EntityNotFoundException;
+import edu.unc.eventos.exception.IllegalOperationException;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface DecoracionService {
-    List<Decoracion> getAllDecoraciones();
+    List<Decoracion> getAll();
 
-    Optional<Decoracion> getDecoracionById(Long idDecoracion);
+    Decoracion getById(Long idDecoracion) throws EntityNotFoundException;
 
-    Decoracion saveDecoracion(Decoracion decoracion);
+    Decoracion save(Decoracion decoracion) throws IllegalOperationException;
 
-    void deleteDecoracion(Long idDecoracion);
+    Decoracion update(Long idDecoracion, Decoracion decoracion) throws EntityNotFoundException, IllegalOperationException;
+
+    void delete(Long idDecoracion) throws EntityNotFoundException, IllegalOperationException;
 }
