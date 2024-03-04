@@ -33,6 +33,6 @@ public interface EventoRepository extends JpaRepository<Evento, Long> {
      */
     List<Evento> findByDuracionBetween(Integer minDuracion, Integer maxDuracion);
 
-    List<Evento>findByLocalAndFecha(Local local, LocalDate fechaEvento);
+    List<Evento> findByLocalAndFecha(Local local, LocalDate fechaEvento);
 
 }
