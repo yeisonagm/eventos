@@ -33,7 +33,7 @@ public class Seguro {
      * No puede estar en blanco, debe tener un máximo de 11 caracteres y solo puede contener números.
      */
     @NotBlank(message = "El código no puede estar en blanco.")
-    @Size(max = 11, message = "El código debe tener un máximo de 11 caracteres.")
+    @Size(min = 11,max = 11, message = "El código debe tener un máximo de 11 caracteres.")
     @Pattern(regexp = "^[0-9]*$", message = "El código solo puede contener números.")
     private String codigo;
 

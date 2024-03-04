@@ -10,6 +10,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -46,7 +47,8 @@ public class Evento {
      * El campo fecha representa la fecha en la que se llevará a cabo el evento.
      */
     @Temporal(TemporalType.DATE)
-    private String fecha;
+    @Future(message = "La fecha debe ser futura")
+    private Date fecha;
 
     /**
      * El campo duración indica la duración estimada del evento en horas.

@@ -47,7 +47,7 @@ public class Local {
      */
     @NotBlank(message = "El aforo no puede estar vacío.")
     @Min(value = 10, message = "El aforo debe ser mayor a 10.")
-    @Max(value = 500, message = "El duración debe ser menor que 500.")
+    @Max(value = 500, message = "El aforo debe ser menor que 500.")
     private Integer aforo;
 
     /** Referencia del Local.
