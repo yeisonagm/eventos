@@ -6,6 +6,7 @@
 package edu.unc.eventos.config;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -26,6 +27,7 @@ public class ApplicationConfig {
      *
      * @return una nueva instancia de {@code ModelMapper}.
      */
+    @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }
