@@ -5,7 +5,7 @@ import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
 
 import java.util.List;
-import java.util.Optional;
+
 
 public interface ClienteService {
     List<Cliente> getAll();

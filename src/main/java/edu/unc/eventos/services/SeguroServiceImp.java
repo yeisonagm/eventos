@@ -79,6 +79,7 @@ public class SeguroServiceImp implements SeguroService {
             throw new EntityNotFoundException("Ya existe un seguro con el mismo código.");
         }
 
+
         return seguroRepository.save(seguro);
     }
 
