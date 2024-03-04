@@ -1,10 +1,7 @@
 /**
  * @file: ClienteDTO.java
  * @author: (c)2024 Aldo Pereyra (AldoPM1305)
- * @created: Mar 03, 2024 18:50:00 PM
- * Data Transfer Object (DTO) para la entidad Cliente. Contiene información específica
- * para la transferencia de datos relacionados con clientes entre diferentes capas de la aplicación.
- * Utilizado para evitar la exposición innecesaria de detalles internos de la entidad Cliente.
+ * @created: Mar 03, 2024 6:50:00 PM
  */
 package edu.unc.eventos.dto;
 
@@ -13,25 +10,41 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * La clase ClienteDTO es un objeto de transferencia de datos (DTO) que se utiliza para representar información
+ * relacionada con clientes en el sistema. A diferencia de la clase Cliente, este DTO contiene solo los campos
+ * relevantes para la comunicación entre capas o servicios.
+ */
 
 @Data
 public class ClienteDTO {
-
-    // Identificador único del cliente
+    /**
+     * El campo 'idCliente' es el identificador único del cliente.
+     */
     private Long idCliente;
 
-    // Número de documento de identidad del cliente
+    /**
+     * El campo 'di' representa el documento de identidad del cliente.
+     */
     private String di;
 
-    // Nombre del cliente
+    /**
+     * El campo 'nombre' representa el nombre del cliente.
+     */
     private String nombre;
 
-    // Dirección del cliente
+    /**
+     * El campo 'direccion' representa la dirección del cliente.
+     */
     private String direccion;
 
-    // Número de teléfono del cliente
+    /**
+     * El campo 'telefono' representa el número de teléfono del cliente.
+     */
     private String telefono;
 
-    // Lista de eventos asociados al cliente
+    /**
+     * El campo 'eventos' es una lista de eventos asociados al cliente.
+     */
     private List<Evento> eventos = new ArrayList<>();
 }
