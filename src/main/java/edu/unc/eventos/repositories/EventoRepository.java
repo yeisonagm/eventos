@@ -7,7 +7,11 @@
 package edu.unc.eventos.repositories;
 
 import edu.unc.eventos.domain.Evento;
+import edu.unc.eventos.domain.Local;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 public interface EventoRepository extends JpaRepository<Evento, Long> {
@@ -18,7 +22,7 @@ public interface EventoRepository extends JpaRepository<Evento, Long> {
      * @param fecha La fecha del evento.
      * @return Lista de eventos en la fecha proporcionada.
      */
-    List<Evento> findByFecha(String fecha);
+    List<Evento> findByFecha(Date fecha);
 
     /**
      * Busca eventos por duración.
@@ -28,4 +32,7 @@ public interface EventoRepository extends JpaRepository<Evento, Long> {
      * @return Lista de eventos dentro del rango de duración especificado.
      */
     List<Evento> findByDuracionBetween(Integer minDuracion, Integer maxDuracion);
+
+    List<Evento>findByLocalAndFecha(Local local, LocalDate fechaEvento);
+
 }
