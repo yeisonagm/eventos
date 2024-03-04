@@ -87,6 +87,7 @@ public class DecoracionServiceImp implements DecoracionService {
      * @throws EntityNotFoundException Si la decoración no se encuentra en la base de datos.
      */
     @Override
+    @Transactional
     public Decoracion update(Long idDecoracion, Decoracion decoracion) throws EntityNotFoundException {
         Optional<Decoracion> decoracionOpt = decoracionRepository.findById(idDecoracion);
         if (decoracionOpt.isEmpty()) {
@@ -104,6 +105,7 @@ public class DecoracionServiceImp implements DecoracionService {
      * @throws IllegalOperationException Si la decoración tiene eventos asociados.
      */
     @Override
+    @Transactional
     public void delete(Long idDecoracion) throws EntityNotFoundException, IllegalOperationException {
         Decoracion decoracion = decoracionRepository.findById(idDecoracion).orElseThrow(
                 () -> new EntityNotFoundException("La decoración con el ID proporcionado no se encontró.")
