@@ -15,9 +15,9 @@ import java.util.Optional;
 public interface RolService {
     List<Rol> getAll();
 
-    Optional<Rol> getRolById(Long idRol) throws EntityNotFoundException;
+    Rol getRolById(Long idRol) throws EntityNotFoundException;
 
-    Rol save(Rol rol) throws EntityNotFoundException;
+    Rol save(Rol rol) throws IllegalOperationException;
 
     Rol update(Long idRol, Rol rol) throws EntityNotFoundException, IllegalOperationException;
 

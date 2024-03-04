@@ -7,15 +7,12 @@ package edu.unc.eventos.services;
 
 import edu.unc.eventos.domain.Rol;
 import edu.unc.eventos.exception.EntityNotFoundException;
-import edu.unc.eventos.exception.ErrorMessage;
 import edu.unc.eventos.exception.IllegalOperationException;
-import edu.unc.eventos.repositories.LocalRepository;
 import edu.unc.eventos.repositories.RolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,7 +82,7 @@ public class RolServiceImp implements RolService {
         if (rolEntity.isEmpty())
             throw new EntityNotFoundException("El Rol con el ID proporcionado no se encontró.");
         if (rolDB != null && !rolDB.getIdRol().equals(idRol)) {
-            throw new IllegalOperationException("El nombre del rol ya existe");
+            throw new IllegalOperationException("El nombre del rol ya existe.");
         }
         rol.setIdRol(idRol);
         return rolRepository.save(rol);
@@ -95,7 +92,7 @@ public class RolServiceImp implements RolService {
      * Elimina un rol existente
      *
      * @param idRol Id de la decoración que se quiere eliminar
-     * @throws EntityNotFoundException Si el rol no se encuentra en la base de datos.
+     * @throws EntityNotFoundException   Si el rol no se encuentra en la base de datos.
      * @throws IllegalOperationException Si el rol tiene eventos asociados.
      */
     @Override

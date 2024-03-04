@@ -1,16 +1,20 @@
 package edu.unc.eventos.services;
 
 import edu.unc.eventos.domain.Cliente;
+import edu.unc.eventos.exception.EntityNotFoundException;
+import edu.unc.eventos.exception.IllegalOperationException;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ClienteService {
-    List<Cliente> getAllClientes();
+    List<Cliente> getAll();
 
-    Optional<Cliente> getClienteById(Long idCliente);
+    Cliente getById(Long idCliente) throws EntityNotFoundException;
 
-    Cliente saveCliente(Cliente cliente);
+    Cliente save(Cliente cliente) throws IllegalOperationException;
 
-    void deleteCliente(Long idCliente);
+    Cliente update(Long idCliente, Cliente cliente) throws EntityNotFoundException, IllegalOperationException;
+
+    void delete(Long idCliente) throws EntityNotFoundException, IllegalOperationException;
 }
