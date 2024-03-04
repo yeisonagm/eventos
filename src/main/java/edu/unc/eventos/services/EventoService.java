@@ -15,9 +15,9 @@ import java.util.Optional;
 public interface EventoService {
     List<Evento> getAll();
 
-    Optional<Evento> getEventoById(Long idEvento) throws EntityNotFoundException;
+    Evento getEventoById(Long idEvento) throws EntityNotFoundException;
 
-    Evento save(Evento evento) throws EntityNotFoundException;
+    Evento save(Evento evento) throws IllegalOperationException;
 
     Evento update(Long idEvento, Evento evento) throws EntityNotFoundException, IllegalOperationException;
 
