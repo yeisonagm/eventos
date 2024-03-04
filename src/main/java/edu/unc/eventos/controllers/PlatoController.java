@@ -3,9 +3,9 @@
  * @author: (c)2024 Peter Vásquez
  * @created: Mar 03, 2024 09:11:11 PM
  * @description: Controlador REST que gestiona las operaciones CRUD para 'Plato'.
- *  <p>Se mapea a la ruta '/api/platos' y espera que todas las solicitudes incluyan el encabezado 'Api-Version=1'.
- *  Las operaciones incluyen obtener todos los platos, obtener unn plato por su ID,
- *  guardar un nuevo plato, actualizar un plato existente y eliminar un plato.</p>
+ * <p>Se mapea a la ruta '/api/platos' y espera que todas las solicitudes incluyan el encabezado 'Api-Version=1'.
+ * Las operaciones incluyen obtener todos los platos, obtener unn plato por su ID,
+ * guardar un nuevo plato, actualizar un plato existente y eliminar un plato.</p>
  */
 
 package edu.unc.eventos.controllers;
@@ -41,15 +41,15 @@ public class PlatoController {
      * @return Lista de Platos
      */
     @GetMapping
-    public ResponseEntity<?> getAll(){
+    public ResponseEntity<?> getAll() {
         List<Plato> platos = platoService.getAll();
-        if(platos == null || platos.isEmpty()){
+        if (platos == null || platos.isEmpty()) {
             return ResponseEntity.noContent().build();
-        }else {
+        } else {
             List<PlatoDTO> PlatosDTOs = platos.stream()
                     .map(Plato -> modelMapper.map(Plato, PlatoDTO.class))
                     .collect(Collectors.toList());
-            ApiResponse<List<PlatoDTO>> response = new ApiResponse<>(true,"Lista de Platos",PlatosDTOs);
+            ApiResponse<List<PlatoDTO>> response = new ApiResponse<>(true, "Lista de Platos", PlatosDTOs);
             return ResponseEntity.ok(response);
         }
     }
@@ -62,10 +62,10 @@ public class PlatoController {
      */
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable Long id){
+    public ResponseEntity<?> getById(@PathVariable Long id) {
         Plato plato = platoService.getById(id);
-        PlatoDTO PlatoDTO = modelMapper.map(plato,PlatoDTO.class);
-        ApiResponse<PlatoDTO> response = new ApiResponse<>(true,"Plato",PlatoDTO);
+        PlatoDTO PlatoDTO = modelMapper.map(plato, PlatoDTO.class);
+        ApiResponse<PlatoDTO> response = new ApiResponse<>(true, "Plato", PlatoDTO);
         return ResponseEntity.ok(response);
     }
 
@@ -99,12 +99,12 @@ public class PlatoController {
      * @throws IllegalOperationException Si ocurre una operación ilegal durante el proceso de actualización del plato.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<PlatoDTO>> update(@PathVariable Long id, @RequestBody PlatoDTO platoDTO) throws EntityNotFoundException,IllegalOperationException {
+    public ResponseEntity<ApiResponse<PlatoDTO>> update(@PathVariable Long id, @RequestBody PlatoDTO platoDTO) throws EntityNotFoundException, IllegalOperationException {
         Plato plato = modelMapper.map(platoDTO, Plato.class);
         platoService.update(id, plato);
         PlatoDTO updateDTO = modelMapper.map(plato, PlatoDTO.class);
         ApiResponse<PlatoDTO> response = new ApiResponse<>(true, "Plato actualizado", updateDTO);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     /**

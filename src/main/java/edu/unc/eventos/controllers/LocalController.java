@@ -3,9 +3,9 @@
  * @author: (c)2024 Peter Vásquez
  * @created: Mar 03, 2024 08:53:18 PM
  * @description: Controlador REST que gestiona las operaciones CRUD para 'Local'.
- *  <p>Se mapea a la ruta '/api/locales' y espera que todas las solicitudes incluyan el encabezado 'Api-Version=1'.
- *  Las operaciones incluyen obtener todos los locales, obtener unn local por su ID,
- *  guardar un nuevo local, actualizar un local existente y eliminar un local.</p>
+ * <p>Se mapea a la ruta '/api/locales' y espera que todas las solicitudes incluyan el encabezado 'Api-Version=1'.
+ * Las operaciones incluyen obtener todos los locales, obtener unn local por su ID,
+ * guardar un nuevo local, actualizar un local existente y eliminar un local.</p>
  */
 package edu.unc.eventos.controllers;
 
@@ -39,15 +39,15 @@ public class LocalController {
      * @return Lista de locales
      */
     @GetMapping
-    public ResponseEntity<?> getAll(){
+    public ResponseEntity<?> getAll() {
         List<Local> locales = localService.getAll();
-        if(locales == null || locales.isEmpty()){
+        if (locales == null || locales.isEmpty()) {
             return ResponseEntity.noContent().build();
-        }else {
+        } else {
             List<LocalDTO> localesDTOs = locales.stream()
                     .map(local -> modelMapper.map(local, LocalDTO.class))
                     .collect(Collectors.toList());
-            ApiResponse<List<LocalDTO>> response = new ApiResponse<>(true,"Lista de locales",localesDTOs);
+            ApiResponse<List<LocalDTO>> response = new ApiResponse<>(true, "Lista de locales", localesDTOs);
             return ResponseEntity.ok(response);
         }
     }
@@ -59,10 +59,10 @@ public class LocalController {
      * @return local
      */
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable Long id){
+    public ResponseEntity<?> getById(@PathVariable Long id) {
         Local local = localService.getById(id);
-        LocalDTO localDTO = modelMapper.map(local,LocalDTO.class);
-        ApiResponse<LocalDTO> response = new ApiResponse<>(true,"Local",localDTO);
+        LocalDTO localDTO = modelMapper.map(local, LocalDTO.class);
+        ApiResponse<LocalDTO> response = new ApiResponse<>(true, "Local", localDTO);
         return ResponseEntity.ok(response);
     }
 
@@ -96,12 +96,12 @@ public class LocalController {
      * @throws IllegalOperationException Si ocurre una operación ilegal durante el proceso de actualización del local.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<LocalDTO>> update(@PathVariable Long id, @RequestBody LocalDTO localDTO) throws EntityNotFoundException,IllegalOperationException {
+    public ResponseEntity<ApiResponse<LocalDTO>> update(@PathVariable Long id, @RequestBody LocalDTO localDTO) throws EntityNotFoundException, IllegalOperationException {
         Local local = modelMapper.map(localDTO, Local.class);
         localService.update(id, local);
         LocalDTO updateDTO = modelMapper.map(local, LocalDTO.class);
         ApiResponse<LocalDTO> response = new ApiResponse<>(true, "Local actualizado", updateDTO);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     /**
