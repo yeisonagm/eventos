@@ -1,16 +1,20 @@
 package edu.unc.eventos.services;
 
 import edu.unc.eventos.domain.Seguro;
+import edu.unc.eventos.exception.EntityNotFoundException;
+import edu.unc.eventos.exception.IllegalOperationException;
 
 import java.util.List;
-import java.util.Optional;
+
 
 public interface SeguroService {
-    List<Seguro> getAllSeguro();
+    List<Seguro> getAll();
 
-    Optional<Seguro> getSeguroById(Long idSeguro);
+    Seguro getById(Long idSeguro) throws EntityNotFoundException;
 
-    Seguro saveSeguro(Seguro seguro);
+    Seguro save(Seguro seguro) throws IllegalOperationException;
 
-    void deleteSeguro(Long idSeguro);
+    Seguro update(Long idSeguro, Seguro seguro) throws EntityNotFoundException, IllegalOperationException;
+
+    void delete(Long idSeguro) throws EntityNotFoundException, IllegalOperationException;
 }
