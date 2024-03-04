@@ -4,6 +4,7 @@
  * @created: Mar 03, 2024 00:10:00 AM
  */
 package edu.unc.eventos.domain;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -34,6 +35,7 @@ public class Rol {
      */
     @NotBlank(message = "El Nombre no puede estar vacío.")
     @Size(min = 2, max = 15, message = "El nombre debe tener entre 4 a 15 caracteres.")
+    @Column(unique = true)
     private String nombre;
 
     /**
