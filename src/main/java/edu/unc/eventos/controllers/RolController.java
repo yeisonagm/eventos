@@ -20,6 +20,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Controlador REST que gestiona las operaciones CRUD para 'Roles'.
+ * <p>Se mapea a la ruta '/api/roles' y espera que todas las solicitudes incluyan el encabezado 'Api-Version=1'.
+ * Las operaciones incluyen obtener todos las roles, obtener una rol por su ID,
+ * guardar un nuevo rol, actualizar un rol existente y eliminar un rol.</p>
+ */
 @RestController
 @RequestMapping(value = "/api/roles", headers = "Api-Version=1")
 public class RolController {
@@ -95,7 +101,7 @@ public class RolController {
         rolService.update(id, rol);
         RolDTO updateDTO = modelMapper.map(rol, RolDTO.class);
         ApiResponse<RolDTO> response = new ApiResponse<>(true, "Rol actualizado", updateDTO);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     /**
