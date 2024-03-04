@@ -8,9 +8,17 @@ package edu.unc.eventos.repositories;
 
 import edu.unc.eventos.domain.Empleado;
 import org.springframework.data.jpa.repository.JpaRepository;
+
 import java.util.List;
 
 public interface EmpleadoRepository extends JpaRepository<Empleado, Long> {
+    /**
+     * Busca un empleado por su número de identificación nacional.
+     *
+     * @param dni El número de identificación nacional del empleado.
+     * @return El empleado con el número de identificación proporcionado.
+     */
+    Empleado findByDni(String dni);
 
     /**
      * Busca empleados por nombre.

@@ -1,16 +1,64 @@
+/**
+ * @file: EmpleadoService.java
+ * @author: (c)2024 Yeison García
+ * @created: Mar 04, 2024 01:03:06 PM
+ */
 package edu.unc.eventos.services;
 
 import edu.unc.eventos.domain.Empleado;
+import edu.unc.eventos.exception.EntityNotFoundException;
+import edu.unc.eventos.exception.IllegalOperationException;
 
 import java.util.List;
-import java.util.Optional;
 
+/**
+ * Esta interfaz define las operaciones que se pueden realizar sobre la entidad Empleado.
+ * <p>Las operaciones incluyen la obtención de todos los empleados, la búsqueda de un empleado por su ID,
+ * la creación de un nuevo empleado, la actualización de un empleado existente y la eliminación de un empleado.</p>
+ */
 public interface EmpleadoService {
-    List<Empleado> getAllEmpleados();
+    /**
+     * Devuelve todos los empleados que hay en la base de datos.
+     *
+     * @return Lista de entidades de tipo empleado.
+     */
+    List<Empleado> getAll();
 
-    Optional<Empleado> getEmpleadoById(Long idEmpleado);
+    /**
+     * Devuelve un empleado por su id
+     *
+     * @param idEmpleado Id del empleado que se quiere buscar.
+     * @return El empleado que se encontró.
+     * @throws EntityNotFoundException Si el empleado no se encuentra en la base de datos.
+     */
+    Empleado getById(Long idEmpleado) throws EntityNotFoundException;
 
-    Empleado saveEmpleado(Empleado empleado);
+    /**
+     * Crea un nuevo empleado en la base de datos.
+     *
+     * @param empleado El empleado que se quiere guardar.
+     * @return El empleado que se creó.
+     * @throws IllegalOperationException Si el empleado ya existe en la base de datos.
+     */
+    Empleado save(Empleado empleado) throws IllegalOperationException;
 
-    void deleteEmpleado(Long idEmpleado);
+    /**
+     * Actualiza un empleado existente en la base de datos.
+     *
+     * @param idEmpleado Id del empleado que se quiere actualizar.
+     * @param empleado   El empleado con los datos actualizados.
+     * @return El empleado que se actualizó.
+     * @throws EntityNotFoundException   Si el empleado no se encuentra en la base de datos.
+     * @throws IllegalOperationException Si el empleado ya existe en la base de datos.
+     */
+    Empleado update(Long idEmpleado, Empleado empleado) throws EntityNotFoundException, IllegalOperationException;
+
+    /**
+     * Elimina un empleado de la base de datos.
+     *
+     * @param idEmpleado Id del empleado que se quiere eliminar.
+     * @throws EntityNotFoundException   Si el empleado no se encuentra en la base de datos.
+     * @throws IllegalOperationException Si el empleado no puede ser eliminado.
+     */
+    void delete(Long idEmpleado) throws EntityNotFoundException, IllegalOperationException;
 }
