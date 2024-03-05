@@ -1,6 +1,6 @@
 package edu.unc.eventos.controllers;
 
-import edu.unc.eventos.domain.Cliente;
+
 import edu.unc.eventos.domain.Seguro;
 
 import edu.unc.eventos.dto.SeguroDTO;

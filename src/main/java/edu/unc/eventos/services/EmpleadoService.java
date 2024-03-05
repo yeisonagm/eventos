@@ -61,4 +61,7 @@ public interface EmpleadoService {
      * @throws IllegalOperationException Si el empleado no puede ser eliminado.
      */
     void delete(Long idEmpleado) throws EntityNotFoundException, IllegalOperationException;
+
+    Empleado addRolToEmpleado(Long idEmpleado, Long idRol) throws EntityNotFoundException, IllegalOperationException;
+
 }
