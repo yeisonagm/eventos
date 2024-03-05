@@ -5,10 +5,12 @@
  */
 package edu.unc.eventos.services;
 
+import edu.unc.eventos.domain.Decoracion;
 import edu.unc.eventos.domain.Evento;
 import edu.unc.eventos.domain.Local;
 import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
+import edu.unc.eventos.repositories.DecoracionRepository;
 import edu.unc.eventos.repositories.EventoRepository;
 import edu.unc.eventos.repositories.LocalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +30,7 @@ public class EventoServiceImp implements EventoService {
     private EventoRepository eventoRepository;
 
     @Autowired
-    private LocalRepository localRepository;
+    private DecoracionRepository decoracionRepository;
 
     /**
      * Este método devuelve una lista de todos los eventos
@@ -148,21 +150,16 @@ public class EventoServiceImp implements EventoService {
      */
     @Override
     @Transactional
-    public Evento addLocalToEvento(Long idEvento, Long idLocal) throws EntityNotFoundException, IllegalOperationException {
+    public Evento addDecoracionToEvento(Long idEvento, Long idDecoracion) throws EntityNotFoundException, IllegalOperationException {
         Evento evento = eventoRepository.findById(idEvento).orElseThrow(
                 () -> new EntityNotFoundException("El evento con el ID proporcionado no se encontró")
         );
-        Local local = localRepository.findById(idLocal).orElseThrow(
-                () -> new EntityNotFoundException("El local con el ID proporcionado no se encontró")
+        Decoracion decoracion = decoracionRepository.findById(idDecoracion).orElseThrow(
+                () -> new EntityNotFoundException("La decoracion con el ID proporcionado no se encontró")
         );
 
-        if (existsEventOnSameDayAndLocal(local, evento.getFecha())) {
-            throw new IllegalOperationException("Ya hay un evento planificado en el mismo local para la misma fecha.");
-        }
-
-        evento.setLocal(local);
-        local.getEventos().add(evento);
-        return (eventoRepository.save(evento));
+        evento.setDecoracion(decoracion);
+        return eventoRepository.save(evento);
     }
 
 
