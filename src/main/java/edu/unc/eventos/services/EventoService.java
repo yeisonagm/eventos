@@ -12,6 +12,7 @@ import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface EventoService {
     /**
@@ -58,6 +59,17 @@ public interface EventoService {
      * @throws IllegalOperationException Si hay algún problema que impide la eliminación del evento.
      */
     void delete(Long idEvento) throws EntityNotFoundException, IllegalOperationException;
+
+    /**
+     * Añade un plato a un evento existente.
+     *
+     * @param idEvento El ID del evento al que se desea añadir el plato.
+     * @param idPlato El ID del plato que se desea asociar al evento.
+     * @return El evento actualizado con el plato añadido.
+     * @throws EntityNotFoundException Si el evento o el plato con los IDs especificados no se encuentran en la base de datos.
+     * @throws IllegalOperationException Si ocurre una operación ilegal durante la asociación del plato al evento.
+     */
+    Evento addPlato (Long idEvento, Long idPlato)throws EntityNotFoundException, IllegalOperationException;
 
     /**
      * Asigna un local al Evento.
