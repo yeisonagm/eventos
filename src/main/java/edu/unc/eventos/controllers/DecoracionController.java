@@ -6,7 +6,9 @@
 package edu.unc.eventos.controllers;
 
 import edu.unc.eventos.domain.Decoracion;
+import edu.unc.eventos.domain.Evento;
 import edu.unc.eventos.dto.DecoracionDTO;
+import edu.unc.eventos.dto.EventoDTO;
 import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
 import edu.unc.eventos.services.DecoracionService;
@@ -132,5 +134,47 @@ public class DecoracionController {
         decoracionService.delete(id);
         ApiResponse<?> response = new ApiResponse<>(true, "Decoración eliminada con éxito", null);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    /**
+     * Este controlador permite recuperar todos los eventos asociados a una decoracion
+     *
+     * @param idDecoracion Identificador de la decoración
+     * @return Retorna la lista de eventos asociados a la decoración
+     * @throws EntityNotFoundException Si el Id de la decoración no existe en la DB
+     */
+    @GetMapping("/{idDecoracion}/eventos")
+    public ResponseEntity<?> getAllEventosByIdDecoracion(@PathVariable Long idDecoracion) throws EntityNotFoundException {
+        List<Evento> eventos = decoracionService.getAllEventosByIdDecoracion(idDecoracion);
+        if (eventos == null || eventos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            List<EventoDTO> eventoDTOs = eventos.stream()
+                    .map(evento -> modelMapper.map(evento, EventoDTO.class))
+                    .collect(Collectors.toList());
+            ApiResponse<List<EventoDTO>> response = new ApiResponse<>(true, "Eventos asociados a la decoracion", eventoDTOs);
+            return ResponseEntity.ok(response);
+        }
+    }
+
+    /**
+     * Este controlodaro devuelve un evento específico que tiene asignado una decoración específica
+     *
+     * @param idDecoracion Identificador de la decoración
+     * @param idEvento     Identificador del evento
+     * @return Retorna un evento.
+     */
+    @GetMapping("/{idDecoracion}/empleados/{idEvento}")
+    public ResponseEntity<?> getByIdEventoByIdEvento(@PathVariable Long idDecoracion, @PathVariable Long idEvento) {
+        Evento evento = decoracionService.getByIdEventoByIdEvento(idDecoracion, idEvento);
+        if (evento == null) {
+            ApiResponse<String> response = new ApiResponse<>(false, "Evento no encontrado", null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } else {
+            EventoDTO eventoDTO = modelMapper.map(evento, EventoDTO.class);
+            ApiResponse<EventoDTO> response = new ApiResponse<>(true, "Evento encontrado", eventoDTO);
+            return ResponseEntity.ok(response);
+
+        }
     }
 }
