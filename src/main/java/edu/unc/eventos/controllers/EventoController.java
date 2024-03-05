@@ -178,19 +178,6 @@ class EventoController {
         return ResponseEntity.ok("Plato agregado al evento correctamente");
     }
 
-    /**
-     * Actualiza o agrega un local a un evento existente
-     *
-     * @param idEvento     Identificador del Evento al que se necesita asignar o actualizar el local.
-     * @param idDecoracion Identificador del Local que se busca asignar o actualizar al evento.
-     * @return Respuesta indicando la operación con éxito
-     * @throws IllegalOperationException Si hay una operación ilegal
-     */
-    @PatchMapping("/{idEvento}/addDecoracionToEvento")
-    public ResponseEntity<?> addDecoracionToEvento(@PathVariable Long idEvento, @RequestParam Long idDecoracion) throws IllegalOperationException {
-        eventoService.addDecoracionToEvento(idEvento, idDecoracion);
-        return ResponseEntity.ok("Decoracion agregada al evento correctamente");
-    }
 
     /**
      * Eliminar un Evento por su ID

@@ -92,15 +92,4 @@ public interface EventoService {
      * @throws IllegalOperationException Si ocurre una operación ilegal durante la asociación del plato al evento.
      */
     Evento addPlato(Long idEvento, Long idPlato) throws EntityNotFoundException, IllegalOperationException;
-
-    /**
-     * Asigna un local al Evento.
-     *
-     * @param idEvento     Identificador único del evento al que se asignará el local.
-     * @param idDecoracion Identificador único de la decoracion el cual se asignará al evento.
-     * @return El objeto Evento actualizado con el nuevo local
-     * @throws EntityNotFoundException   Si no se encuentra ningún evento o local con el identificador especificado.
-     * @throws IllegalOperationException Si hay algún problema con los datos del evento o local que impide su actualización.
-     */
-    Evento addDecoracionToEvento(Long idEvento, Long idDecoracion) throws EntityNotFoundException, IllegalOperationException;
 }

@@ -183,29 +183,6 @@ public class EventoServiceImp implements EventoService {
         eventoRepository.deleteById(idEvento);
     }
 
-    /**
-     * Asigna un local a un evento existente
-     *
-     * @param idEvento     Identificador único del evento al que se asignará el local.
-     * @param idDecoracion Identificador único de la decoracion el cual se asignará al evento.
-     * @return El objeto luego de actualizarlo en la base de datos
-     * @throws EntityNotFoundException   Si el evento o el local no se encuentra en la base de datos.
-     * @throws IllegalOperationException Si existe algún conflicto con la fecha en la que se da el evento.
-     */
-    @Override
-    @Transactional
-    public Evento addDecoracionToEvento(Long idEvento, Long idDecoracion) throws EntityNotFoundException, IllegalOperationException {
-        Evento evento = eventoRepository.findById(idEvento).orElseThrow(
-                () -> new EntityNotFoundException("El evento con el ID proporcionado no se encontró")
-        );
-        Decoracion decoracion = decoracionRepository.findById(idDecoracion).orElseThrow(
-                () -> new EntityNotFoundException("La decoracion con el ID proporcionado no se encontró")
-        );
-
-        evento.setDecoracion(decoracion);
-        return eventoRepository.save(evento);
-    }
-
 
     /**
      * Este método verifica si existe un Evento programdado en el mismo local, en el mismo día
