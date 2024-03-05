@@ -54,7 +54,7 @@ public class DecoracionServiceImp implements DecoracionService {
     public Decoracion getById(Long idDecoracion) throws EntityNotFoundException {
         Optional<Decoracion> decoracionOpt = decoracionRepository.findById(idDecoracion);
         if (decoracionOpt.isEmpty()) {
-            throw new EntityNotFoundException("La decoración con el ID proporcionado no se encontró.");
+            throw new EntityNotFoundException("La decoración con el Id proporcionado no se encontró.");
         }
         return decoracionOpt.get();
     }
