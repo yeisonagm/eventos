@@ -72,4 +72,13 @@ public interface EmpleadoService {
      */
     void addRolToEmpleado(Long idEmpleado, Long idRol) throws EntityNotFoundException, IllegalOperationException;
 
+    /**
+     * Asigna el supervisor de un empleado.
+     *
+     * @param idEmpleado   ID del empleado al que se asignará el supervisor
+     * @param idSupervisor ID del supervisor que se asignará al empleado
+     * @throws EntityNotFoundException   Si no se encuentra el empleado o el supervisor
+     * @throws IllegalOperationException Si el empleado ya tiene asignado el supervisor proporcionado
+     */
+    Empleado addSupervisor(Long idEmpleado, Long idSupervisor) throws EntityNotFoundException, IllegalOperationException;
 }

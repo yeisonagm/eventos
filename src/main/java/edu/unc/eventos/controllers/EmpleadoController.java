@@ -135,6 +135,7 @@ public class EmpleadoController {
         ApiResponse<String> response = new ApiResponse<>(true, "Empleado eliminado", null);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
     /**
      * Asigna un rol a un empleado.
      *
@@ -150,4 +151,20 @@ public class EmpleadoController {
         return ResponseEntity.ok("Rol asignado al empleado correctamente");
     }
 
+    /**
+     * Asigna el supervisor de un empleado.
+     *
+     * @param idEmpleado   ID del empleado al que se asignará el supervisor
+     * @param idSupervisor ID del supervisor que se asignará al empleado
+     * @return ResponseEntity con el resultado de la operación
+     * @throws EntityNotFoundException   Si no se encuentra el empleado o el supervisor
+     * @throws IllegalOperationException Si el empleado ya tiene asignado el supervisor proporcionado
+     */
+    @PatchMapping("/{idEmpleado}/addSupervisor/{idSupervisor}")
+    public ResponseEntity<?> addSupervisorToEmpleado(@PathVariable Long idEmpleado, @PathVariable Long idSupervisor) throws EntityNotFoundException, IllegalOperationException {
+        Empleado empleado = empleadoService.addSupervisor(idEmpleado, idSupervisor);
+        EmpleadoDTO empleadoDTO = modelMapper.map(empleado, EmpleadoDTO.class);
+        ApiResponse<EmpleadoDTO> response = new ApiResponse<>(true, "Supervisor asignado al empleado correctamente", empleadoDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 }
