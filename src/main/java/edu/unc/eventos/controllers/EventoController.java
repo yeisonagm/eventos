@@ -31,6 +31,8 @@ class EventoController {
     @Autowired
     private ModelMapper modelMapper;
 
+
+
     /**
      * Obtiene todos los eventos existentes
      *
@@ -73,7 +75,7 @@ class EventoController {
      * @throws IllegalOperationException Si hay una operación ilegal
      */
     @PostMapping
-    public ResponseEntity<ApiResponse<EventoDTO>> create(@RequestBody EventoDTO eventoDTO) throws IllegalOperationException {
+    public ResponseEntity<?> create(@RequestBody EventoDTO eventoDTO) throws IllegalOperationException {
         Evento evento = modelMapper.map(eventoDTO, Evento.class);
         eventoService.save(evento);
         EventoDTO createdDTO = modelMapper.map(evento, EventoDTO.class);
@@ -91,12 +93,26 @@ class EventoController {
      * @throws IllegalOperationException Si hay una operación ilegal
      */
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<EventoDTO>> update(@PathVariable Long id, @RequestBody EventoDTO eventoDTO) throws EntityNotFoundException, IllegalOperationException {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody EventoDTO eventoDTO) throws EntityNotFoundException, IllegalOperationException {
         Evento evento = modelMapper.map(eventoDTO, Evento.class);
         eventoService.update(id, evento);
         EventoDTO updateDTO = modelMapper.map(evento, EventoDTO.class);
         ApiResponse<EventoDTO> response = new ApiResponse<>(true, "Evento actualizado", updateDTO);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    /**
+     * Actualiza o agrega un local a un evento existente
+     *
+     * @param idEvento Identificador del Evento al que se necesita asignar o actualizar el local.
+     * @param idLocal Identificador del Local que se busca asignar o actualizar al evento.
+     * @return Respuesta indicando la operación con éxito
+     * @throws IllegalOperationException Si hay una operación ilegal
+     */
+    @PatchMapping("/{idEvento}/addLocalToEvento")
+    public ResponseEntity<?> addLocalToEvento (@PathVariable Long idEvento, @RequestParam Long idLocal) throws IllegalOperationException {
+        eventoService.addLocalToEvento(idEvento, idLocal);
+        return  ResponseEntity.ok("Local agregado al evento correctamente");
     }
 
     /**
