@@ -16,6 +16,9 @@ import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
 import edu.unc.eventos.services.PlatoService;
 import edu.unc.eventos.util.ApiResponse;
+import edu.unc.eventos.util.EntityValidator;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -34,6 +38,9 @@ public class PlatoController {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private Validator validator;
 
     /**
      * Obtiene todos los Platos existentes
@@ -70,17 +77,26 @@ public class PlatoController {
     }
 
     /**
-     * Crea un nuevo recurso de Plato en el sistema.
+     * Método POST para crear un nuevo plato.
      *
-     * Este método procesa una solicitud POST para guardar un nuevo plato en el sistema.
+     * Este método recibe un objeto PlatoDTO en el cuerpo de la solicitud y crea un nuevo plato en el sistema.
+     * Realiza la validación del objeto PlatoDTO utilizando el validador de bean.
+     * Si se encuentran violaciones de restricciones de validación, devuelve una respuesta con los errores de validación.
+     * Si la validación es exitosa, mapea el PlatoDTO a un objeto Plato y lo guarda en la base de datos a través del servicio de plato.
+     * Finalmente, devuelve una respuesta de éxito con el plato recién creado mapeado a un objeto PlatoDTO en el cuerpo de la respuesta.
      *
-     * @param platoDTO El objeto PlatoDTO que contiene los datos del plato a guardar.
-     * @return ResponseEntity que contiene un objeto ApiResponse con información sobre el resultado de la operación.
-     * @throws IllegalOperationException Si ocurre una operación ilegal durante el proceso de guardado del plato.
+     * @param platoDTO El objeto PlatoDTO que contiene los datos del plato a ser creado.
+     * @return ResponseEntity que contiene la respuesta de la operación, incluyendo el resultado de la operación y los detalles del plato creado.
+     * @throws IllegalOperationException Si ocurre una operación ilegal durante la creación del plato.
      */
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody PlatoDTO platoDTO) throws IllegalOperationException {
+    public ResponseEntity<?> create(@RequestBody PlatoDTO platoDTO) throws IllegalOperationException {
         Plato plato = modelMapper.map(platoDTO, Plato.class);
+        Set<ConstraintViolation<Plato>> violations = validator.validate (plato);
+        if(!violations.isEmpty()){
+            EntityValidator entityValidator = new EntityValidator();
+            return entityValidator.validate(violations);
+        }
         platoService.save(plato);
         PlatoDTO saveDTO = modelMapper.map(plato, PlatoDTO.class);
         ApiResponse<PlatoDTO> response = new ApiResponse<>(true, "Plato guardado", saveDTO);
@@ -88,19 +104,28 @@ public class PlatoController {
     }
 
     /**
-     * Actualiza un recurso de Plato en el sistema.
+     * Método PUT para actualizar un plato existente.
      *
-     * Este método procesa una solicitud PUT para actualizar un plato existente en el sistema.
+     * Este método recibe el ID del plato a ser actualizado y un objeto PlatoDTO en el cuerpo de la solicitud.
+     * Actualiza el plato correspondiente en la base de datos utilizando el servicio de plato.
+     * Realiza la validación del objeto PlatoDTO utilizando el validador de bean.
+     * Si se encuentran violaciones de restricciones de validación, devuelve una respuesta con los errores de validación.
+     * Si la validación es exitosa y la actualización se realiza correctamente, devuelve una respuesta de éxito con el plato actualizado mapeado a un objeto PlatoDTO en el cuerpo de la respuesta.
      *
-     * @param id El identificador único del plato a actualizar.
+     * @param id El ID del plato a ser actualizado.
      * @param platoDTO El objeto PlatoDTO que contiene los datos actualizados del plato.
-     * @return ResponseEntity que contiene un objeto ApiResponse con información sobre el resultado de la operación.
-     * @throws EntityNotFoundException Si no se encuentra el plato con el identificador proporcionado.
-     * @throws IllegalOperationException Si ocurre una operación ilegal durante el proceso de actualización del plato.
+     * @return ResponseEntity que contiene la respuesta de la operación, incluyendo el resultado de la operación y los detalles del plato actualizado.
+     * @throws EntityNotFoundException Si el plato con el ID especificado no se encuentra en la base de datos.
+     * @throws IllegalOperationException Si ocurre una operación ilegal durante la actualización del plato.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<PlatoDTO>> update(@PathVariable Long id, @RequestBody PlatoDTO platoDTO) throws EntityNotFoundException, IllegalOperationException {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody PlatoDTO platoDTO) throws EntityNotFoundException, IllegalOperationException {
         Plato plato = modelMapper.map(platoDTO, Plato.class);
+        Set<ConstraintViolation<Plato>> violations = validator.validate (plato);
+        if(!violations.isEmpty()){
+            EntityValidator entityValidator = new EntityValidator();
+            return entityValidator.validate(violations);
+        }
         platoService.update(id, plato);
         PlatoDTO updateDTO = modelMapper.map(plato, PlatoDTO.class);
         ApiResponse<PlatoDTO> response = new ApiResponse<>(true, "Plato actualizado", updateDTO);

@@ -5,19 +5,23 @@
  */
 package edu.unc.eventos.services;
 
+import edu.unc.eventos.domain.Decoracion;
 import edu.unc.eventos.domain.Evento;
 import edu.unc.eventos.domain.Local;
+import edu.unc.eventos.domain.Plato;
 import edu.unc.eventos.domain.Rol;
 import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
+import edu.unc.eventos.repositories.DecoracionRepository;
 import edu.unc.eventos.repositories.EventoRepository;
+import edu.unc.eventos.repositories.PlatoRepository;
+import edu.unc.eventos.repositories.LocalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +31,13 @@ public class EventoServiceImp implements EventoService {
 
     @Autowired
     private EventoRepository eventoRepository;
+
+    @Autowired
+    private PlatoRepository platoRepository;
+
+
+    @Autowired
+    private DecoracionRepository decoracionRepository;
 
     /**
      * Este método devuelve una lista de todos los eventos
@@ -72,19 +83,19 @@ public class EventoServiceImp implements EventoService {
         if (evento.getFecha() == null) {
             throw new IllegalOperationException("La fecha del evento no puede estar vacía.");
         }
-        if (existeEventoEnMismoDiaYLocal(evento.getLocal(), evento.getFecha())) {
+        if (existsEventOnSameDayAndLocal(evento.getLocal(), evento.getFecha())) {
             throw new IllegalOperationException("Ya hay un evento planificado en el mismo local para la misma fecha.");
         }
         return eventoRepository.save(evento);
     }
 
     /**
-     *  Actualiza un evento eistente
+     * Actualiza un evento eistente
      *
      * @param idEvento Id del evento que se quiere actualizar
-     * @param evento Objeto del tipo evento que se va a actualizar
+     * @param evento   Objeto del tipo evento que se va a actualizar
      * @return El objeto luego de actualizarlo en la base de datos
-     * @throws EntityNotFoundException Si el evento no se encuentra en la base de datos
+     * @throws EntityNotFoundException   Si el evento no se encuentra en la base de datos
      * @throws IllegalOperationException Si el nombre o fecha del evento es inválido.
      */
     @Override
@@ -101,7 +112,7 @@ public class EventoServiceImp implements EventoService {
         if (evento.getFecha() == null) {
             throw new IllegalOperationException("La fecha del evento no puede estar vacía.");
         }
-        if (existeEventoEnMismoDiaYLocal(evento.getLocal(), evento.getFecha())) {
+        if (existsEventOnSameDayAndLocal(evento.getLocal(), evento.getFecha())) {
             throw new IllegalOperationException("Ya hay un evento planificado en el mismo local para la misma fecha.");
         }
 
@@ -136,15 +147,71 @@ public class EventoServiceImp implements EventoService {
     }
 
     /**
+     * Asigna un local a un evento existente
+     *
+     * @param idEvento     Identificador único del evento al que se asignará el local.
+     * @param idDecoracion Identificador único de la decoracion el cual se asignará al evento.
+     * @return El objeto luego de actualizarlo en la base de datos
+     * @throws EntityNotFoundException   Si el evento o el local no se encuentra en la base de datos.
+     * @throws IllegalOperationException Si existe algún conflicto con la fecha en la que se da el evento.
+     */
+    @Override
+    @Transactional
+    public Evento addDecoracionToEvento(Long idEvento, Long idDecoracion) throws EntityNotFoundException, IllegalOperationException {
+        Evento evento = eventoRepository.findById(idEvento).orElseThrow(
+                () -> new EntityNotFoundException("El evento con el ID proporcionado no se encontró")
+        );
+        Decoracion decoracion = decoracionRepository.findById(idDecoracion).orElseThrow(
+                () -> new EntityNotFoundException("La decoracion con el ID proporcionado no se encontró")
+        );
+
+        evento.setDecoracion(decoracion);
+        return eventoRepository.save(evento);
+    }
+
+
+    /**
      * Este método verifica si existe un Evento programdado en el mismo local, en el mismo día
      *
      * @param local Objeto del tipo local
      * @param fecha Objeto del tipo Date
      * @return Retorna un true o false de acuerdo a si existe un evento programado en un local, en la misma fecha que otro evento.
      */
-    private boolean existeEventoEnMismoDiaYLocal(Local local, Date fecha) {
+    private boolean existsEventOnSameDayAndLocal(Local local, Date fecha) {
         LocalDate fechaEvento = fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         List<Evento> eventosEnMismoDiaYLocal = eventoRepository.findByLocalAndFecha(local, fechaEvento);
         return !eventosEnMismoDiaYLocal.isEmpty();
+    }
+
+    /**
+     * Agrega un plato a un evento existente.
+     * <p>
+     * Este método permite asociar un plato existente a un evento existente mediante sus identificadores.
+     * Recibe el ID del evento y el ID del plato que se desea asociar.
+     * Busca el evento y el plato correspondientes en la base de datos utilizando los repositorios respectivos.
+     * Si el evento o el plato no se encuentran en la base de datos, lanza una excepción de tipo EntityNotFoundException.
+     * Si el plato ya está asociado al evento, lanza una excepción de tipo IllegalOperationException.
+     * Si la operación se realiza con éxito, guarda el evento actualizado en la base de datos y lo devuelve.
+     *
+     * @param idEvento El ID del evento al que se desea añadir el plato.
+     * @param idPlato  El ID del plato que se desea asociar al evento.
+     * @return El evento actualizado con el plato añadido.
+     * @throws EntityNotFoundException   Si el evento o el plato con los IDs especificados no se encuentran en la base de datos.
+     * @throws IllegalOperationException Si el plato ya está asociado al evento.
+     */
+    @Override
+    public Evento addPlato(Long idEvento, Long idPlato) throws EntityNotFoundException, IllegalOperationException {
+        Evento evento = eventoRepository.findById(idEvento)
+                .orElseThrow(() -> new EntityNotFoundException("El Evento no se ha encontrado"));
+
+        Plato plato = platoRepository.findById(idPlato)
+                .orElseThrow(() -> new EntityNotFoundException("El Plato no se ha encontrado"));
+
+        if (evento.getPlatos().contains(plato)) {
+            throw new IllegalOperationException("El plato ya está agregado al evento");
+        }
+        evento.getPlatos().add(plato);
+        eventoRepository.save(evento);
+        return evento;
     }
 }

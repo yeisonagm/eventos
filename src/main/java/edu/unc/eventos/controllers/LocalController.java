@@ -15,6 +15,9 @@ import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
 import edu.unc.eventos.services.LocalService;
 import edu.unc.eventos.util.ApiResponse;
+import edu.unc.eventos.util.EntityValidator;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -32,6 +36,10 @@ public class LocalController {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private Validator validator;
+
 
     /**
      * Obtiene todos los locales existentes
@@ -76,8 +84,13 @@ public class LocalController {
      * @throws IllegalOperationException Si ocurre una operación ilegal durante el proceso de guardado del local.
      */
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody LocalDTO localDTO) throws IllegalOperationException {
+    public ResponseEntity<?> create(@RequestBody LocalDTO localDTO) throws IllegalOperationException {
         Local local = modelMapper.map(localDTO, Local.class);
+        Set<ConstraintViolation<Local>> violations = validator.validate(local);
+        if(!violations.isEmpty()){
+            EntityValidator entityValidator = new EntityValidator();
+            return entityValidator.validate(violations);
+        }
         localService.save(local);
         LocalDTO saveDTO = modelMapper.map(local, LocalDTO.class);
         ApiResponse<LocalDTO> response = new ApiResponse<>(true, "Local guardado", saveDTO);
@@ -96,8 +109,13 @@ public class LocalController {
      * @throws IllegalOperationException Si ocurre una operación ilegal durante el proceso de actualización del local.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<LocalDTO>> update(@PathVariable Long id, @RequestBody LocalDTO localDTO) throws EntityNotFoundException, IllegalOperationException {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody LocalDTO localDTO) throws EntityNotFoundException, IllegalOperationException {
         Local local = modelMapper.map(localDTO, Local.class);
+        Set<ConstraintViolation<Local>> violations = validator.validate(local);
+        if(!violations.isEmpty()){
+            EntityValidator entityValidator = new EntityValidator();
+            return entityValidator.validate(violations);
+        }
         localService.update(id, local);
         LocalDTO updateDTO = modelMapper.map(local, LocalDTO.class);
         ApiResponse<LocalDTO> response = new ApiResponse<>(true, "Local actualizado", updateDTO);

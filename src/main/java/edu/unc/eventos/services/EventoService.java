@@ -26,7 +26,7 @@ public interface EventoService {
      * Recupera un evento específico según su ID
      *
      * @param idEvento Idetificador único del evento.
-     * @return
+     * @return Objeto Evento correspondiente al ID proporcionado.
      * @throws EntityNotFoundException Si no se encuentra ningún evento con el identificador especificado.
      */
     Evento getEventoById(Long idEvento) throws EntityNotFoundException;
@@ -44,9 +44,9 @@ public interface EventoService {
      * Actualiza un evento axistente.
      *
      * @param idEvento El identificador único del evento que se va a actualizar
-     * @param evento El objeto Evento con los nuevos datos
+     * @param evento   El objeto Evento con los nuevos datos
      * @return El objeto Evento actualizado
-     * @throws EntityNotFoundException Si no se encuentra ningún evento con el identificador especificado.
+     * @throws EntityNotFoundException   Si no se encuentra ningún evento con el identificador especificado.
      * @throws IllegalOperationException Si hay algún problema con los datos del evento que impide su actualización.
      */
     Evento update(Long idEvento, Evento evento) throws EntityNotFoundException, IllegalOperationException;
@@ -55,8 +55,30 @@ public interface EventoService {
      * Elimina un local del sistema según su identificador único
      *
      * @param idEvento El identificador único del evento que se va a eliminar
-     * @throws EntityNotFoundException Si no se encuentra ningún evento con el identificador especificado.
+     * @throws EntityNotFoundException   Si no se encuentra ningún evento con el identificador especificado.
      * @throws IllegalOperationException Si hay algún problema que impide la eliminación del evento.
      */
     void delete(Long idEvento) throws EntityNotFoundException, IllegalOperationException;
+
+    /**
+     * Añade un plato a un evento existente.
+     *
+     * @param idEvento El ID del evento al que se desea añadir el plato.
+     * @param idPlato El ID del plato que se desea asociar al evento.
+     * @return El evento actualizado con el plato añadido.
+     * @throws EntityNotFoundException Si el evento o el plato con los IDs especificados no se encuentran en la base de datos.
+     * @throws IllegalOperationException Si ocurre una operación ilegal durante la asociación del plato al evento.
+     */
+    Evento addPlato (Long idEvento, Long idPlato)throws EntityNotFoundException, IllegalOperationException;
+
+    /**
+     * Asigna un local al Evento.
+     *
+     * @param idEvento Identificador único del evento al que se asignará el local.
+     * @param idDecoracion  Identificador único de la decoracion el cual se asignará al evento.
+     * @return El objeto Evento actualizado con el nuevo local
+     * @throws EntityNotFoundException   Si no se encuentra ningún evento o local con el identificador especificado.
+     * @throws IllegalOperationException Si hay algún problema con los datos del evento o local que impide su actualización.
+     */
+    Evento addDecoracionToEvento(Long idEvento, Long idDecoracion) throws EntityNotFoundException, IllegalOperationException;
 }

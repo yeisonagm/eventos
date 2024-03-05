@@ -135,6 +135,19 @@ public class EmpleadoController {
         ApiResponse<String> response = new ApiResponse<>(true, "Empleado eliminado", null);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-
+    /**
+     * Asigna un rol a un empleado.
+     *
+     * @param idEmpleado ID del empleado al que se asignará el rol
+     * @param idRol      ID del rol que se asignará al empleado
+     * @return ResponseEntity con el resultado de la operación
+     * @throws EntityNotFoundException   Si no se encuentra el empleado o el rol
+     * @throws IllegalOperationException Si el empleado ya tiene asignado el rol proporcionado
+     */
+    @PatchMapping("/{idEmpleado}/addRolToEmpleado/{idRol}")
+    public ResponseEntity<?> addRolToEmpleado(@PathVariable Long idEmpleado, @PathVariable Long idRol) throws EntityNotFoundException, IllegalOperationException {
+        empleadoService.addRolToEmpleado(idEmpleado, idRol);
+        return ResponseEntity.ok("Rol asignado al empleado correctamente");
+    }
 
 }
