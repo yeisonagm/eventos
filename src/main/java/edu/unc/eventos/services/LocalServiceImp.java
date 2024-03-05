@@ -71,10 +71,10 @@ public class LocalServiceImp implements LocalService {
         if (local.getAforo() <= 0) {
             throw new IllegalOperationException("El aforo del local no puede ser menor o igual a cero.");
         }
-        if (localRepository.findByNombre(local.getNombre()).isEmpty()) {
+        if (!localRepository.findByNombre(local.getNombre()).isEmpty()) {
             throw new IllegalOperationException("El nombre del local ya existe en la base de datos");
         }
-        if (localRepository.findByUbicacion(local.getUbicacion()).isEmpty()) {
+        if (!localRepository.findByUbicacion(local.getUbicacion()).isEmpty()) {
             throw new IllegalOperationException("La dirección del local ya existe en la base de datos");
         }
         return localRepository.save(local);
