@@ -164,7 +164,7 @@ public class DecoracionController {
      * @param idEvento     Identificador del evento
      * @return Retorna un evento.
      */
-    @GetMapping("/{idDecoracion}/empleados/{idEvento}")
+    @GetMapping("/{idDecoracion}/eventos/{idEvento}")
     public ResponseEntity<?> getByIdEventoByIdEvento(@PathVariable Long idDecoracion, @PathVariable Long idEvento) {
         Evento evento = decoracionService.getByIdEventoByIdEvento(idDecoracion, idEvento);
         if (evento == null) {
