@@ -70,6 +70,15 @@ public class EmpleadoServiceImp implements EmpleadoService {
     public Empleado save(Empleado empleado) throws IllegalOperationException {
         Empleado empleadoDB = empleadoRepository.findByDni(empleado.getDni());
         if (empleadoDB != null) {
+            if (empleadoDB.getDni().equals(empleado.getDni())) {
+                throw new IllegalOperationException("Un empleado con el DNI ingresado ya existe en la base de datos.");
+            }
+            if (empleadoDB.getEmail().equals(empleado.getEmail())) {
+                throw new IllegalOperationException("El email ya existe en la base de datos.");
+            }
+            if (empleadoDB.getTelefono().equals(empleado.getTelefono())) {
+                throw new IllegalOperationException("El teléfono ya existe en la base de datos.");
+            }
             throw new IllegalOperationException("El empleado ya existe en la base de datos.");
         }
         return empleadoRepository.save(empleado);
@@ -92,7 +101,16 @@ public class EmpleadoServiceImp implements EmpleadoService {
             throw new EntityNotFoundException("El empleado con el Id proporcionado no se encontró.");
         }
         Empleado empleadoDB = empleadoRepository.findByDni(empleado.getDni());
-        if (empleadoDB != null && empleadoDB.getIdEmpleado().equals(idEmpleado)) {
+        if (empleadoDB != null) {
+            if (empleadoDB.getDni().equals(empleado.getDni())) {
+                throw new IllegalOperationException("Un empleado con el DNI ingresado ya existe en la base de datos.");
+            }
+            if (empleadoDB.getEmail().equals(empleado.getEmail())) {
+                throw new IllegalOperationException("El email ya existe en la base de datos.");
+            }
+            if (empleadoDB.getTelefono().equals(empleado.getTelefono())) {
+                throw new IllegalOperationException("El teléfono ya existe en la base de datos.");
+            }
             throw new IllegalOperationException("El empleado ya existe en la base de datos.");
         }
         return empleadoRepository.save(empleado);

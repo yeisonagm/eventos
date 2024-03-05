@@ -11,17 +11,17 @@ import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
 import edu.unc.eventos.services.EmpleadoService;
 import edu.unc.eventos.util.ApiResponse;
-import jakarta.validation.Valid;
+import edu.unc.eventos.util.EntityValidator;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -38,6 +38,9 @@ public class EmpleadoController {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private Validator validator;
 
     /**
      * Obtiene todas los empleados existentes
@@ -75,15 +78,18 @@ public class EmpleadoController {
     /**
      * Crea un nuevo empleado
      *
-     * @param empleadoDTO Datos del empleado que se quiere guardar
+     * @param empleadoDTO Datos del nuevo empleado
      * @return El empleado que se guardó
      * @throws IllegalOperationException Sí se genera una operación ilegal
      */
     @PostMapping
-    public ResponseEntity<?> save(@Valid @RequestBody EmpleadoDTO empleadoDTO, BindingResult result) throws IllegalOperationException {
+    public ResponseEntity<?> create(@RequestBody EmpleadoDTO empleadoDTO) throws IllegalOperationException {
         Empleado empleado = modelMapper.map(empleadoDTO, Empleado.class);
-        if (result.hasErrors()) {
-            return validate(result);
+        // Realiza la validación, si hay errores de validación, maneja los errores
+        Set<ConstraintViolation<Empleado>> violations = validator.validate(empleado);
+        if (!violations.isEmpty()) {
+            EntityValidator entityValidator = new EntityValidator();
+            return entityValidator.validate(violations);
         }
         empleadoService.save(empleado);
         EmpleadoDTO saveDTO = modelMapper.map(empleado, EmpleadoDTO.class);
@@ -101,8 +107,14 @@ public class EmpleadoController {
      * @throws IllegalOperationException Sí se genera una operación ilegal
      */
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<EmpleadoDTO>> update(@PathVariable Long id, @RequestBody EmpleadoDTO empleadoDTO) throws EntityNotFoundException, IllegalOperationException {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody EmpleadoDTO empleadoDTO) throws EntityNotFoundException, IllegalOperationException {
         Empleado empleado = modelMapper.map(empleadoDTO, Empleado.class);
+        // Realiza la validación, si hay errores de validación, maneja los errores
+        Set<ConstraintViolation<Empleado>> violations = validator.validate(empleado);
+        if (!violations.isEmpty()) {
+            EntityValidator entityValidator = new EntityValidator();
+            return entityValidator.validate(violations);
+        }
         empleadoService.update(id, empleado);
         EmpleadoDTO updateDTO = modelMapper.map(empleado, EmpleadoDTO.class);
         ApiResponse<EmpleadoDTO> response = new ApiResponse<>(true, "Decoración actualizada", updateDTO);
@@ -122,20 +134,7 @@ public class EmpleadoController {
         empleadoService.delete(id);
         ApiResponse<String> response = new ApiResponse<>(true, "Empleado eliminado", null);
         return ResponseEntity.status(HttpStatus.OK).body(response);
-
     }
 
-    /**
-     * Maneja los errores generados por la validación de los datos de las entidades
-     *
-     * @param result Resultado de la validación
-     * @return Mapa con los errores
-     */
-    private ResponseEntity<Map<String, String>> validate(BindingResult result) {
-        Map<String, String> errors = new HashMap<>();
-        result.getFieldErrors().forEach(error -> {
-            errors.put(error.getField(), "El campo " + error.getField() + " " + error.getDefaultMessage());
-        });
-        return ResponseEntity.badRequest().body(errors);
-    }
+
 }

@@ -31,7 +31,7 @@ public class Empleado {
      */
     @NotBlank(message = "Debe al menos colocar un apellido")
     @Size(min = 6, max = 30, message = "El Apellido debe tener entre 6 a 30 caracteres.")
-    @Pattern(regexp = "^[a-zA-Z]*$\\s", message = "El apellido solo puede contener letras")
+    @Pattern(regexp = "^[a-zA-Z\\s]*$", message = "El apellido solo puede contener letras")
     private String apellidos;
 
     /**
@@ -61,6 +61,7 @@ public class Empleado {
     /**
      * Número de teléfono del empleado.
      */
+    @Column(unique = true)
     @NotBlank(message = "El número de teléfono no puede estar vacío.")
     @Size(min = 9, max = 9, message = "El número de teléfono debe tener 9 caracteres.")
     @Pattern(regexp = "^[0-9]*$", message = "El número de teléfono solo puede contener números.")
@@ -69,6 +70,7 @@ public class Empleado {
     /**
      * Email del empleado.
      */
+    @Column(unique = true)
     @NotBlank(message = "El email no puede estar vacío.")
     @Email(message = "El formato del correo electrónico no es válido")
     @Size(max = 30, message = "El email debe tener menos de 30 caracteres.")
