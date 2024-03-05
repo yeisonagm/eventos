@@ -147,13 +147,12 @@ public class EmpleadoServiceImp implements EmpleadoService {
      *
      * @param idEmpleado ID del empleado al que se asignará el rol
      * @param idRol      ID del rol que se asignará al empleado
-     * @return El empleado actualizado con el rol asignado
      * @throws EntityNotFoundException   Si no se encuentra el empleado o el rol
      * @throws IllegalOperationException Si el empleado ya tiene asignado el rol proporcionado
      */
     @Override
     @Transactional
-    public Empleado addRolToEmpleado(Long idEmpleado, Long idRol) throws EntityNotFoundException, IllegalOperationException {
+    public void addRolToEmpleado(Long idEmpleado, Long idRol) throws EntityNotFoundException, IllegalOperationException {
         Empleado empleado = empleadoRepository.findById(idEmpleado)
                 .orElseThrow(() -> new EntityNotFoundException("Empleado no encontrado con el ID proporcionado"));
 
@@ -169,7 +168,6 @@ public class EmpleadoServiceImp implements EmpleadoService {
         empleadoRepository.save(empleado); // Guardar los cambios en el empleado
         rolRepository.save(rol); // Guardar los cambios en el rol
 
-        return empleado; // Devolver el empleado actualizado
     }
 
 }
