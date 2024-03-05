@@ -5,8 +5,6 @@
  */
 package edu.unc.eventos.controllers;
 
-import edu.unc.eventos.domain.Empleado;
-import edu.unc.eventos.domain.Evento;
 import edu.unc.eventos.domain.Rol;
 import edu.unc.eventos.dto.RolDTO;
 import edu.unc.eventos.exception.EntityNotFoundException;

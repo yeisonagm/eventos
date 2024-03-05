@@ -142,7 +142,7 @@ public class EventoServiceImp implements EventoService {
      *
      * @param idEvento Identificador único del evento al que se asignará el local.
      * @param idLocal  Identificador único del local el cual se asignará al evento.
-     * @return
+     * @return El objeto luego de actualizarlo en la base de datos
      * @throws EntityNotFoundException   Si el evento o el local no se encuentra en la base de datos.
      * @throws IllegalOperationException Si existe algún conflicto con la fecha en la que se da el evento.
      */
