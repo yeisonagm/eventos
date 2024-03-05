@@ -1,8 +1,13 @@
+/**
+ * @file: SeguroController.java
+ * @author: (c)2024 Yeison García
+ * @created: Mar 05, 2024 02:35:18 AM
+ */
 package edu.unc.eventos.controllers;
-
 
 import edu.unc.eventos.domain.Seguro;
 
+import edu.unc.eventos.dto.EmpleadoDTO;
 import edu.unc.eventos.dto.SeguroDTO;
 import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
@@ -74,8 +79,8 @@ public class SeguroController {
     public ResponseEntity<?> create(@RequestBody SeguroDTO seguroDTO) throws IllegalOperationException {
         Seguro seguro = modelMapper.map(seguroDTO, Seguro.class);
         Set<ConstraintViolation<Seguro>> violations = validator.validate(seguro);
-        if(!violations.isEmpty()){
-            EntityValidator entityValidator=new EntityValidator();
+        if (!violations.isEmpty()) {
+            EntityValidator entityValidator = new EntityValidator();
             return entityValidator.validate(violations);
         }
         seguro = seguroService.save(seguro);
@@ -98,8 +103,8 @@ public class SeguroController {
             throws EntityNotFoundException, IllegalOperationException {
         Seguro seguro = modelMapper.map(seguroDTO, Seguro.class);
         Set<ConstraintViolation<Seguro>> violations = validator.validate(seguro);
-        if(!violations.isEmpty()){
-            EntityValidator entityValidator=new EntityValidator();
+        if (!violations.isEmpty()) {
+            EntityValidator entityValidator = new EntityValidator();
             return entityValidator.validate(violations);
         }
         seguroService.update(id, seguro);
@@ -122,5 +127,27 @@ public class SeguroController {
         seguroService.delete(id);
         ApiResponse<String> response = new ApiResponse<>(true, "Seguro eliminado con éxito", null);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    /**
+     * Asigna un seguro a un empleado.
+     *
+     * @param idEmpleado Id del empleado al que se le asignará el seguro.
+     * @param idSeguro   Id del seguro que se asignará al empleado.
+     * @return Respuesta indicando la operación con éxito.
+     * @throws EntityNotFoundException   Si el empleado o el seguro no se encuentran en la base de datos.
+     * @throws IllegalOperationException Si el seguro ya está asignado al empleado.
+     */
+    @PutMapping("/{idSeguro}/addEmpleado/{idEmpleado}")
+    public ResponseEntity<?> addSeguro(@PathVariable Long idEmpleado, @PathVariable Long idSeguro) throws EntityNotFoundException, IllegalOperationException {
+        Seguro seguro = seguroService.addEmpleado(idSeguro, idEmpleado);
+        Set<ConstraintViolation<Seguro>> violations = validator.validate(seguro);
+        if (!violations.isEmpty()) {
+            EntityValidator entityValidator = new EntityValidator();
+            return entityValidator.validate(violations);
+        }
+        EmpleadoDTO empleadoDTO = modelMapper.map(seguro, EmpleadoDTO.class);
+        ApiResponse<EmpleadoDTO> response = new ApiResponse<>(true, "Seguro asignado al empleado correctamente", empleadoDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

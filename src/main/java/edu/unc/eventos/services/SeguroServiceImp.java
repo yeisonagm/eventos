@@ -5,9 +5,11 @@
  */
 package edu.unc.eventos.services;
 
+import edu.unc.eventos.domain.Empleado;
 import edu.unc.eventos.domain.Seguro;
 import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
+import edu.unc.eventos.repositories.EmpleadoRepository;
 import edu.unc.eventos.repositories.SeguroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,9 @@ public class SeguroServiceImp implements SeguroService {
 
     @Autowired
     private SeguroRepository seguroRepository;
+
+    @Autowired
+    private EmpleadoRepository empleadoRepository;
 
     /**
      * Devuelve todos los seguros que hay en la base de datos.
@@ -69,16 +74,15 @@ public class SeguroServiceImp implements SeguroService {
     @Override
     @Transactional
     public Seguro save(Seguro seguro) throws EntityNotFoundException {
-        Optional<Seguro> existingSeguroOpt = seguroRepository.findById(seguro.getIdSeguro());
-        if (existingSeguroOpt.isPresent()) {
-            throw new EntityNotFoundException("Ya existe un seguro con el mismo ID.");
+        if (seguro.getCodigo().isEmpty()) {
+            throw new EntityNotFoundException("El código no puede estar vacío.");
         }
-
-        Seguro seguroConMismoCodigo = seguroRepository.findByCodigo(seguro.getCodigo());
-        if (seguroConMismoCodigo != null) {
+        if (seguro.getFechaInscripcion() == null) {
+            throw new EntityNotFoundException("El campo fecha de inscripción no puede estar vacío.");
+        }
+        if (seguroRepository.findByCodigo(seguro.getCodigo()) != null) {
             throw new EntityNotFoundException("Ya existe un seguro con el mismo código.");
         }
-
 
         return seguroRepository.save(seguro);
     }
@@ -89,7 +93,7 @@ public class SeguroServiceImp implements SeguroService {
      * @param idSeguro Id del seguro que se quiere actualizar.
      * @param seguro   Objeto del tipo Seguro que se va a actualizar.
      * @return El objeto luego de actualizarlo en la base de datos
-     * @throws EntityNotFoundException Si el seguro no se encuentra en la base de datos.
+     * @throws EntityNotFoundException   Si el seguro no se encuentra en la base de datos.
      * @throws IllegalOperationException Si el seguro ya pertenece a otro código.
      */
     @Override
@@ -127,5 +131,30 @@ public class SeguroServiceImp implements SeguroService {
         }
 
         seguroRepository.deleteById(idSeguro);
+    }
+
+    /**
+     * Agrega un empleado a un seguro.
+     *
+     * @param idSeguro   El identificador único del seguro al que se le va a agregar el empleado.
+     * @param idEmpleado El identificador único del empleado que se va a agregar al seguro.
+     * @return El seguro con el empleado agregado.
+     * @throws EntityNotFoundException   Si no se encuentra ningún seguro o empleado con los identificadores especificados.
+     * @throws IllegalOperationException Si ocurre una operación ilegal durante el proceso de agregado del empleado al seguro.
+     */
+    @Override
+    public Seguro addEmpleado(Long idSeguro, Long idEmpleado) throws EntityNotFoundException, IllegalOperationException {
+        Seguro seguro = seguroRepository.findById(idSeguro)
+                .orElseThrow(() -> new EntityNotFoundException("Seguro con el Id proporcionado no existe."));
+        Empleado empleado = empleadoRepository.findById(idEmpleado)
+                .orElseThrow(() -> new EntityNotFoundException("Empleado con el Id proporcionado no existe."));
+
+        if (empleado.getSeguro() != null) {
+            throw new IllegalOperationException("El empleado ya tiene asignado un seguro. Seguro: "
+                    + empleado.getSeguro().getCodigo());
+        }
+
+        seguro.setEmpleado(empleado);
+        return seguroRepository.save(seguro);
     }
 }

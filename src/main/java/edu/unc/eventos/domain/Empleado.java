@@ -22,7 +22,7 @@ public class Empleado {
      * Nombre(s) del Empleado.
      */
     @NotBlank(message = "El Nombre no puede estar vacío.")
-    @Size(min = 6, max = 30, message = "El nombre debe tener entre 6 a 30 caracteres.")
+    @Size(min = 3, max = 30, message = "El nombre debe tener entre 6 a 30 caracteres.")
     @Pattern(regexp = "^[a-zA-Z\\s]*$", message = "El nombre solo puede contener letras")
     private String nombres;
 

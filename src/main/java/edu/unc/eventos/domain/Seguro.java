@@ -11,10 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.util.Date;
@@ -45,7 +42,7 @@ public class Seguro {
      * Fecha de inscripción del seguro.
      * No puede estar en blanco y debe ser una fecha en el pasado.
      */
-    @NotBlank(message = "La fecha de inscripción no puede estar vacía.")
+    @NotNull(message = "La fecha de inscripción no puede estar vacía.")
     @Past(message = "La fecha de inscripción debe ser en el pasado.")
     @Temporal(TemporalType.DATE)
     private Date fechaInscripcion;

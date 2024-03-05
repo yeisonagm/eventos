@@ -61,4 +61,15 @@ public interface SeguroService {
      * @throws IllegalOperationException Si ocurre una operación ilegal durante el proceso de eliminación del seguro.
      */
     void delete(Long idSeguro) throws EntityNotFoundException, IllegalOperationException;
+
+    /**
+     * Agrega un empleado a un seguro.
+     *
+     * @param idSeguro   El identificador único del seguro al que se le va a agregar el empleado.
+     * @param idEmpleado El identificador único del empleado que se va a agregar al seguro.
+     * @return El seguro con el empleado agregado.
+     * @throws EntityNotFoundException  Si no se encuentra ningún seguro o empleado con los identificadores especificados.
+     * @throws IllegalOperationException Si ocurre una operación ilegal durante el proceso de agregado del empleado al seguro.
+     */
+    Seguro addEmpleado(Long idSeguro, Long idEmpleado) throws EntityNotFoundException, IllegalOperationException;
 }
