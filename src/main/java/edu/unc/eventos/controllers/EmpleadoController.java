@@ -74,6 +74,11 @@ public class EmpleadoController {
         ApiResponse<EmpleadoDTO> response = new ApiResponse<>(true, "Empleado encontrado", empleadoDTO);
         return ResponseEntity.ok(response);
     }
+    @PatchMapping("/{empleadoId}/supervisor/{supervisorId}")
+    public ResponseEntity<String> addSupervisor(@PathVariable Long empleadoId, @PathVariable Long supervisorId) throws IllegalOperationException {
+        empleadoService.addSupervisor(empleadoId, supervisorId);
+        return ResponseEntity.ok("Supervisor actualizado correctamente");
+    }
 
     /**
      * Crea un nuevo empleado
