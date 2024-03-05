@@ -6,9 +6,11 @@
 package edu.unc.eventos.services;
 
 import edu.unc.eventos.domain.Empleado;
+import edu.unc.eventos.domain.Rol;
 import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
 import edu.unc.eventos.repositories.EmpleadoRepository;
+import edu.unc.eventos.repositories.RolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +31,9 @@ import java.util.Optional;
 public class EmpleadoServiceImp implements EmpleadoService {
     @Autowired
     private EmpleadoRepository empleadoRepository;
+
+    @Autowired
+    private RolRepository rolRepository;
 
     /**
      * Devuelve todos los empleados que hay en la base de datos.
@@ -136,4 +141,35 @@ public class EmpleadoServiceImp implements EmpleadoService {
         }
         empleadoRepository.delete(empleado);
     }
+
+    /**
+     * Asigna un rol a un empleado.
+     *
+     * @param idEmpleado ID del empleado al que se asignará el rol
+     * @param idRol      ID del rol que se asignará al empleado
+     * @return El empleado actualizado con el rol asignado
+     * @throws EntityNotFoundException   Si no se encuentra el empleado o el rol
+     * @throws IllegalOperationException Si el empleado ya tiene asignado el rol proporcionado
+     */
+    @Override
+    @Transactional
+    public Empleado addRolToEmpleado(Long idEmpleado, Long idRol) throws EntityNotFoundException, IllegalOperationException {
+        Empleado empleado = empleadoRepository.findById(idEmpleado)
+                .orElseThrow(() -> new EntityNotFoundException("Empleado no encontrado con el ID proporcionado"));
+
+        Rol rol = rolRepository.findById(idRol)
+                .orElseThrow(() -> new EntityNotFoundException("Rol no encontrado con el ID proporcionado"));
+
+        // Verificar si el empleado ya tiene asignado el rol
+        if (empleado.getRol() != null) {
+            throw new IllegalOperationException("El empleado ya tiene asignado el rol proporcionado");
+        }
+
+        empleado.setRol(rol); // Asignar el rol al empleado
+        empleadoRepository.save(empleado); // Guardar los cambios en el empleado
+        rolRepository.save(rol); // Guardar los cambios en el rol
+
+        return empleado; // Devolver el empleado actualizado
+    }
+
 }
