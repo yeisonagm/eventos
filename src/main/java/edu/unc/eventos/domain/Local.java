@@ -49,7 +49,7 @@ public class Local {
      * El campo aforo representa la capacidad máxima de personas permitidas en el local.
      * Este campo es obligatorio y debe ser un número entre 10 y 500.
      */
-    @NotBlank(message = "El aforo no puede estar vacío.")
+    @NotNull(message = "El aforo no puede estar vacío.")
     @Min(value = 10, message = "El aforo debe ser mayor a 10.")
     @Max(value = 500, message = "El aforo debe ser menor que 500.")
     private Integer aforo;
