@@ -50,7 +50,7 @@ public class Cliente {
      */
     @NotBlank(message = "El Nombre no puede estar vacío.")
     @Size(min = 6, max = 50, message = "El nombre debe tener entre 6 y 50 caracteres.")
-    @Pattern(regexp = "^[a-zA-Z\\s]*$", message = "El nombre solo puede contener letras.")
+    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚ\\s]*$", message = "El nombre solo puede contener letras.")
     private String nombre;
 
     /**
