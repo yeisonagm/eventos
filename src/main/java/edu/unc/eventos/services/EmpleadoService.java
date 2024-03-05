@@ -61,4 +61,15 @@ public interface EmpleadoService {
      * @throws IllegalOperationException Si el empleado no puede ser eliminado.
      */
     void delete(Long idEmpleado) throws EntityNotFoundException, IllegalOperationException;
+
+    /**
+     * Asigna un rol a un empleado.
+     *
+     * @param idEmpleado ID del empleado al que se asignará el rol
+     * @param idRol      ID del rol que se asignará al empleado
+     * @throws EntityNotFoundException   Si no se encuentra el empleado o el rol
+     * @throws IllegalOperationException Si el empleado ya tiene asignado el rol proporcionado
+     */
+    void addRolToEmpleado(Long idEmpleado, Long idRol) throws EntityNotFoundException, IllegalOperationException;
+
 }

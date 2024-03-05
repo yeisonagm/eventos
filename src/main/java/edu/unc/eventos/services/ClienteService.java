@@ -61,4 +61,7 @@ public interface ClienteService {
      * @throws IllegalOperationException Si ocurre una operación ilegal durante el proceso de eliminación del cliente.
      */
     void delete(Long idCliente) throws EntityNotFoundException, IllegalOperationException;
+
+
+
 }

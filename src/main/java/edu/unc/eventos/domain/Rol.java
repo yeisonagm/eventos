@@ -50,4 +50,6 @@ public class Rol {
     @OneToMany(mappedBy = "rol")
     @JsonIgnore
     private List<Empleado> empleados = new ArrayList<>();
+
+
 }

@@ -5,6 +5,7 @@
  */
 package edu.unc.eventos.services;
 
+import edu.unc.eventos.domain.Empleado;
 import edu.unc.eventos.domain.Rol;
 import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
@@ -107,4 +108,49 @@ public class RolServiceImp implements RolService {
 
         rolRepository.deleteById(idRol);
     }
+    /**
+     * Obtiene todos los empleados asociados a un rol específico.
+     *
+     * @param idRol ID del rol del que se desean obtener los empleados.
+     * @return Lista de empleados asociados al rol.
+     * @throws EntityNotFoundException Si el rol no se encuentra en la base de datos.
+     */
+    @Override
+    @Transactional
+    public List<Empleado> getEmpleadosByRol(Long idRol) throws EntityNotFoundException {
+        Rol rol = rolRepository.findById(idRol)
+                .orElseThrow(() -> new EntityNotFoundException("Rol no encontrado con el ID proporcionado"));
+        return rol.getEmpleados();
+    }
+    /**
+     * Obtiene un empleado específico asociado a un rol por los IDs especificados.
+     *
+     * @param idRol      ID del rol.
+     * @param idEmpleado ID del empleado asociado al rol.
+     * @return Empleado encontrado.
+     * @throws EntityNotFoundException Si no se encuentra el empleado asociado al rol.
+     */
+    @Override
+    @Transactional
+    public Empleado getEmpleadoByRolId(Long idRol, Long idEmpleado) throws EntityNotFoundException {
+        Rol rol = rolRepository.findById(idRol)
+                .orElseThrow(() -> new EntityNotFoundException("Rol no encontrado con el ID proporcionado"));
+
+        if (rol.getEmpleados() == null || rol.getEmpleados().isEmpty()) {
+            throw new EntityNotFoundException("No se encontraron empleados asociados al rol");
+        }
+
+        Optional<Empleado> empleadoOpt = rol.getEmpleados().stream()
+                .filter(empleado -> empleado.getIdEmpleado().equals(idEmpleado))
+                .findFirst();
+
+        if (empleadoOpt.isEmpty()) {
+            throw new EntityNotFoundException("No se encontró el empleado asociado al rol con el ID proporcionado");
+        }
+
+        return empleadoOpt.get();
+    }
+
+
+
 }
