@@ -113,7 +113,7 @@ public class EmpleadoServiceImp implements EmpleadoService {
         if (!empleado.getEventos().isEmpty()) {
             throw new IllegalOperationException("El empleado tiene eventos asociados.");
         }
-        if (!empleado.getEmpleados().isEmpty()) {
+        if (!empleado.getEmpleados_supervisados().isEmpty()) {
             throw new IllegalOperationException("El empleado es supervisor de otros empleados.");
         }
         empleadoRepository.delete(empleado);

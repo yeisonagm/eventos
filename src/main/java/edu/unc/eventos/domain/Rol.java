@@ -5,6 +5,9 @@
  */
 package edu.unc.eventos.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -20,6 +23,7 @@ import java.util.List;
  */
 @Entity
 @Data
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idRol")
 public class Rol {
     /**
      * El campo idRol es el identificador único de cada Rol en la base de datos.
@@ -44,5 +48,6 @@ public class Rol {
      * Cuando un empleado es asignado a este Rol, se añade a esta lista.
      */
     @OneToMany(mappedBy = "rol")
+    @JsonIgnore
     private List<Empleado> empleados = new ArrayList<>();
 }

@@ -75,7 +75,6 @@ public class EventoServiceImp implements EventoService {
         if (existeEventoEnMismoDiaYLocal(evento.getLocal(), evento.getFecha())) {
             throw new IllegalOperationException("Ya hay un evento planificado en el mismo local para la misma fecha.");
         }
-
         return eventoRepository.save(evento);
     }
 

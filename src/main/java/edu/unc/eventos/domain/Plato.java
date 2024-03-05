@@ -3,12 +3,13 @@
  * @author: (c)2024 Peter Vásquez
  * @created: Mar 03, 2024 00:48:00 AM
  * @description: Esta clase es parte del dominio del sistema y representa un plato que puede ser servido en un evento.
- *  * Cada instancia de esta clase contiene información sobre el nombre, descripción,
- *  * tipo y una lista de eventos en los que se puede servir el plato.
+ * * Cada instancia de esta clase contiene información sobre el nombre, descripción,
+ * * tipo y una lista de eventos en los que se puede servir el plato.
  */
 
 package edu.unc.eventos.domain;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -20,6 +21,7 @@ import java.util.List;
 
 @Entity
 @Data
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idPlato")
 public class Plato {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,6 +56,6 @@ public class Plato {
      * Representa la lista de eventos en los que se puede servir el plato.
      */
     @ManyToMany(mappedBy = "platos")
+    @JsonIgnore
     private List<Evento> eventos = new ArrayList<>();
-
 }

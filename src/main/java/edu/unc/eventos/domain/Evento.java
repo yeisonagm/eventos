@@ -5,16 +5,19 @@
  */
 package edu.unc.eventos.domain;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Data
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idEvento")
 public class Evento {
     /**
      * El campo idEvento es el identificador único de cada Evento en la base de datos.
@@ -38,7 +41,7 @@ public class Evento {
      * El campo numPersonas indica el número de personas que se espera asistan al evento.
      * Debe ser mayor que 0 y menor que 500.
      */
-    @NotBlank(message = "El número de personas no puede estar vacío.")
+    @NotNull(message = "El número de personas no puede estar vacío.")
     @Min(value = 1, message = "El número de personas debe ser mayor que 0.")
     @Max(value = 499, message = "El número de personas debe ser menor que 500.")
     private Integer numPersonas;
@@ -54,7 +57,7 @@ public class Evento {
      * El campo duración indica la duración estimada del evento en horas.
      * Debe ser mayor a 1 hora y menor que 10 horas.
      */
-    @NotBlank(message = "La duración no puede estar vacío.")
+    @NotNull(message = "La duración no puede estar vacío.")
     @Min(value = 1, message = "La duración debe ser mayor a 1 hora.")
     @Max(value = 10, message = "La duración debe ser menor que 10 horas.")
     private Integer duracion;
@@ -63,17 +66,19 @@ public class Evento {
      * El campo total representa el precio total del evento.
      * Debe estar entre 3000.00 y 20000.00, con un máximo de 5 dígitos y 2 decimales.
      */
-    @NotBlank(message = "El precio no puede estar vacío")
+    @NotNull(message = "El precio no puede estar vacío")
     @DecimalMin(value = "3000.00", message = "El precio mínimo debe ser mayor que 3,000")
     @DecimalMax(value = "20000.00", message = "El precio máximo debe ser menor que 20,000")
     @Digits(integer = 5, fraction = 2, message = "El precio debe tener un máximo de 5 dígitos, con 2 decimales")
-    private Double total;
+    private BigDecimal total;
 
     /**
      * Relación con Empleado: Representa el empleado asociado al evento.
      */
     @ManyToOne
     @JoinColumn(name = "id_empleado")
+    //@JsonBackReference("empleadoEvento")
+    @JsonIgnore
     private Empleado empleado;
 
     /**
@@ -81,6 +86,7 @@ public class Evento {
      */
     @ManyToOne
     @JoinColumn(name = "id_cliente")
+    @JsonIgnore
     private Cliente cliente;
 
     /**
@@ -92,6 +98,8 @@ public class Evento {
             joinColumns = @JoinColumn(name = "id_evento"),
             inverseJoinColumns = @JoinColumn(name = "id_plato")
     )
+    @JsonIdentityReference(alwaysAsId = true)
+    @JsonIgnore
     private List<Plato> platos = new ArrayList<>();
 
 
@@ -100,6 +108,7 @@ public class Evento {
      */
     @ManyToOne
     @JoinColumn(name = "id_decoracion")
+    @JsonIgnore
     private Decoracion decoracion;
 
     /**
@@ -107,5 +116,6 @@ public class Evento {
      */
     @ManyToOne
     @JoinColumn(name = "id_local")
+    @JsonIgnore
     private Local local;
 }

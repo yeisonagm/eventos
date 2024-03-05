@@ -7,6 +7,9 @@
  */
 package edu.unc.eventos.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
@@ -18,6 +21,7 @@ import java.util.Date;
 
 @Entity
 @Data
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idSeguro")
 public class Seguro {
     /**
      * El campo idSeguro es el identificador único de cada seguro en la base de datos.
@@ -33,8 +37,8 @@ public class Seguro {
      * No puede estar en blanco, debe tener un máximo de 11 caracteres y solo puede contener números.
      */
     @NotBlank(message = "El código no puede estar en blanco.")
-    @Size(min = 11,max = 11, message = "El código debe tener un máximo de 11 caracteres.")
-    @Pattern(regexp = "^[0-9]*$", message = "El código solo puede contener números.")
+    @Size(min = 11, max = 11, message = "El código debe tener un máximo de 11 caracteres.")
+    @Pattern(regexp = "^[0-9]{4}-[0-9]{3}-[0-9]{2}", message = "El código debe tener numero separados por guiones 4444-444-44")
     private String codigo;
 
     /**
@@ -52,5 +56,6 @@ public class Seguro {
      */
     @OneToOne
     @JoinColumn(name = "id_empleado")
+    @JsonIgnore
     private Empleado empleado;
 }

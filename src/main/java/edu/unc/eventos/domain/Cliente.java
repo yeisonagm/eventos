@@ -7,6 +7,9 @@
  */
 package edu.unc.eventos.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -18,6 +21,7 @@ import java.util.List;
 
 @Entity
 @Data
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idCliente")
 public class Cliente {
     /**
      * El campo idCliente es el identificador único de cada cliente en la base de datos.
@@ -46,7 +50,7 @@ public class Cliente {
      */
     @NotBlank(message = "El Nombre no puede estar vacío.")
     @Size(min = 6, max = 50, message = "El nombre debe tener entre 6 y 50 caracteres.")
-    @Pattern(regexp = "^[a-zA-Z]*$", message = "El nombre solo puede contener letras.")
+    @Pattern(regexp = "^[a-zA-Z\\s]*$", message = "El nombre solo puede contener letras.")
     private String nombre;
 
     /**
@@ -63,7 +67,7 @@ public class Cliente {
      */
     @NotBlank(message = "El número de teléfono no puede estar vacío.")
     @Size(min = 9, max = 9, message = "El número de teléfono debe tener 9 caracteres.")
-    @Pattern(regexp = "^[0-9]*$", message = "El número de teléfono solo puede contener números.")
+    @Pattern(regexp = "^9[0-9]*$", message = "El número celular debe ser uno valido de Perú")
     private String telefono;
 
     /**
@@ -71,5 +75,6 @@ public class Cliente {
      * Esto representa una relación uno a muchos con la clase Evento.
      */
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Evento> eventos = new ArrayList<>();
 }

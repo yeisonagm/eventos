@@ -1,6 +1,7 @@
 package edu.unc.eventos.domain;
 
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Entity
 @Data
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idEmpleado")
 public class Empleado {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +23,7 @@ public class Empleado {
      */
     @NotBlank(message = "El Nombre no puede estar vacío.")
     @Size(min = 6, max = 30, message = "El nombre debe tener entre 6 a 30 caracteres.")
-    @Pattern(regexp = "^[a-zA-Z]*$", message = "El nombre solo puede contener letras")
+    @Pattern(regexp = "^[a-zA-Z\\s]*$", message = "El nombre solo puede contener letras")
     private String nombres;
 
     /**
@@ -29,7 +31,7 @@ public class Empleado {
      */
     @NotBlank(message = "Debe al menos colocar un apellido")
     @Size(min = 6, max = 30, message = "El Apellido debe tener entre 6 a 30 caracteres.")
-    @Pattern(regexp = "^[a-zA-Z]*$", message = "El apellido solo puede contener letras")
+    @Pattern(regexp = "^[a-zA-Z]*$\\s", message = "El apellido solo puede contener letras")
     private String apellidos;
 
     /**
@@ -67,21 +69,31 @@ public class Empleado {
     /**
      * Email del empleado.
      */
+    @NotBlank(message = "El email no puede estar vacío.")
     @Email(message = "El formato del correo electrónico no es válido")
     @Size(max = 30, message = "El email debe tener menos de 30 caracteres.")
     private String email;
 
     /**
+     * Relación con Supervisor.
+     */
+    @ManyToOne
+    @JoinColumn(name = "id_supervisor")
+    @JsonIgnore
+    private Empleado supervisor;
+
+    /**
      * Relación con Empleado.
      */
-    @OneToMany
-    @JoinColumn(name = "id_supervisor")
-    private List<Empleado> empleados;
+    @OneToMany(mappedBy = "supervisor")
+    @JsonIgnore
+    private List<Empleado> empleados_supervisados;
 
     /**
      * Relación con Evento.
      */
     @OneToMany(mappedBy = "empleado")
+    @JsonIgnore
     private List<Evento> eventos = new ArrayList<>();
 
     /**
@@ -89,11 +101,13 @@ public class Empleado {
      */
     @ManyToOne
     @JoinColumn(name = "id_rol")
+    @JsonIgnore
     private Rol rol;
 
     /**
      * Relación con Seguro.
      */
     @OneToOne(mappedBy = "empleado")
+    @JsonIgnore
     private Seguro seguro;
 }

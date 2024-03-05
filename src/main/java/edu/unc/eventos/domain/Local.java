@@ -3,12 +3,15 @@
  * @author: (c)2024 Peter Vásquez
  * @created: Mar 03, 2024 00:30:00 AM
  * @description: Esta clase es parte del dominio del sistema y representa un local donde se pueden llevar a cabo eventos.
- *  * Cada instancia de esta clase contiene información sobre el nombre, ubicación,
- *  * aforo, referencia y una lista de eventos asociados al local.
+ * * Cada instancia de esta clase contiene información sobre el nombre, ubicación,
+ * * aforo, referencia y una lista de eventos asociados al local.
  */
 
 package edu.unc.eventos.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -18,6 +21,7 @@ import java.util.List;
 
 @Entity
 @Data
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idLocal")
 public class Local {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,5 +66,6 @@ public class Local {
      * Un local puede tener múltiples eventos asociados.
      */
     @OneToMany(mappedBy = "local")
+    @JsonIgnore
     private List<Evento> eventos = new ArrayList<>();
 }
