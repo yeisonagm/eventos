@@ -35,8 +35,8 @@ public class Decoracion {
      * Precio de la decoración.
      */
     @NotNull(message = "El precio no puede estar vacío")
-    @DecimalMin(value = "50.00", message = "El precio mínimo debe ser mayor que 50")
-    @DecimalMax(value = "10000.00", message = "El precio máximo debe ser menor que 10 000")
+    @DecimalMin(value = "50.00", message = "El precio mínimo debe ser mayor que 50 soles")
+    @DecimalMax(value = "10000.00", message = "El precio máximo debe ser menor que 10 000 soles")
     @Digits(integer = 5, fraction = 2, message = "El precio debe tener un máximo de 5 dígitos, con 2 decimales")
     private BigDecimal precio;
 
@@ -44,7 +44,7 @@ public class Decoracion {
      * Color predominante de la decoración.
      */
     @Size(min = 3, max = 20, message = "El color de la decoración debe tener entre 3 a 20 caracteres.")
-    @Pattern(regexp = "^[a-zA-Z\\s]*$", message = "El color solo puede contener letras")
+    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚ\\s]*$", message = "El color solo puede contener letras")
     private String color;
 
     /**

@@ -65,8 +65,8 @@ public class Cliente {
      * Número de teléfono del cliente.
      * No puede estar vacío, debe tener una longitud de 9 caracteres y solo puede contener números.
      */
-    @NotBlank(message = "El número de teléfono no puede estar vacío.")
-    @Size(min = 9, max = 9, message = "El número de teléfono debe tener 9 caracteres.")
+    @NotBlank(message = "El número de celular no puede estar vacío.")
+    @Size(min = 9, max = 9, message = "El número de celular debe tener 9 caracteres.")
     @Pattern(regexp = "^9[0-9]*$", message = "El número celular debe ser uno valido de Perú")
     private String telefono;
 

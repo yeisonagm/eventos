@@ -30,7 +30,7 @@ public class Empleado {
      */
     @NotBlank(message = "El Nombre no puede estar vacío.")
     @Size(min = 3, max = 30, message = "El nombre debe tener entre 6 a 30 caracteres.")
-    @Pattern(regexp = "^[a-zA-Z\\s]*$", message = "El nombre solo puede contener letras")
+    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚ\\s]*$", message = "El nombre solo puede contener letras")
     private String nombres;
 
     /**
@@ -38,7 +38,7 @@ public class Empleado {
      */
     @NotBlank(message = "Debe al menos colocar un apellido")
     @Size(min = 6, max = 30, message = "El Apellido debe tener entre 6 a 30 caracteres.")
-    @Pattern(regexp = "^[a-zA-Z\\s]*$", message = "El apellido solo puede contener letras")
+    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚ\\s]*$", message = "El apellido solo puede contener letras")
     private String apellidos;
 
     /**
