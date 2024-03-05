@@ -6,19 +6,16 @@
 package edu.unc.eventos.controllers;
 
 import edu.unc.eventos.domain.Evento;
-import edu.unc.eventos.domain.Local;
 import edu.unc.eventos.domain.Plato;
 import edu.unc.eventos.dto.EventoDTO;
+import edu.unc.eventos.dto.PlatoDTO;
 import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
 import edu.unc.eventos.services.EventoService;
-import edu.unc.eventos.services.PlatoService;
 import edu.unc.eventos.util.ApiResponse;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import edu.unc.eventos.util.EntityValidator;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,9 +38,6 @@ class EventoController {
 
     @Autowired
     private Validator validator;
-
-    @Autowired
-    private PlatoService platoService;
 
     /**
      * Obtiene todos los eventos existentes
@@ -90,9 +84,11 @@ class EventoController {
      * @throws EntityNotFoundException Si el evento con el ID especificado no se encuentra en la base de datos.
      */
     @GetMapping("/{eventoId}/platos")
-    public ResponseEntity<List<Plato>> getPlatosByEventoId(@PathVariable Long eventoId) {
+    public ResponseEntity<?> getPlatosByEventoId(@PathVariable Long eventoId) {
         List<Plato> platos = eventoService.getPlatosByEventoId(eventoId);
-        return ResponseEntity.ok(platos);
+        List<PlatoDTO> platoDTOS = platos.stream().map(plato -> modelMapper.map(plato,PlatoDTO.class)).collect(Collectors.toList());
+        ApiResponse<List<PlatoDTO>> response =new ApiResponse<>(true,"Lista de platos",platoDTOS);
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -107,9 +103,11 @@ class EventoController {
      * @throws EntityNotFoundException Si el evento con el ID especificado no se encuentra en la base de datos o si el plato con el ID especificado no se encuentra en el evento.
      */
     @GetMapping("/{eventoId}/platos/{platoId}")
-    public ResponseEntity<Plato> getPlatoByEventoId(@PathVariable Long eventoId, @PathVariable Long platoId) {
+    public ResponseEntity<?> getPlatoByEventoId(@PathVariable Long eventoId, @PathVariable Long platoId) {
         Plato plato = eventoService.getPlatoByEventoId(eventoId, platoId);
-        return ResponseEntity.ok(plato);
+        PlatoDTO platoDTO = modelMapper.map(plato, PlatoDTO.class);
+        ApiResponse<PlatoDTO> response = new ApiResponse<>(true, "Plato encontrado", platoDTO);
+        return ResponseEntity.ok(response);
     }
 
 
@@ -173,11 +171,12 @@ class EventoController {
      * @throws IllegalOperationException Si ocurre una operación ilegal durante la asociación del plato al evento.
      */
     @PatchMapping("/{idEvento}/addPlato")
-    public ResponseEntity<String> addplato(@PathVariable Long idEvento, @RequestParam Long idPlato) throws IllegalOperationException {
-        eventoService.addPlato(idEvento, idPlato);
-        return ResponseEntity.ok("Plato agregado al evento correctamente");
+    public ResponseEntity<?> addPlato(@PathVariable Long idEvento, @RequestParam Long idPlato) throws IllegalOperationException {
+        Evento evento = eventoService.addPlato(idEvento, idPlato);
+        EventoDTO updatedDTO = modelMapper.map(evento, EventoDTO.class);
+        ApiResponse<EventoDTO> response = new ApiResponse<>(true, "Plato agregado al evento correctamente", updatedDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-
 
     /**
      * Eliminar un Evento por su ID

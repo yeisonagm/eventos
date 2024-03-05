@@ -12,6 +12,7 @@ package edu.unc.eventos.controllers;
 
 import edu.unc.eventos.domain.Evento;
 import edu.unc.eventos.domain.Plato;
+import edu.unc.eventos.dto.EventoDTO;
 import edu.unc.eventos.dto.PlatoDTO;
 import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
@@ -97,9 +98,11 @@ public class PlatoController {
      * @throws EntityNotFoundException Si el plato con el ID especificado no se encuentra en la base de datos.
      */
     @GetMapping("/{platoId}/eventos")
-    public ResponseEntity<List<Evento>> getEventosByPlatoId(@PathVariable Long platoId) {
+    public ResponseEntity<?> getEventosByPlatoId(@PathVariable Long platoId) {
         List<Evento> eventos = platoService.getEventosByPlatoId(platoId);
-        return ResponseEntity.ok(eventos);
+        List<EventoDTO> eventoDTOS = eventos.stream().map(evento -> modelMapper.map(evento,EventoDTO.class)).collect(Collectors.toList());
+        ApiResponse<List<EventoDTO>> response = new ApiResponse<>(true,"Lista de Eventos",eventoDTOS);
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -114,9 +117,11 @@ public class PlatoController {
      * @throws EntityNotFoundException Si el plato con el ID especificado no se encuentra en la base de datos o si el evento con el ID especificado no se encuentra en el plato.
      */
     @GetMapping("/{platoId}/eventos/{eventoId}")
-    public ResponseEntity<Evento> getPlatoByEventoId(@PathVariable Long platoId, @PathVariable Long eventoId) {
+    public ResponseEntity<?> getEventoByPlatoId(@PathVariable Long platoId, @PathVariable Long eventoId) {
         Evento evento = platoService.getEventoByPlatoId(platoId, eventoId);
-        return ResponseEntity.ok(evento);
+        EventoDTO eventoDTO = modelMapper.map(evento,EventoDTO.class);
+        ApiResponse<EventoDTO> response = new ApiResponse<>(true,"Evento Encontrado",eventoDTO);
+        return ResponseEntity.ok(response);
     }
 
     /**
