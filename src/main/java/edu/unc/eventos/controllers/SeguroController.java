@@ -73,7 +73,7 @@ public class SeguroController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody SeguroDTO seguroDTO) throws IllegalOperationException {
         Seguro seguro = modelMapper.map(seguroDTO, Seguro.class);
-        Set<ConstraintViolation<Cliente>> violations = validator.validate(cliente);
+        Set<ConstraintViolation<Seguro>> violations = validator.validate(seguro);
         if(!violations.isEmpty()){
             EntityValidator entityValidator=new EntityValidator();
             return entityValidator.validate(violations);
@@ -97,7 +97,7 @@ public class SeguroController {
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody SeguroDTO seguroDTO)
             throws EntityNotFoundException, IllegalOperationException {
         Seguro seguro = modelMapper.map(seguroDTO, Seguro.class);
-        Set<ConstraintViolation<Cliente>> violations = validator.validate(cliente);
+        Set<ConstraintViolation<Seguro>> violations = validator.validate(seguro);
         if(!violations.isEmpty()){
             EntityValidator entityValidator=new EntityValidator();
             return entityValidator.validate(violations);
