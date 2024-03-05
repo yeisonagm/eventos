@@ -228,4 +228,24 @@ public class EventoServiceImp implements EventoService {
         eventoRepository.save(evento);
         return evento;
     }
+
+    /**
+     *
+     *
+     * @param idEvento     El ID del evento al que se desea añadir el plato.
+     * @param idDecoracion El ID de la decoracion que se desea asociar al evento.
+     * @return El evento actualizado con la decoración añadida.
+     * @throws EntityNotFoundException Si el evento o la decoracion con los IDs especificados no se encuentran en la base de datos.
+     * @throws IllegalOperationException Si la decoracion ya está asociado al evento.
+     */
+    public Evento addDecoracionToEvento(Long idEvento, Long idDecoracion) throws EntityNotFoundException, IllegalOperationException {
+        Evento evento = eventoRepository.findById(idEvento).orElseThrow(
+                () -> new EntityNotFoundException("El evento con el ID proporcionado no se encontró")
+        );
+        Decoracion decoracion = decoracionRepository.findById(idDecoracion).orElseThrow(
+                () -> new EntityNotFoundException("La decoracion con el ID proporcionado no se encontró")
+        );
+        evento.setDecoracion(decoracion);
+        return eventoRepository.save(evento);
+    }
 }

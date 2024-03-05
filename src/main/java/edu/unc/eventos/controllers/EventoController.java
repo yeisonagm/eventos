@@ -178,6 +178,21 @@ class EventoController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+
+    /**
+     * Agrega una decoracion a un evento existente mediante una solicitud PATCH.
+     *
+     * @param idEvento Identificador del Evento
+     * @param idDecoracion Identificador de la Decoracion
+     * @return Mensaje confirmando la operacion
+     * @throws IllegalOperationException Si ocurre una operación ilegal durante la asociación de la decoracion al evento.
+     */
+    @PatchMapping("/{idEvento}/addDecoracionToEvento")
+    public ResponseEntity<?> addDecoracionToEvento(@PathVariable Long idEvento, @RequestParam Long idDecoracion) throws IllegalOperationException {
+        eventoService.addDecoracionToEvento(idEvento, idDecoracion);
+        return ResponseEntity.ok("Decoracion agregada al evento correctamente");
+    }
+
     /**
      * Eliminar un Evento por su ID
      *
