@@ -37,7 +37,7 @@ public class EventoServiceImp implements EventoService {
 
 
     @Autowired
-    private LocalRepository localRepository;
+    private DecoracionRepository decoracionRepository;
 
     /**
      * Este método devuelve una lista de todos los eventos
@@ -149,8 +149,8 @@ public class EventoServiceImp implements EventoService {
     /**
      * Asigna un local a un evento existente
      *
-     * @param idEvento Identificador único del evento al que se asignará el local.
-     * @param idLocal  Identificador único del local el cual se asignará al evento.
+     * @param idEvento     Identificador único del evento al que se asignará el local.
+     * @param idDecoracion Identificador único de la decoracion el cual se asignará al evento.
      * @return El objeto luego de actualizarlo en la base de datos
      * @throws EntityNotFoundException   Si el evento o el local no se encuentra en la base de datos.
      * @throws IllegalOperationException Si existe algún conflicto con la fecha en la que se da el evento.
@@ -185,7 +185,7 @@ public class EventoServiceImp implements EventoService {
 
     /**
      * Agrega un plato a un evento existente.
-     *
+     * <p>
      * Este método permite asociar un plato existente a un evento existente mediante sus identificadores.
      * Recibe el ID del evento y el ID del plato que se desea asociar.
      * Busca el evento y el plato correspondientes en la base de datos utilizando los repositorios respectivos.
@@ -194,9 +194,9 @@ public class EventoServiceImp implements EventoService {
      * Si la operación se realiza con éxito, guarda el evento actualizado en la base de datos y lo devuelve.
      *
      * @param idEvento El ID del evento al que se desea añadir el plato.
-     * @param idPlato El ID del plato que se desea asociar al evento.
+     * @param idPlato  El ID del plato que se desea asociar al evento.
      * @return El evento actualizado con el plato añadido.
-     * @throws EntityNotFoundException Si el evento o el plato con los IDs especificados no se encuentran en la base de datos.
+     * @throws EntityNotFoundException   Si el evento o el plato con los IDs especificados no se encuentran en la base de datos.
      * @throws IllegalOperationException Si el plato ya está asociado al evento.
      */
     @Override
