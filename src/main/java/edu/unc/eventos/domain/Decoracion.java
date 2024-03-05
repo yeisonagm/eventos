@@ -1,3 +1,8 @@
+/**
+ * @file: EmpleadoDTO.java
+ * @author: (c)2024 Yeison García
+ * @created: Mar 05, 2024 4:14:18 AM
+ */
 package edu.unc.eventos.domain;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;

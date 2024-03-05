@@ -1,5 +1,9 @@
+/**
+ * @file: EmpleadoDTO.java
+ * @author: (c)2024 Yeison García
+ * @created: Mar 05, 2024 4:12:18 AM
+ */
 package edu.unc.eventos.domain;
-
 
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
@@ -10,6 +14,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Clase Empleado.
+ */
 @Entity
 @Data
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idEmpleado")
