@@ -14,6 +14,9 @@ import edu.unc.eventos.services.EventoService;
 import edu.unc.eventos.util.ApiResponse;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
+import edu.unc.eventos.util.EntityValidator;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +24,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -46,7 +48,7 @@ class EventoController {
     @GetMapping
     public ResponseEntity<?> getAll() {
         List<Evento> eventos = eventoService.getAll();
-        if (eventos == null || eventos.isEmpty()){
+        if (eventos == null || eventos.isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {
             List<EventoDTO> eventosDTOs = eventos.stream()
@@ -80,8 +82,14 @@ class EventoController {
      * @throws IllegalOperationException Si hay una operación ilegal
      */
     @PostMapping
-    public ResponseEntity<ApiResponse<EventoDTO>> create(@RequestBody EventoDTO eventoDTO) throws IllegalOperationException {
+    public ResponseEntity<?> create(@RequestBody EventoDTO eventoDTO) throws IllegalOperationException {
         Evento evento = modelMapper.map(eventoDTO, Evento.class);
+        // Realiza la validación, si hay errores de validación, maneja los errores
+        Set<ConstraintViolation<Evento>> violations = validator.validate(evento);
+        if (!violations.isEmpty()) {
+            EntityValidator entityValidator = new EntityValidator();
+            return entityValidator.validate(violations);
+        }
         eventoService.save(evento);
         EventoDTO createdDTO = modelMapper.map(evento, EventoDTO.class);
         ApiResponse<EventoDTO> response = new ApiResponse<>(true, "Evento creado con éxito", createdDTO);
@@ -98,8 +106,14 @@ class EventoController {
      * @throws IllegalOperationException Si hay una operación ilegal
      */
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<EventoDTO>> update(@PathVariable Long id, @RequestBody EventoDTO eventoDTO) throws EntityNotFoundException, IllegalOperationException {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody EventoDTO eventoDTO) throws EntityNotFoundException, IllegalOperationException {
         Evento evento = modelMapper.map(eventoDTO, Evento.class);
+        // Realiza la validación, si hay errores de validación, maneja los errores
+        Set<ConstraintViolation<Evento>> violations = validator.validate(evento);
+        if (!violations.isEmpty()) {
+            EntityValidator entityValidator = new EntityValidator();
+            return entityValidator.validate(violations);
+        }
         eventoService.update(id, evento);
         EventoDTO updateDTO = modelMapper.map(evento, EventoDTO.class);
         ApiResponse<EventoDTO> response = new ApiResponse<>(true, "Evento actualizado", updateDTO);
@@ -123,6 +137,20 @@ class EventoController {
     public ResponseEntity<String> addplato (@PathVariable Long idEvento, @RequestParam Long idPlato) throws IllegalOperationException {
         eventoService.addPlato(idEvento, idPlato);
         return ResponseEntity.ok("Plato agregado al evento correctamente");
+    }
+
+    /**
+     * Actualiza o agrega un local a un evento existente
+     *
+     * @param idEvento Identificador del Evento al que se necesita asignar o actualizar el local.
+     * @param idLocal  Identificador del Local que se busca asignar o actualizar al evento.
+     * @return Respuesta indicando la operación con éxito
+     * @throws IllegalOperationException Si hay una operación ilegal
+     */
+    @PatchMapping("/{idEvento}/addLocalToEvento")
+    public ResponseEntity<?> addLocalToEvento(@PathVariable Long idEvento, @RequestParam Long idLocal) throws IllegalOperationException {
+        eventoService.addLocalToEvento(idEvento, idLocal);
+        return ResponseEntity.ok("Local agregado al evento correctamente");
     }
 
     /**

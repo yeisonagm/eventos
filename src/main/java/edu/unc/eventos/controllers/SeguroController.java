@@ -1,5 +1,6 @@
 package edu.unc.eventos.controllers;
 
+import edu.unc.eventos.domain.Cliente;
 import edu.unc.eventos.domain.Seguro;
 
 import edu.unc.eventos.dto.SeguroDTO;
@@ -7,6 +8,9 @@ import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
 import edu.unc.eventos.services.SeguroService;
 import edu.unc.eventos.util.ApiResponse;
+import edu.unc.eventos.util.EntityValidator;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -25,6 +30,9 @@ public class SeguroController {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private Validator validator;
 
     /**
      * Obtiene todos los seguros.
@@ -65,6 +73,11 @@ public class SeguroController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody SeguroDTO seguroDTO) throws IllegalOperationException {
         Seguro seguro = modelMapper.map(seguroDTO, Seguro.class);
+        Set<ConstraintViolation<Seguro>> violations = validator.validate(seguro);
+        if(!violations.isEmpty()){
+            EntityValidator entityValidator=new EntityValidator();
+            return entityValidator.validate(violations);
+        }
         seguro = seguroService.save(seguro);
         SeguroDTO createdDTO = modelMapper.map(seguro, SeguroDTO.class);
         ApiResponse<SeguroDTO> response = new ApiResponse<>(true, "Seguro creado con éxito", createdDTO);
@@ -84,6 +97,11 @@ public class SeguroController {
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody SeguroDTO seguroDTO)
             throws EntityNotFoundException, IllegalOperationException {
         Seguro seguro = modelMapper.map(seguroDTO, Seguro.class);
+        Set<ConstraintViolation<Seguro>> violations = validator.validate(seguro);
+        if(!violations.isEmpty()){
+            EntityValidator entityValidator=new EntityValidator();
+            return entityValidator.validate(violations);
+        }
         seguroService.update(id, seguro);
         SeguroDTO updateDTO = modelMapper.map(seguro, SeguroDTO.class);
         ApiResponse<SeguroDTO> response = new ApiResponse<>(true, "Seguro actualizado con éxito", updateDTO);

@@ -13,13 +13,13 @@ import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
 import edu.unc.eventos.repositories.EventoRepository;
 import edu.unc.eventos.repositories.PlatoRepository;
+import edu.unc.eventos.repositories.LocalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +33,9 @@ public class EventoServiceImp implements EventoService {
     @Autowired
     private PlatoRepository platoRepository;
 
+
+    @Autowired
+    private LocalRepository localRepository;
 
     /**
      * Este método devuelve una lista de todos los eventos
@@ -78,19 +81,19 @@ public class EventoServiceImp implements EventoService {
         if (evento.getFecha() == null) {
             throw new IllegalOperationException("La fecha del evento no puede estar vacía.");
         }
-        if (existeEventoEnMismoDiaYLocal(evento.getLocal(), evento.getFecha())) {
+        if (existsEventOnSameDayAndLocal(evento.getLocal(), evento.getFecha())) {
             throw new IllegalOperationException("Ya hay un evento planificado en el mismo local para la misma fecha.");
         }
         return eventoRepository.save(evento);
     }
 
     /**
-     *  Actualiza un evento eistente
+     * Actualiza un evento eistente
      *
      * @param idEvento Id del evento que se quiere actualizar
-     * @param evento Objeto del tipo evento que se va a actualizar
+     * @param evento   Objeto del tipo evento que se va a actualizar
      * @return El objeto luego de actualizarlo en la base de datos
-     * @throws EntityNotFoundException Si el evento no se encuentra en la base de datos
+     * @throws EntityNotFoundException   Si el evento no se encuentra en la base de datos
      * @throws IllegalOperationException Si el nombre o fecha del evento es inválido.
      */
     @Override
@@ -107,7 +110,7 @@ public class EventoServiceImp implements EventoService {
         if (evento.getFecha() == null) {
             throw new IllegalOperationException("La fecha del evento no puede estar vacía.");
         }
-        if (existeEventoEnMismoDiaYLocal(evento.getLocal(), evento.getFecha())) {
+        if (existsEventOnSameDayAndLocal(evento.getLocal(), evento.getFecha())) {
             throw new IllegalOperationException("Ya hay un evento planificado en el mismo local para la misma fecha.");
         }
 
@@ -142,13 +145,42 @@ public class EventoServiceImp implements EventoService {
     }
 
     /**
+     * Asigna un local a un evento existente
+     *
+     * @param idEvento Identificador único del evento al que se asignará el local.
+     * @param idLocal  Identificador único del local el cual se asignará al evento.
+     * @return El objeto luego de actualizarlo en la base de datos
+     * @throws EntityNotFoundException   Si el evento o el local no se encuentra en la base de datos.
+     * @throws IllegalOperationException Si existe algún conflicto con la fecha en la que se da el evento.
+     */
+    @Override
+    @Transactional
+    public Evento addLocalToEvento(Long idEvento, Long idLocal) throws EntityNotFoundException, IllegalOperationException {
+        Evento evento = eventoRepository.findById(idEvento).orElseThrow(
+                () -> new EntityNotFoundException("El evento con el ID proporcionado no se encontró")
+        );
+        Local local = localRepository.findById(idLocal).orElseThrow(
+                () -> new EntityNotFoundException("El local con el ID proporcionado no se encontró")
+        );
+
+        if (existsEventOnSameDayAndLocal(local, evento.getFecha())) {
+            throw new IllegalOperationException("Ya hay un evento planificado en el mismo local para la misma fecha.");
+        }
+
+        evento.setLocal(local);
+        local.getEventos().add(evento);
+        return (eventoRepository.save(evento));
+    }
+
+
+    /**
      * Este método verifica si existe un Evento programdado en el mismo local, en el mismo día
      *
      * @param local Objeto del tipo local
      * @param fecha Objeto del tipo Date
      * @return Retorna un true o false de acuerdo a si existe un evento programado en un local, en la misma fecha que otro evento.
      */
-    private boolean existeEventoEnMismoDiaYLocal(Local local, Date fecha) {
+    private boolean existsEventOnSameDayAndLocal(Local local, Date fecha) {
         LocalDate fechaEvento = fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         List<Evento> eventosEnMismoDiaYLocal = eventoRepository.findByLocalAndFecha(local, fechaEvento);
         return !eventosEnMismoDiaYLocal.isEmpty();
