@@ -6,8 +6,6 @@
 package edu.unc.eventos.controllers;
 
 import edu.unc.eventos.domain.Seguro;
-
-import edu.unc.eventos.dto.EmpleadoDTO;
 import edu.unc.eventos.dto.SeguroDTO;
 import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
@@ -139,15 +137,15 @@ public class SeguroController {
      * @throws IllegalOperationException Si el seguro ya está asignado al empleado.
      */
     @PutMapping("/{idSeguro}/addEmpleado/{idEmpleado}")
-    public ResponseEntity<?> addSeguro(@PathVariable Long idEmpleado, @PathVariable Long idSeguro) throws EntityNotFoundException, IllegalOperationException {
+    public ResponseEntity<?> addEmpleado(@PathVariable Long idEmpleado, @PathVariable Long idSeguro) throws EntityNotFoundException, IllegalOperationException {
         Seguro seguro = seguroService.addEmpleado(idSeguro, idEmpleado);
         Set<ConstraintViolation<Seguro>> violations = validator.validate(seguro);
         if (!violations.isEmpty()) {
             EntityValidator entityValidator = new EntityValidator();
             return entityValidator.validate(violations);
         }
-        EmpleadoDTO empleadoDTO = modelMapper.map(seguro, EmpleadoDTO.class);
-        ApiResponse<EmpleadoDTO> response = new ApiResponse<>(true, "Seguro asignado al empleado correctamente", empleadoDTO);
+        SeguroDTO seguroDTO = modelMapper.map(seguro, SeguroDTO.class);
+        ApiResponse<SeguroDTO> response = new ApiResponse<>(true, "Empleado asignado a su seguro correctamente", seguroDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
