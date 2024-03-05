@@ -11,6 +11,9 @@ import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
 import edu.unc.eventos.services.EventoService;
 import edu.unc.eventos.util.ApiResponse;
+import edu.unc.eventos.util.EntityValidator;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -31,7 +34,8 @@ class EventoController {
     @Autowired
     private ModelMapper modelMapper;
 
-
+    @Autowired
+    private Validator validator;
 
     /**
      * Obtiene todos los eventos existentes
@@ -41,7 +45,7 @@ class EventoController {
     @GetMapping
     public ResponseEntity<?> getAll() {
         List<Evento> eventos = eventoService.getAll();
-        if (eventos == null || eventos.isEmpty()){
+        if (eventos == null || eventos.isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {
             List<EventoDTO> eventosDTOs = eventos.stream()
@@ -77,6 +81,12 @@ class EventoController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody EventoDTO eventoDTO) throws IllegalOperationException {
         Evento evento = modelMapper.map(eventoDTO, Evento.class);
+        // Realiza la validación, si hay errores de validación, maneja los errores
+        Set<ConstraintViolation<Evento>> violations = validator.validate(evento);
+        if (!violations.isEmpty()) {
+            EntityValidator entityValidator = new EntityValidator();
+            return entityValidator.validate(violations);
+        }
         eventoService.save(evento);
         EventoDTO createdDTO = modelMapper.map(evento, EventoDTO.class);
         ApiResponse<EventoDTO> response = new ApiResponse<>(true, "Evento creado con éxito", createdDTO);
@@ -95,6 +105,12 @@ class EventoController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody EventoDTO eventoDTO) throws EntityNotFoundException, IllegalOperationException {
         Evento evento = modelMapper.map(eventoDTO, Evento.class);
+        // Realiza la validación, si hay errores de validación, maneja los errores
+        Set<ConstraintViolation<Evento>> violations = validator.validate(evento);
+        if (!violations.isEmpty()) {
+            EntityValidator entityValidator = new EntityValidator();
+            return entityValidator.validate(violations);
+        }
         eventoService.update(id, evento);
         EventoDTO updateDTO = modelMapper.map(evento, EventoDTO.class);
         ApiResponse<EventoDTO> response = new ApiResponse<>(true, "Evento actualizado", updateDTO);
@@ -105,14 +121,14 @@ class EventoController {
      * Actualiza o agrega un local a un evento existente
      *
      * @param idEvento Identificador del Evento al que se necesita asignar o actualizar el local.
-     * @param idLocal Identificador del Local que se busca asignar o actualizar al evento.
+     * @param idLocal  Identificador del Local que se busca asignar o actualizar al evento.
      * @return Respuesta indicando la operación con éxito
      * @throws IllegalOperationException Si hay una operación ilegal
      */
     @PatchMapping("/{idEvento}/addLocalToEvento")
-    public ResponseEntity<?> addLocalToEvento (@PathVariable Long idEvento, @RequestParam Long idLocal) throws IllegalOperationException {
+    public ResponseEntity<?> addLocalToEvento(@PathVariable Long idEvento, @RequestParam Long idLocal) throws IllegalOperationException {
         eventoService.addLocalToEvento(idEvento, idLocal);
-        return  ResponseEntity.ok("Local agregado al evento correctamente");
+        return ResponseEntity.ok("Local agregado al evento correctamente");
     }
 
     /**
