@@ -4,7 +4,7 @@
  * @created: Mar 04, 2024 00:40:00 AM
  * @description: Implementación concreta de la interfaz {@link LocalService}, que proporciona métodos para la gestión de locales en el sistema.
  * Esta clase realiza la implementación de los servicios definidos en la interfaz {@link LocalService}, incluyendo operaciones como la recuperación, creación, actualización y eliminación de locales.
-*/
+ */
 
 package edu.unc.eventos.services;
 
@@ -44,7 +44,7 @@ public class LocalServiceImp implements LocalService {
      */
     @Override
     @Transactional(readOnly = true)
-    public Local getById(Long idLocal)throws EntityNotFoundException{
+    public Local getById(Long idLocal) throws EntityNotFoundException {
         Optional<Local> localOpt = localRepository.findById(idLocal);
         if (localOpt.isEmpty()) {
             throw new EntityNotFoundException("El local con el ID proporcionado no se encontró.");

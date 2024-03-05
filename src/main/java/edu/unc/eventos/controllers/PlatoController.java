@@ -45,7 +45,7 @@ public class PlatoController {
 
     /**
      * Obtiene todos los platos disponibles.
-     *
+     * <p>
      * Este método GET permite recuperar todos los platos disponibles en el sistema.
      * Retorna una lista de todos los platos en forma de ResponseEntity.
      * Si no se encuentran platos disponibles, devuelve una respuesta sin contenido (status 204).
@@ -69,7 +69,7 @@ public class PlatoController {
 
     /**
      * Obtiene un plato por su ID.
-     *
+     * <p>
      * Este método GET permite recuperar un plato específico mediante su ID.
      * Recibe el ID del plato como parámetro en la URL y retorna una respuesta con el plato correspondiente.
      * Si se encuentra el plato, lo convierte en un DTO (Data Transfer Object), lo agrega a una ApiResponse y retorna una respuesta con estado OK (status 200) junto con el plato en formato DTO.
@@ -88,7 +88,7 @@ public class PlatoController {
 
     /**
      * Obtiene una lista de eventos asociados a un plato mediante su ID.
-     *
+     * <p>
      * Este método GET permite recuperar todos los eventos asociados a un plato específico.
      * Recibe el ID del plato como parámetro en la URL y retorna una lista de eventos asociados a ese plato.
      *
@@ -104,24 +104,24 @@ public class PlatoController {
 
     /**
      * Obtiene un evento asociado a un plato mediante los IDs de plato y evento.
-     *
+     * <p>
      * Este método GET permite recuperar un evento específico que está asociado a un plato determinado.
      * Recibe los IDs del plato y del evento como parámetros en la URL y retorna el evento asociado a ese plato.
      *
-     * @param platoId El ID del plato del cual se desea obtener el evento.
+     * @param platoId  El ID del plato del cual se desea obtener el evento.
      * @param eventoId El ID del evento que se desea recuperar.
      * @return ResponseEntity que contiene una respuesta con estado OK y el evento asociado al plato especificado.
      * @throws EntityNotFoundException Si el plato con el ID especificado no se encuentra en la base de datos o si el evento con el ID especificado no se encuentra en el plato.
      */
     @GetMapping("/{platoId}/eventos/{eventoId}")
     public ResponseEntity<Evento> getPlatoByEventoId(@PathVariable Long platoId, @PathVariable Long eventoId) {
-        Evento evento = platoService.getEventoByPlatoId(platoId,eventoId);
+        Evento evento = platoService.getEventoByPlatoId(platoId, eventoId);
         return ResponseEntity.ok(evento);
     }
 
     /**
      * Método POST para crear un nuevo plato.
-     *
+     * <p>
      * Este método recibe un objeto PlatoDTO en el cuerpo de la solicitud y crea un nuevo plato en el sistema.
      * Realiza la validación del objeto PlatoDTO utilizando el validador de bean.
      * Si se encuentran violaciones de restricciones de validación, devuelve una respuesta con los errores de validación.
@@ -135,8 +135,8 @@ public class PlatoController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody PlatoDTO platoDTO) throws IllegalOperationException {
         Plato plato = modelMapper.map(platoDTO, Plato.class);
-        Set<ConstraintViolation<Plato>> violations = validator.validate (plato);
-        if(!violations.isEmpty()){
+        Set<ConstraintViolation<Plato>> violations = validator.validate(plato);
+        if (!violations.isEmpty()) {
             EntityValidator entityValidator = new EntityValidator();
             return entityValidator.validate(violations);
         }
@@ -148,24 +148,24 @@ public class PlatoController {
 
     /**
      * Método PUT para actualizar un plato existente.
-     *
+     * <p>
      * Este método recibe el ID del plato a ser actualizado y un objeto PlatoDTO en el cuerpo de la solicitud.
      * Actualiza el plato correspondiente en la base de datos utilizando el servicio de plato.
      * Realiza la validación del objeto PlatoDTO utilizando el validador de bean.
      * Si se encuentran violaciones de restricciones de validación, devuelve una respuesta con los errores de validación.
      * Si la validación es exitosa y la actualización se realiza correctamente, devuelve una respuesta de éxito con el plato actualizado mapeado a un objeto PlatoDTO en el cuerpo de la respuesta.
      *
-     * @param id El ID del plato a ser actualizado.
+     * @param id       El ID del plato a ser actualizado.
      * @param platoDTO El objeto PlatoDTO que contiene los datos actualizados del plato.
      * @return ResponseEntity que contiene la respuesta de la operación, incluyendo el resultado de la operación y los detalles del plato actualizado.
-     * @throws EntityNotFoundException Si el plato con el ID especificado no se encuentra en la base de datos.
+     * @throws EntityNotFoundException   Si el plato con el ID especificado no se encuentra en la base de datos.
      * @throws IllegalOperationException Si ocurre una operación ilegal durante la actualización del plato.
      */
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody PlatoDTO platoDTO) throws EntityNotFoundException, IllegalOperationException {
         Plato plato = modelMapper.map(platoDTO, Plato.class);
-        Set<ConstraintViolation<Plato>> violations = validator.validate (plato);
-        if(!violations.isEmpty()){
+        Set<ConstraintViolation<Plato>> violations = validator.validate(plato);
+        if (!violations.isEmpty()) {
             EntityValidator entityValidator = new EntityValidator();
             return entityValidator.validate(violations);
         }

@@ -3,7 +3,7 @@
  * @author:(c)2024 Peter Vásquez
  * @created: Mar 04, 2024 00:37:00 AM
  * @description: Interfaz que define los servicios disponibles para la gestión de locales en el sistema.
- *  Proporciona métodos para la recuperación, creación, actualización y eliminación de locales.
+ * Proporciona métodos para la recuperación, creación, actualización y eliminación de locales.
  */
 package edu.unc.eventos.services;
 

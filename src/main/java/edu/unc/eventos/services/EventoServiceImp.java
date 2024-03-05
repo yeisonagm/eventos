@@ -52,7 +52,7 @@ public class EventoServiceImp implements EventoService {
 
     /**
      * Obtiene una lista de platos asociados a un evento específico.
-     *
+     * <p>
      * Recibe el ID del evento como parámetro y retorna una lista de platos asociados a ese evento.
      *
      * @param eventoId El ID del evento del cual se desean obtener los platos.
@@ -68,11 +68,11 @@ public class EventoServiceImp implements EventoService {
 
     /**
      * Obtiene un plato específico asociado a un evento.
-     *
+     * <p>
      * Recibe el ID del evento y el ID del plato como parámetros y retorna el plato asociado a ese evento.
      *
      * @param eventoId El ID del evento del cual se desea obtener el plato.
-     * @param platoId El ID del plato que se desea recuperar.
+     * @param platoId  El ID del plato que se desea recuperar.
      * @return El plato asociado al evento especificado.
      * @throws EntityNotFoundException Si el evento con el ID especificado no se encuentra en la base de datos o si el plato con el ID especificado no se encuentra en el evento.
      */
