@@ -81,4 +81,23 @@ public interface EmpleadoService {
      * @throws IllegalOperationException Si el empleado ya tiene asignado el supervisor proporcionado
      */
     Empleado addSupervisor(Long idEmpleado, Long idSupervisor) throws EntityNotFoundException, IllegalOperationException;
+
+    /**
+     * Obtiene todos los empleados supervisados por un supervisor.
+     *
+     * @param idSupervisor ID del supervisor
+     * @return Lista de empleados supervisados
+     * @throws EntityNotFoundException Si no se encuentra el supervisor
+     */
+    List<Empleado> getEmpleadosSupervisados(Long idSupervisor) throws EntityNotFoundException;
+
+    /**
+     * Obtiene un empleado supervisado por un supervisor específico.
+     *
+     * @param idSupervisor El ID del supervisor.
+     * @param idEmpleado   El ID del empleado supervisado.
+     * @return El empleado supervisado por el supervisor especificado.
+     * @throws EntityNotFoundException Si el supervisor o el empleado no se encuentran en la base de datos.
+     */
+    Empleado getEmpleadoSupervisado(Long idSupervisor, Long idEmpleado) throws EntityNotFoundException;
 }

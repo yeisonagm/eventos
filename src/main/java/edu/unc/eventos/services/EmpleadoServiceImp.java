@@ -191,7 +191,38 @@ public class EmpleadoServiceImp implements EmpleadoService {
         empleado.setRol(rol); // Asignar el rol al empleado
         empleadoRepository.save(empleado); // Guardar los cambios en el empleado
         rolRepository.save(rol); // Guardar los cambios en el rol
-
     }
 
+    /**
+     * Obtiene todos los empleados supervisados por un supervisor.
+     *
+     * @param idSupervisor ID del supervisor
+     * @return Lista de empleados supervisados por el supervisor especificado
+     * @throws EntityNotFoundException Si no se encuentra el supervisor
+     */
+    @Override
+    public List<Empleado> getEmpleadosSupervisados(Long idSupervisor) throws EntityNotFoundException {
+        Empleado supervisor = empleadoRepository.findById(idSupervisor)
+                .orElseThrow(() -> new EntityNotFoundException("Supervisor no encontrado con el Id proporcionado"));
+        return supervisor.getEmpleados_supervisados();
+    }
+
+    /**
+     * Obtiene un empleado supervisado por un supervisor.
+     *
+     * @param idSupervisor ID del supervisor
+     * @param idEmpleado   ID del empleado supervisado
+     * @return Empleado supervisado por el supervisor especificado
+     * @throws EntityNotFoundException Si no se encuentra el supervisor o el empleado supervisado
+     */
+    @Override
+    public Empleado getEmpleadoSupervisado(Long idSupervisor, Long idEmpleado) throws EntityNotFoundException {
+        Empleado supervisor = empleadoRepository.findById(idSupervisor)
+                .orElseThrow(() -> new EntityNotFoundException("Supervisor no encontrado con el Id proporcionado"));
+
+        return supervisor.getEmpleados_supervisados().stream()
+                .filter(empleado -> empleado.getIdEmpleado().equals(idEmpleado))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("No hay un empleado supervisado con el Id proporcionado"));
+    }
 }

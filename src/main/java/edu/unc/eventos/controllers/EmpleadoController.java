@@ -74,11 +74,6 @@ public class EmpleadoController {
         ApiResponse<EmpleadoDTO> response = new ApiResponse<>(true, "Empleado encontrado", empleadoDTO);
         return ResponseEntity.ok(response);
     }
-    @PatchMapping("/{empleadoId}/supervisor/{supervisorId}")
-    public ResponseEntity<String> addSupervisor(@PathVariable Long empleadoId, @PathVariable Long supervisorId) throws IllegalOperationException {
-        empleadoService.addSupervisor(empleadoId, supervisorId);
-        return ResponseEntity.ok("Supervisor actualizado correctamente");
-    }
 
     /**
      * Crea un nuevo empleado
@@ -166,10 +161,46 @@ public class EmpleadoController {
      * @throws IllegalOperationException Si el empleado ya tiene asignado el supervisor proporcionado
      */
     @PatchMapping("/{idEmpleado}/addSupervisor/{idSupervisor}")
-    public ResponseEntity<?> addSupervisorToEmpleado(@PathVariable Long idEmpleado, @PathVariable Long idSupervisor) throws EntityNotFoundException, IllegalOperationException {
+    public ResponseEntity<?> addSupervisor(@PathVariable Long idEmpleado, @PathVariable Long idSupervisor) throws EntityNotFoundException, IllegalOperationException {
         Empleado empleado = empleadoService.addSupervisor(idEmpleado, idSupervisor);
         EmpleadoDTO empleadoDTO = modelMapper.map(empleado, EmpleadoDTO.class);
         ApiResponse<EmpleadoDTO> response = new ApiResponse<>(true, "Supervisor asignado al empleado correctamente", empleadoDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    /**
+     * Obtiene todos los empleados supervisados por un supervisor.
+     *
+     * @param idSupervisor ID del supervisor
+     * @return Lista de empleados supervisados
+     * @throws EntityNotFoundException Si no se encuentra el supervisor
+     */
+    @GetMapping("/{idSupervisor}/empleados_supervisados")
+    public ResponseEntity<?> getEmpleadosSupervisados(@PathVariable Long idSupervisor) throws EntityNotFoundException {
+        List<Empleado> empleados = empleadoService.getEmpleadosSupervisados(idSupervisor);
+        List<EmpleadoDTO> empleadosDTOs = empleados.stream()
+                .map(empleado -> modelMapper.map(empleado, EmpleadoDTO.class))
+                .collect(Collectors.toList());
+        ApiResponse<List<EmpleadoDTO>> response = new ApiResponse<>(
+                true,
+                "Lista de empleados supervisados el empleado " + idSupervisor,
+                empleadosDTOs);
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Obtiene un empleado supervisado por un supervisor definido.
+     *
+     * @param idSupervisor ID del supervisor
+     * @param idEmpleado   ID del empleado
+     * @return El empleado supervisado
+     * @throws EntityNotFoundException Si no se encuentra el supervisor o el empleado
+     */
+    @GetMapping("/{idSupervisor}/empleados_supervisados/{idEmpleado}")
+    public ResponseEntity<?> getEmpleadoSupervisado(@PathVariable Long idSupervisor, @PathVariable Long idEmpleado) throws EntityNotFoundException {
+        Empleado empleado = empleadoService.getEmpleadoSupervisado(idSupervisor, idEmpleado);
+        EmpleadoDTO empleadoDTO = modelMapper.map(empleado, EmpleadoDTO.class);
+        ApiResponse<EmpleadoDTO> response = new ApiResponse<>(true, "Empleado encontrado", empleadoDTO);
+        return ResponseEntity.ok(response);
     }
 }
