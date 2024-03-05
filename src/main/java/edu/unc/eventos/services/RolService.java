@@ -7,6 +7,7 @@
  */
 package edu.unc.eventos.services;
 
+import edu.unc.eventos.domain.Empleado;
 import edu.unc.eventos.domain.Rol;
 import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
@@ -58,4 +59,22 @@ public interface RolService {
      * @throws IllegalOperationException Si hay algún problema que impide la eliminación del rol.
      */
     void delete(Long idRol) throws EntityNotFoundException, IllegalOperationException;
+
+    /**
+     * Obtiene todos los empleados asociados a un rol específico.
+     *
+     * @param idRol ID del rol del que se desean obtener los empleados.
+     * @return Lista de empleados asociados al rol.
+     * @throws EntityNotFoundException Si el rol no se encuentra en la base de datos.
+     */
+    List<Empleado> getEmpleadosByRol(Long idRol) throws EntityNotFoundException;
+    /**
+     * Obtiene un empleado asociado a un rol específico por su ID.
+     *
+     * @param idRol      ID del rol al que está asociado el empleado.
+     * @param idEmpleado ID del empleado que se desea obtener.
+     * @return Objeto Empleado asociado al rol con el ID especificado.
+     */
+    Empleado getEmpleadoByRolId(Long idRol, Long idEmpleado);
+
 }

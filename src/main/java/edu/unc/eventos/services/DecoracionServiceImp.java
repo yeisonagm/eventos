@@ -6,6 +6,7 @@
 package edu.unc.eventos.services;
 
 import edu.unc.eventos.domain.Decoracion;
+import edu.unc.eventos.domain.Evento;
 import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
 import edu.unc.eventos.repositories.DecoracionRepository;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Esta clase es la implementación concreta de la interfaz DecoracionService.
@@ -115,5 +117,46 @@ public class DecoracionServiceImp implements DecoracionService {
         }
 
         decoracionRepository.deleteById(idDecoracion);
+    }
+
+    /**
+     * Devuelve todos los eventos asociados a una decoración en específico
+     *
+     * @param idDecoracion Identificador de la decoración
+     * @return Lista de eventos
+     * @throws EntityNotFoundException Si el identificador de la decoración no es válido
+     */
+    @Override
+    public List<Evento> getAllEventosByIdDecoracion(Long idDecoracion) throws EntityNotFoundException {
+        Decoracion decoracion = decoracionRepository.findById(idDecoracion).orElseThrow(
+                () -> new EntityNotFoundException("La decoración con el ID proporcionado no se encontró.")
+        );
+        return decoracion.getEventos();
+    }
+
+    /**
+     * Devuelve un evento que tiene asociado una decoración en específico
+     *
+     * @param idDecoracion Identificador de la decoración
+     * @param idEvento     Identificador de la decoración
+     * @return Objeto del tipo Evento
+     * @throws EntityNotFoundException Si el identificador de la decoración o el evento no es válido
+     */
+    @Override
+    public Evento getByIdEventoByIdEvento(Long idDecoracion, Long idEvento) throws EntityNotFoundException {
+        Decoracion decoracion = decoracionRepository.findById(idDecoracion).orElseThrow(
+                () -> new EntityNotFoundException("La decoración con el ID proporcionado no se encontró.")
+        );
+        if (decoracion.getEventos() == null || decoracion.getEventos().isEmpty()) {
+            throw new EntityNotFoundException("No se encontraron eventos asociados a la decoracion");
+        }
+        Optional<Evento> eventoOpt = decoracion.getEventos().stream()
+                .filter(evento -> evento.getIdEvento().equals(idEvento))
+                .findFirst();
+        if (eventoOpt.isEmpty()) {
+            throw new EntityNotFoundException("No se encontró el evento asociado a la decoracion con el ID proporcionado");
+        }
+
+        return eventoOpt.get();
     }
 }

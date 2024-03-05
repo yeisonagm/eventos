@@ -6,6 +6,7 @@
 package edu.unc.eventos.services;
 
 import edu.unc.eventos.domain.Decoracion;
+import edu.unc.eventos.domain.Evento;
 import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
 
@@ -61,4 +62,23 @@ public interface DecoracionService {
      * @throws IllegalOperationException Si la decoración no se puede eliminar.
      */
     void delete(Long idDecoracion) throws EntityNotFoundException, IllegalOperationException;
+
+    /**
+     * Este metodo retorna una lista de Eventos los cuales tienen una misma decoracion
+     *
+     * @param idDecoracion Identificador de la decoración
+     * @return La lista de eventos que se encontraron
+     * @throws EntityNotFoundException Si el Identificador de la decoración no existe
+     */
+    List<Evento> getAllEventosByIdDecoracion(Long idDecoracion) throws EntityNotFoundException;
+
+    /**
+     * Este método retorna un evento específico con una decoración específica
+     *
+     * @param idDecoracion Identificador de la decoración
+     * @param idEvento     Identificador de la decoración
+     * @return El evento que se encontró
+     * @throws EntityNotFoundException Si el Identificador de la decoración o del evento no existe
+     */
+    Evento getByIdEventoByIdEvento(Long idDecoracion, Long idEvento) throws EntityNotFoundException;
 }

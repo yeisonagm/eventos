@@ -8,6 +8,7 @@
 package edu.unc.eventos.services;
 
 import edu.unc.eventos.domain.Evento;
+import edu.unc.eventos.domain.Plato;
 import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
 
@@ -21,6 +22,27 @@ public interface EventoService {
      * @return Lista de objetos Evento.
      */
     List<Evento> getAll();
+
+    /**
+     * Obtiene una lista de platos asociados a un evento específico.
+     * <p>
+     * Recibe el ID del evento como parámetro y retorna una lista de platos asociados a ese evento.
+     *
+     * @param eventoId El ID del evento del cual se desean obtener los platos.
+     * @return Lista de platos asociados al evento especificado.
+     */
+    List<Plato> getPlatosByEventoId(Long eventoId);
+
+    /**
+     * Obtiene un plato específico asociado a un evento.
+     * <p>
+     * Recibe el ID del evento y el ID del plato como parámetros y retorna el plato asociado a ese evento.
+     *
+     * @param eventoId El ID del evento del cual se desea obtener el plato.
+     * @param platoId  El ID del plato que se desea recuperar.
+     * @return El plato asociado al evento especificado.
+     */
+    Plato getPlatoByEventoId(Long eventoId, Long platoId);
 
     /**
      * Recupera un evento específico según su ID
@@ -64,21 +86,10 @@ public interface EventoService {
      * Añade un plato a un evento existente.
      *
      * @param idEvento El ID del evento al que se desea añadir el plato.
-     * @param idPlato El ID del plato que se desea asociar al evento.
+     * @param idPlato  El ID del plato que se desea asociar al evento.
      * @return El evento actualizado con el plato añadido.
-     * @throws EntityNotFoundException Si el evento o el plato con los IDs especificados no se encuentran en la base de datos.
+     * @throws EntityNotFoundException   Si el evento o el plato con los IDs especificados no se encuentran en la base de datos.
      * @throws IllegalOperationException Si ocurre una operación ilegal durante la asociación del plato al evento.
      */
-    Evento addPlato (Long idEvento, Long idPlato)throws EntityNotFoundException, IllegalOperationException;
-
-    /**
-     * Asigna un local al Evento.
-     *
-     * @param idEvento Identificador único del evento al que se asignará el local.
-     * @param idDecoracion  Identificador único de la decoracion el cual se asignará al evento.
-     * @return El objeto Evento actualizado con el nuevo local
-     * @throws EntityNotFoundException   Si no se encuentra ningún evento o local con el identificador especificado.
-     * @throws IllegalOperationException Si hay algún problema con los datos del evento o local que impide su actualización.
-     */
-    Evento addDecoracionToEvento(Long idEvento, Long idDecoracion) throws EntityNotFoundException, IllegalOperationException;
+    Evento addPlato(Long idEvento, Long idPlato) throws EntityNotFoundException, IllegalOperationException;
 }

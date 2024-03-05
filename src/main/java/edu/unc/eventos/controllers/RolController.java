@@ -5,7 +5,9 @@
  */
 package edu.unc.eventos.controllers;
 
+import edu.unc.eventos.domain.Empleado;
 import edu.unc.eventos.domain.Rol;
+import edu.unc.eventos.dto.EmpleadoDTO;
 import edu.unc.eventos.dto.RolDTO;
 import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
@@ -137,4 +139,46 @@ public class RolController {
         ApiResponse<?> response = new ApiResponse<>(true, "Rol eliminado con éxito", null);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    /**
+     * Obtiene todos los empleados asociados a un rol específico.
+     *
+     * @param idRol ID del rol del que se desean obtener los empleados.
+     * @return Lista de empleados asociados al rol.
+     * @throws EntityNotFoundException Si el rol no se encuentra en la base de datos.
+     */
+    @GetMapping("/{idRol}/empleados")
+    public ResponseEntity<?> getEmpleadosByRol(@PathVariable Long idRol) throws EntityNotFoundException {
+        List<Empleado> empleados = rolService.getEmpleadosByRol(idRol);
+        if (empleados == null || empleados.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            List<EmpleadoDTO> empleadosDTOs = empleados.stream()
+                    .map(empleado -> modelMapper.map(empleado, EmpleadoDTO.class))
+                    .collect(Collectors.toList());
+            ApiResponse<List<EmpleadoDTO>> response = new ApiResponse<>(true, "Empleados asociados al rol", empleadosDTOs);
+            return ResponseEntity.ok(response);
+        }
+    }
+    /**
+     * Obtiene todos los empleados asociados a un rol específico por su ID.
+     *
+     * @param idRol ID del rol del que se desean obtener los empleados.
+     * @return ResponseEntity con la lista de empleados asociados al rol.
+     */
+    @GetMapping("/{idRol}/empleados/{idEmpleado}")
+    public ResponseEntity<?> getEmpleadoById(@PathVariable Long idRol, @PathVariable Long idEmpleado) {
+        Empleado empleado = rolService.getEmpleadoByRolId(idRol, idEmpleado);
+        if (empleado == null) {
+            ApiResponse<String> response = new ApiResponse<>(false, "Empleado no encontrado", null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } else {
+            EmpleadoDTO empleadoDTO = modelMapper.map(empleado, EmpleadoDTO.class);
+            ApiResponse<EmpleadoDTO> response = new ApiResponse<>(true, "Empleado encontrado", empleadoDTO);
+            return ResponseEntity.ok(response);
+        }
+    }
+
+
+
 }

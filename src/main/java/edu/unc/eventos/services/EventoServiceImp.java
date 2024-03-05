@@ -51,6 +51,43 @@ public class EventoServiceImp implements EventoService {
     }
 
     /**
+     * Obtiene una lista de platos asociados a un evento específico.
+     * <p>
+     * Recibe el ID del evento como parámetro y retorna una lista de platos asociados a ese evento.
+     *
+     * @param eventoId El ID del evento del cual se desean obtener los platos.
+     * @return Lista de platos asociados al evento especificado.
+     * @throws EntityNotFoundException Si el evento con el ID especificado no se encuentra en la base de datos.
+     */
+    @Override
+    public List<Plato> getPlatosByEventoId(Long eventoId) {
+        Evento evento = eventoRepository.findById(eventoId)
+                .orElseThrow(() -> new EntityNotFoundException("El Evento no se ha encontrado"));
+        return evento.getPlatos();
+    }
+
+    /**
+     * Obtiene un plato específico asociado a un evento.
+     * <p>
+     * Recibe el ID del evento y el ID del plato como parámetros y retorna el plato asociado a ese evento.
+     *
+     * @param eventoId El ID del evento del cual se desea obtener el plato.
+     * @param platoId  El ID del plato que se desea recuperar.
+     * @return El plato asociado al evento especificado.
+     * @throws EntityNotFoundException Si el evento con el ID especificado no se encuentra en la base de datos o si el plato con el ID especificado no se encuentra en el evento.
+     */
+    @Override
+    public Plato getPlatoByEventoId(Long eventoId, Long platoId) {
+        Evento evento = eventoRepository.findById(eventoId)
+                .orElseThrow(() -> new EntityNotFoundException("El Evento no se ha encontrado"));
+
+        return evento.getPlatos().stream()
+                .filter(plato -> plato.getIdPlato().equals(platoId))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("El Plato no se ha encontrado en este evento"));
+    }
+
+    /**
      * Devuelve un evento por su Id
      *
      * @param idEvento Identificador del Evento que se quiere busacar
@@ -144,29 +181,6 @@ public class EventoServiceImp implements EventoService {
             throw new IllegalOperationException("El evento tiene un local asociado.");
         }
         eventoRepository.deleteById(idEvento);
-    }
-
-    /**
-     * Asigna un local a un evento existente
-     *
-     * @param idEvento     Identificador único del evento al que se asignará el local.
-     * @param idDecoracion Identificador único de la decoracion el cual se asignará al evento.
-     * @return El objeto luego de actualizarlo en la base de datos
-     * @throws EntityNotFoundException   Si el evento o el local no se encuentra en la base de datos.
-     * @throws IllegalOperationException Si existe algún conflicto con la fecha en la que se da el evento.
-     */
-    @Override
-    @Transactional
-    public Evento addDecoracionToEvento(Long idEvento, Long idDecoracion) throws EntityNotFoundException, IllegalOperationException {
-        Evento evento = eventoRepository.findById(idEvento).orElseThrow(
-                () -> new EntityNotFoundException("El evento con el ID proporcionado no se encontró")
-        );
-        Decoracion decoracion = decoracionRepository.findById(idDecoracion).orElseThrow(
-                () -> new EntityNotFoundException("La decoracion con el ID proporcionado no se encontró")
-        );
-
-        evento.setDecoracion(decoracion);
-        return eventoRepository.save(evento);
     }
 
 

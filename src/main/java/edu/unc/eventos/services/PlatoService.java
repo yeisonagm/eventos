@@ -8,6 +8,7 @@
 
 package edu.unc.eventos.services;
 
+import edu.unc.eventos.domain.Evento;
 import edu.unc.eventos.domain.Plato;
 import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
@@ -25,6 +26,27 @@ public interface PlatoService {
      * @return Una lista que contiene todos los platos disponibles.
      */
     List<Plato> getAll();
+
+    /**
+     * Obtiene una lista de eventos asociados a un plato específico.
+     *
+     * Recibe el ID del plato como parámetro y retorna una lista de eventos asociados a ese plato.
+     *
+     * @param platoId El ID del plato del cual se desean obtener los eventos.
+     * @return Lista de eventos asociados al plato especificado.
+     */
+    List<Evento> getEventosByPlatoId(Long platoId);
+
+    /**
+     * Obtiene un evento específico asociado a un plato.
+
+     * Recibe el ID del plato y el ID del evento como parámetros y retorna el evento asociado a ese plato.
+     *
+     * @param platoId El ID del plato del cual se desea obtener el evento.
+     * @param eventoId El ID del evento que se desea recuperar.
+     * @return El evento asociado al plato especificado.
+     */
+    Evento getEventoByPlatoId(Long platoId, Long eventoId);
 
     /**
      * Recupera un plato por su identificador único.
