@@ -8,6 +8,7 @@
 package edu.unc.eventos.services;
 
 import edu.unc.eventos.domain.Evento;
+import edu.unc.eventos.domain.Plato;
 import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
 
@@ -21,6 +22,27 @@ public interface EventoService {
      * @return Lista de objetos Evento.
      */
     List<Evento> getAll();
+
+    /**
+     * Obtiene una lista de platos asociados a un evento específico.
+     *
+     * Recibe el ID del evento como parámetro y retorna una lista de platos asociados a ese evento.
+     *
+     * @param eventoId El ID del evento del cual se desean obtener los platos.
+     * @return Lista de platos asociados al evento especificado.
+     */
+    List<Plato> getPlatosByEventoId(Long eventoId);
+
+    /**
+     * Obtiene un plato específico asociado a un evento.
+
+     * Recibe el ID del evento y el ID del plato como parámetros y retorna el plato asociado a ese evento.
+     *
+     * @param eventoId El ID del evento del cual se desea obtener el plato.
+     * @param platoId El ID del plato que se desea recuperar.
+     * @return El plato asociado al evento especificado.
+     */
+    Plato getPlatoByEventoId(Long eventoId, Long platoId);
 
     /**
      * Recupera un evento específico según su ID
@@ -81,4 +103,5 @@ public interface EventoService {
      * @throws IllegalOperationException Si hay algún problema con los datos del evento o local que impide su actualización.
      */
     Evento addLocalToEvento(Long idEvento, Long idLocal) throws EntityNotFoundException, IllegalOperationException;
+
 }

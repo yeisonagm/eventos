@@ -7,6 +7,7 @@
  */
 package edu.unc.eventos.services;
 
+import edu.unc.eventos.domain.Evento;
 import edu.unc.eventos.domain.Plato;
 import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
@@ -33,6 +34,43 @@ public class PlatoServiceImp implements PlatoService {
     @Transactional
     public List<Plato> getAll() {
         return platoRepository.findAll();
+    }
+
+    /**
+     * Obtiene una lista de eventos asociados a un plato específico.
+     *
+     * Recibe el ID del plato como parámetro y retorna una lista de eventos asociados a ese plato.
+     *
+     * @param platoId El ID del plato del cual se desean obtener los eventos.
+     * @return Lista de eventos asociados al plato especificado.
+     * @throws EntityNotFoundException Si el plato con el ID especificado no se encuentra en la base de datos.
+     */
+    @Override
+    public List<Evento> getEventosByPlatoId(Long platoId) {
+        Plato plato = platoRepository.findById(platoId)
+                .orElseThrow(() -> new EntityNotFoundException("El Plato no se ha encontrado"));
+        return plato.getEventos();
+    }
+
+    /**
+     * Obtiene un evento específico asociado a un plato.
+     *
+     * Recibe el ID del plato y el ID del evento como parámetros y retorna el evento asociado a ese plato.
+     *
+     * @param platoId El ID del plato del cual se desea obtener el evento.
+     * @param eventoId El ID del evento que se desea recuperar.
+     * @return El evento asociado al plato especificado.
+     * @throws EntityNotFoundException Si el plato con el ID especificado no se encuentra en la base de datos o si el evento con el ID especificado no se encuentra en el plato.
+     */
+    @Override
+    public Evento getEventoByPlatoId(Long platoId, Long eventoId) {
+        Plato plato = platoRepository.findById(platoId)
+                .orElseThrow(() -> new EntityNotFoundException("El plato no se ha encontrado"));
+
+        return plato.getEventos().stream()
+                .filter(evento -> evento.getIdEvento().equals(eventoId))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("El evento no se ha encontrado en este plato"));
     }
 
     /**

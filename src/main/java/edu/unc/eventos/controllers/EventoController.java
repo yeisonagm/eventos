@@ -7,10 +7,12 @@ package edu.unc.eventos.controllers;
 
 import edu.unc.eventos.domain.Evento;
 import edu.unc.eventos.domain.Local;
+import edu.unc.eventos.domain.Plato;
 import edu.unc.eventos.dto.EventoDTO;
 import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
 import edu.unc.eventos.services.EventoService;
+import edu.unc.eventos.services.PlatoService;
 import edu.unc.eventos.util.ApiResponse;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
@@ -39,6 +41,9 @@ class EventoController {
 
     @Autowired
     private Validator validator;
+
+    @Autowired
+    private PlatoService platoService;
 
     /**
      * Obtiene todos los eventos existentes
@@ -73,6 +78,40 @@ class EventoController {
         ApiResponse<EventoDTO> response = new ApiResponse<>(true, "Evento", eventoDTO);
         return ResponseEntity.ok(response);
     }
+
+    /**
+     * Obtiene una lista de platos asociados a un evento mediante su ID.
+     *
+     * Este método GET permite recuperar todos los platos asociados a un evento específico.
+     * Recibe el ID del evento como parámetro en la URL y retorna una lista de platos asociados a ese evento.
+     *
+     * @param eventoId El ID del evento del cual se desean obtener los platos.
+     * @return ResponseEntity que contiene una respuesta con estado OK y una lista de platos asociados al evento especificado.
+     * @throws EntityNotFoundException Si el evento con el ID especificado no se encuentra en la base de datos.
+     */
+    @GetMapping("/{eventoId}/platos")
+    public ResponseEntity<List<Plato>> getPlatosByEventoId(@PathVariable Long eventoId) {
+        List<Plato> platos = eventoService.getPlatosByEventoId(eventoId);
+        return ResponseEntity.ok(platos);
+    }
+
+    /**
+     * Obtiene un plato asociado a un evento mediante los IDs de evento y plato.
+     *
+     * Este método GET permite recuperar un plato específico que está asociado a un evento determinado.
+     * Recibe los IDs del evento y del plato como parámetros en la URL y retorna el plato asociado a ese evento.
+     *
+     * @param eventoId El ID del evento del cual se desea obtener el plato.
+     * @param platoId El ID del plato que se desea recuperar.
+     * @return ResponseEntity que contiene una respuesta con estado OK y el plato asociado al evento especificado.
+     * @throws EntityNotFoundException Si el evento con el ID especificado no se encuentra en la base de datos o si el plato con el ID especificado no se encuentra en el evento.
+     */
+    @GetMapping("/{eventoId}/platos/{platoId}")
+    public ResponseEntity<Plato> getPlatoByEventoId(@PathVariable Long eventoId, @PathVariable Long platoId) {
+        Plato plato = eventoService.getPlatoByEventoId(eventoId, platoId);
+        return ResponseEntity.ok(plato);
+    }
+
 
     /**
      * Crear un nuevo Evento

@@ -49,6 +49,43 @@ public class EventoServiceImp implements EventoService {
     }
 
     /**
+     * Obtiene una lista de platos asociados a un evento específico.
+     *
+     * Recibe el ID del evento como parámetro y retorna una lista de platos asociados a ese evento.
+     *
+     * @param eventoId El ID del evento del cual se desean obtener los platos.
+     * @return Lista de platos asociados al evento especificado.
+     * @throws EntityNotFoundException Si el evento con el ID especificado no se encuentra en la base de datos.
+     */
+    @Override
+    public List<Plato> getPlatosByEventoId(Long eventoId) {
+        Evento evento = eventoRepository.findById(eventoId)
+                .orElseThrow(() -> new EntityNotFoundException("El Evento no se ha encontrado"));
+        return evento.getPlatos();
+    }
+
+    /**
+     * Obtiene un plato específico asociado a un evento.
+     *
+     * Recibe el ID del evento y el ID del plato como parámetros y retorna el plato asociado a ese evento.
+     *
+     * @param eventoId El ID del evento del cual se desea obtener el plato.
+     * @param platoId El ID del plato que se desea recuperar.
+     * @return El plato asociado al evento especificado.
+     * @throws EntityNotFoundException Si el evento con el ID especificado no se encuentra en la base de datos o si el plato con el ID especificado no se encuentra en el evento.
+     */
+    @Override
+    public Plato getPlatoByEventoId(Long eventoId, Long platoId) {
+        Evento evento = eventoRepository.findById(eventoId)
+                .orElseThrow(() -> new EntityNotFoundException("El Evento no se ha encontrado"));
+
+        return evento.getPlatos().stream()
+                .filter(plato -> plato.getIdPlato().equals(platoId))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("El Plato no se ha encontrado en este evento"));
+    }
+
+    /**
      * Devuelve un evento por su Id
      *
      * @param idEvento Identificador del Evento que se quiere busacar
