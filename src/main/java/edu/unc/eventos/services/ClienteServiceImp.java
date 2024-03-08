@@ -87,14 +87,9 @@ public class ClienteServiceImp implements ClienteService {
     @Override
     @Transactional
     public Cliente update(Long idCliente, Cliente cliente) throws EntityNotFoundException, IllegalOperationException {
-        Optional<Cliente> clienteOpt = clienteRepository.findById(idCliente);
-        if (clienteOpt.isEmpty()) {
-            throw new EntityNotFoundException("El cliente con id proporcionado no fue encontrado");
-        }
-
         Cliente clienteConNuevoDi = clienteRepository.findByDi(cliente.getDi());
-        if (clienteConNuevoDi != null && !clienteConNuevoDi.getIdCliente().equals(idCliente)) {
-            throw new IllegalOperationException("El documento de identidad ya pertenece a otro cliente.");
+        if (clienteConNuevoDi != null) {
+            throw new IllegalOperationException("El documento de identidad ya se encuentra registrado.");
         }
 
         cliente.setIdCliente(idCliente);

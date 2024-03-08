@@ -54,11 +54,19 @@ public class Empleado {
      * El campo 'email' representa el correo electrónico del empleado.
      */
     private String email;
+
+    /**
+     * Relación con Supervisor.
+     */
+    @ManyToOne
+    @JoinColumn(name = "id_supervisor")
+    @JsonIgnore
+    private Empleado supervisor;
     /**
      * El campo 'empleados' es una lista de empleados asociados al empleado.
      */
     @OneToMany(mappedBy = "supervisor")
-    private List<Empleado> empleados = new ArrayList<>();
+    private List<Empleado> empleados_supervisados = new ArrayList<>();
     /**
      * El campo 'eventos' es una lista de eventos asociados al empleado.
      */
