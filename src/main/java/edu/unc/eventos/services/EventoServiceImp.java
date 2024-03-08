@@ -34,6 +34,8 @@ public class EventoServiceImp implements EventoService {
     @Autowired
     private PlatoRepository platoRepository;
 
+    @Autowired
+    private LocalService localService;
 
     @Autowired
     private DecoracionRepository decoracionRepository;
@@ -113,8 +115,13 @@ public class EventoServiceImp implements EventoService {
     @Override
     @Transactional
     public Evento save(Evento evento) throws IllegalOperationException {
+
+
         if (evento.getNombre().isEmpty()) {
             throw new IllegalOperationException("El nombre del evento no puede estar vacío.");
+        }
+        if (evento.getLocal() == null || evento.getLocal().getIdLocal() == null) {
+            throw new IllegalOperationException("Falta asignar el local para el evento.");
         }
         if (evento.getFecha() == null) {
             throw new IllegalOperationException("La fecha del evento no puede estar vacía.");
@@ -129,6 +136,11 @@ public class EventoServiceImp implements EventoService {
         if (existsEventOnSameDayAndLocal(evento.getLocal(), evento.getFecha())) {
             throw new IllegalOperationException("Ya hay un evento planificado en el mismo local para la misma fecha.");
         }
+
+
+        Local local = localService.getById(evento.getLocal().getIdLocal());
+        evento.setLocal(local);
+
         return eventoRepository.save(evento);
     }
 
@@ -152,6 +164,9 @@ public class EventoServiceImp implements EventoService {
         if (evento.getNombre().isEmpty()) {
             throw new IllegalOperationException("El nombre del evento no puede estar vacío.");
         }
+        if (evento.getLocal() == null || evento.getLocal().getIdLocal() == null) {
+            throw new IllegalOperationException("Falta asignar el local para el evento.");
+        }
         if (evento.getFecha() == null) {
             throw new IllegalOperationException("La fecha del evento no puede estar vacía.");
         } else {
@@ -165,6 +180,9 @@ public class EventoServiceImp implements EventoService {
         if (existsEventOnSameDayAndLocal(evento.getLocal(), evento.getFecha())) {
             throw new IllegalOperationException("Ya hay un evento planificado en el mismo local para la misma fecha.");
         }
+
+        Local local = localService.getById(evento.getLocal().getIdLocal());
+        evento.setLocal(local);
 
         evento.setIdEvento(idEvento);
         return eventoRepository.save(evento);
