@@ -6,7 +6,12 @@
  */
 package edu.unc.eventos.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.unc.eventos.domain.Evento;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -14,28 +19,39 @@ import java.util.List;
 
 @Data
 public class PlatoDTO {
-    /**
-     * El campo 'idPlato' corresponde al identificador único del plato en el sistema.
-     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idPlato;
 
-    /**
-     * El campo 'nombre' corresponde al nombre descriptivo del plato.
+    /** Nombre del Plato.
+     * El campo Nombre es una descripción textual del plato.
+     * Este campo es obligatorio y debe tener entre 4 y 25 caracteres.
      */
+    @NotBlank(message = "El Nombre no puede estar vacío.")
+    @Size(min = 4, max = 25, message = "El nombre debe tener entre 4 a 25 caracteres.")
+    @Column(unique = true)
     private String nombre;
 
-    /**
-     * El campo 'descripcion' es una descripción detallada del plato.
+    /** Descripción del plato.
+     * Representa una descripción detallada del plato.
+     * Este campo es obligatorio y debe tener entre 6 y 255 caracteres.
      */
+    @NotEmpty(message = "La descripción no puede estar vacía")
+    @Size(min = 6, max = 255, message = "La descripción del plato debe tener entre 6 a 255 caracteres.")
     private String descripcion;
 
-    /**
-     * El campo 'tipo' representa el tipo o categoría del plato.
+    /** Tipo del plato.
+     * El campo tipo es una descripción textual del plato, representa el tipo o categoría del plato.
+     * Este campo es obligatorio y debe tener entre 5 y 15 caracteres.
      */
+    @NotEmpty(message = "El tipo no puede estar vacío")
+    @Size(min = 5, max = 15, message = "La tipo del plato debe tener entre 5 a 15 caracteres.")
     private String tipo;
 
-    /**
-     * El campo 'eventos' es una lista de todos los eventos en los que se puede servir este plato.
+    /** Relación con Evento.
+     * Representa la lista de eventos en los que se puede servir el plato.
      */
+    @ManyToMany(mappedBy = "platos")
+    @JsonIgnore
     private List<Evento> eventos = new ArrayList<>();
 }

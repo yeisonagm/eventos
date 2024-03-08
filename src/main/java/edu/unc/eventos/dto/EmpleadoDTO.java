@@ -5,10 +5,13 @@
  */
 package edu.unc.eventos.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.unc.eventos.domain.Empleado;
 import edu.unc.eventos.domain.Evento;
 import edu.unc.eventos.domain.Rol;
 import edu.unc.eventos.domain.Seguro;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -22,52 +25,102 @@ import java.util.List;
  */
 @Data
 public class EmpleadoDTO {
-    /**
-     * El campo 'idEmpleado' es el identificador único del empleado.
-     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idEmpleado;
+
     /**
-     * El campo 'nombres' representa los nombres del empleado.
+     * Nombre(s) del Empleado.
      */
+    @NotBlank(message = "El Nombre no puede estar vacío.")
+    @Size(min = 3, max = 30, message = "El nombre debe tener entre 6 a 30 caracteres.")
+    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚ\\s]*$", message = "El nombre solo puede contener letras")
     private String nombres;
+
     /**
-     * El campo 'apellidos' representa los apellidos del empleado.
+     * Apellidos del Empleado.
      */
+    @NotBlank(message = "Debe al menos colocar un apellido")
+    @Size(min = 6, max = 30, message = "El Apellido debe tener entre 6 a 30 caracteres.")
+    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚ\\s]*$", message = "El apellido solo puede contener letras")
     private String apellidos;
+
     /**
-     * El campo 'dni' representa el documento de identidad del empleado.
+     * Documento de identidad del empleado.
      */
+    @Column(unique = true)
+    @NotBlank(message = "El Documento de identidad no puede estar vacío.")
+    @Size(min = 8, max = 8, message = "El Documento de identidad debe tener entre 8 a 8 caracteres.")
+    @Pattern(regexp = "^[0-9]*$", message = "El Documento de identidad solo puede contener números.")
     private String dni;
+
     /**
-     * El campo 'fechaNacimiento' representa la fecha de nacimiento del empleado.
+     * Fecha de nacimiento del empleado.
      */
+    @Temporal(TemporalType.DATE)
+    @PastOrPresent(message = "Debe tener al menos 18 años")
+    @Past(message = "La fecha de inscripción debe ser en el pasado")
     private Date fechaNacimiento;
+
     /**
-     * El campo 'direccion' representa la dirección del empleado.
+     * Dirección del empleado.
      */
+    @NotBlank(message = "La Dirección no puede estar vacío.")
+    @Size(min = 10, max = 50, message = "La Dirección debe tener entre 10 a 50 caracteres.")
     private String direccion;
+
     /**
-     * El campo 'telefono' representa el número de teléfono del empleado.
+     * Número de teléfono del empleado.
      */
+    @Column(unique = true)
+    @NotBlank(message = "El número de teléfono no puede estar vacío.")
+    @Size(min = 9, max = 9, message = "El número de teléfono debe tener 9 caracteres.")
+    @Pattern(regexp = "^[0-9]*$", message = "El número de teléfono solo puede contener números.")
     private String telefono;
+
     /**
-     * El campo 'email' representa el correo electrónico del empleado.
+     * Email del empleado.
      */
+    @Column(unique = true)
+    @NotBlank(message = "El email no puede estar vacío.")
+    @Email(message = "El formato del correo electrónico no es válido")
+    @Size(max = 30, message = "El email debe tener menos de 30 caracteres.")
     private String email;
+
     /**
-     * El campo 'empleados' es una lista de empleados asociados al empleado.
+     * Relación con Supervisor.
      */
-    private List<Empleado> empleados = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "id_supervisor")
+    @JsonIgnore
+    private Empleado supervisor;
+
     /**
-     * El campo 'eventos' es una lista de eventos asociados al empleado.
+     * Relación con Empleado.
      */
+    @OneToMany(mappedBy = "supervisor")
+    @JsonIgnore
+    private List<Empleado> empleados_supervisados;
+
+    /**
+     * Relación con Evento.
+     */
+    @OneToMany(mappedBy = "empleado")
+    @JsonIgnore
     private List<Evento> eventos = new ArrayList<>();
+
     /**
-     * El campo 'rol' representa el rol del empleado.
+     * Relación con Rol.
      */
+    @ManyToOne
+    @JoinColumn(name = "id_rol")
+    @JsonIgnore
     private Rol rol;
+
     /**
-     * El campo 'seguro' representa el seguro del empleado.
+     * Relación con Seguro.
      */
+    @OneToOne(mappedBy = "empleado")
+    @JsonIgnore
     private Seguro seguro;
 }

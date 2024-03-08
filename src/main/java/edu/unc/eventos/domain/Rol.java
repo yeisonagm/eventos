@@ -6,14 +6,10 @@
 package edu.unc.eventos.domain;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,30 +22,20 @@ import java.util.List;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idRol")
 public class Rol {
     /**
-     * El campo idRol es el identificador único de cada Rol en la base de datos.
-     * Este campo es generado automáticamente por la base de datos cuando se crea un nuevo Rol.
+     * El campo 'idRol' es el identificador único del rol.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idRol;
 
     /**
-     * El campo Nombre es una descripción textual del Rol. Este campo es obligatorio y su longitud debe estar entre 2 y 15 caracteres.
-     * Este campo ayuda a identificar el Rol de manera más amigable y comprensible para los usuarios del sistema.
+     * El campo 'nombre' representa el nombre del rol.
      */
-    @NotBlank(message = "El Nombre no puede estar vacío.")
-    @Size(min = 2, max = 15, message = "El nombre debe tener entre 4 a 15 caracteres.")
-    @Column(unique = true)
     private String nombre;
 
     /**
-     * El campo Empleados es una lista de todos los empleados que están asociados a este Rol.
-     * Esta lista puede estar vacía, lo que significa que actualmente no hay empleados que tengan este Rol.
-     * Cuando un empleado es asignado a este Rol, se añade a esta lista.
+     * El campo 'empleados' es una lista de los empleados asociados a este rol.
      */
     @OneToMany(mappedBy = "rol")
-    @JsonIgnore
-    private List<Empleado> empleados = new ArrayList<>();
-
-
+    private List<Empleado> empleados;
 }
