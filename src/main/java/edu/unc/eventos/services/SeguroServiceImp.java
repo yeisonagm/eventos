@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,13 +75,21 @@ public class SeguroServiceImp implements SeguroService {
      */
     @Override
     @Transactional
-    public Seguro save(Seguro seguro) throws EntityNotFoundException {
+    public Seguro save(Seguro seguro) throws EntityNotFoundException, IllegalOperationException {
         if (seguro.getCodigo().isEmpty()) {
             throw new EntityNotFoundException("El código no puede estar vacío.");
         }
         if (seguro.getFechaInscripcion() == null) {
-            throw new EntityNotFoundException("El campo fecha de inscripción no puede estar vacío.");
+            throw new IllegalOperationException("La fecha de inscripción no puede estar vacía.");
+        } else {
+            Calendar c = Calendar.getInstance();
+            c.add(Calendar.MONTH, -1); // Resta un mes a la fecha actual
+            Date minDate = c.getTime(); // Obtiene la fecha mínima permitida
+            if (seguro.getFechaInscripcion().before(minDate)) {
+                throw new IllegalOperationException("La fecha de inscripción no puede ser más de un mes en el pasado.");
+            }
         }
+
         if (seguroRepository.findByCodigo(seguro.getCodigo()) != null) {
             throw new EntityNotFoundException("Ya existe un seguro con el mismo código.");
         }
@@ -102,6 +112,17 @@ public class SeguroServiceImp implements SeguroService {
         Optional<Seguro> seguroOpt = seguroRepository.findById(idSeguro);
         if (seguroOpt.isEmpty()) {
             throw new EntityNotFoundException("El seguro con id proporcionado no fue encontrado");
+        }
+
+        if (seguro.getFechaInscripcion() == null) {
+            throw new IllegalOperationException("La fecha de inscripción no puede estar vacía.");
+        } else {
+            Calendar c = Calendar.getInstance();
+            c.add(Calendar.MONTH, -1); // Resta un mes a la fecha actual
+            Date minDate = c.getTime(); // Obtiene la fecha mínima permitida
+            if (seguro.getFechaInscripcion().before(minDate)) {
+                throw new IllegalOperationException("La fecha de inscripción no puede ser más de un mes en el pasado.");
+            }
         }
 
         Seguro seguroConNuevoCodigo = seguroRepository.findByCodigo(seguro.getCodigo());

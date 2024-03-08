@@ -9,19 +9,18 @@ import edu.unc.eventos.domain.Decoracion;
 import edu.unc.eventos.domain.Evento;
 import edu.unc.eventos.domain.Local;
 import edu.unc.eventos.domain.Plato;
-import edu.unc.eventos.domain.Rol;
 import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
 import edu.unc.eventos.repositories.DecoracionRepository;
 import edu.unc.eventos.repositories.EventoRepository;
 import edu.unc.eventos.repositories.PlatoRepository;
-import edu.unc.eventos.repositories.LocalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -119,6 +118,13 @@ public class EventoServiceImp implements EventoService {
         }
         if (evento.getFecha() == null) {
             throw new IllegalOperationException("La fecha del evento no puede estar vacía.");
+        } else {
+            Calendar c = Calendar.getInstance();
+            c.add(Calendar.YEAR, 2); // Añade un año a la fecha actual
+            Date maxDate = c.getTime(); // Obtiene la fecha máxima permitida
+            if (evento.getFecha().after(maxDate)) {
+                throw new IllegalOperationException("La fecha del evento no puede ser más de un año en el futuro.");
+            }
         }
         if (existsEventOnSameDayAndLocal(evento.getLocal(), evento.getFecha())) {
             throw new IllegalOperationException("Ya hay un evento planificado en el mismo local para la misma fecha.");
@@ -127,7 +133,7 @@ public class EventoServiceImp implements EventoService {
     }
 
     /**
-     * Actualiza un evento eistente
+     * Actualiza un evento existente
      *
      * @param idEvento Id del evento que se quiere actualizar
      * @param evento   Objeto del tipo evento que se va a actualizar
@@ -148,6 +154,13 @@ public class EventoServiceImp implements EventoService {
         }
         if (evento.getFecha() == null) {
             throw new IllegalOperationException("La fecha del evento no puede estar vacía.");
+        } else {
+            Calendar c = Calendar.getInstance();
+            c.add(Calendar.YEAR, 2); // Añade un año a la fecha actual
+            Date maxDate = c.getTime(); // Obtiene la fecha máxima permitida
+            if (evento.getFecha().after(maxDate)) {
+                throw new IllegalOperationException("La fecha del evento no puede ser más de un año en el futuro.");
+            }
         }
         if (existsEventOnSameDayAndLocal(evento.getLocal(), evento.getFecha())) {
             throw new IllegalOperationException("Ya hay un evento planificado en el mismo local para la misma fecha.");

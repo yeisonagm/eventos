@@ -13,6 +13,7 @@ import jakarta.persistence.*;
 
 import lombok.Data;
 
+import java.util.Date;
 
 
 @Entity
@@ -34,7 +35,7 @@ public class Seguro {
     /**
      * El campo 'fechaInscripcion' representa la fecha de inscripción del seguro.
      */
-    private String fechaInscripcion;
+    private Date fechaInscripcion;
 
     /**
      * El campo 'empleado' representa el empleado asociado al seguro.
