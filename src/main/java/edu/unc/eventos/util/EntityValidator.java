@@ -5,30 +5,26 @@
  */
 package edu.unc.eventos.util;
 
-import jakarta.validation.ConstraintViolation;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Clase que se encarga de validar las entidades y devolver los errores de validación.
  */
 public class EntityValidator {
     /**
-     * Método que recibe un conjunto de violaciones de restricciones de validación y devuelve un ResponseEntity con los errores.
+     * Método que recibe un resultado de validación y devuelve un ResponseEntity con los errores.
      *
-     * @param violations Conjunto de violaciones de restricciones de validación.
-     * @param <T>        Tipo de la entidad que se está validando.
+     * @param result Resultado de validación.
      * @return ResponseEntity con los errores de validación.
      */
-    public <T> ResponseEntity<Map<String, String>> validate(Set<ConstraintViolation<T>> violations) {
+    public ResponseEntity<Map<String, String>> validate(BindingResult result) {
         Map<String, String> errores = new HashMap<>();
-        violations.forEach(violation -> {
-            String field = violation.getPropertyPath().toString();
-            String message = violation.getMessage();
-            errores.put(field, "Error de validación [" + field + "]: " + message);
+        result.getFieldErrors().forEach(error -> {
+            errores.put(error.getField(), "Error [" + error.getField() + "]: " + error.getDefaultMessage());
         });
         return ResponseEntity.badRequest().body(errores);
     }

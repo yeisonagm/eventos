@@ -14,16 +14,15 @@ import edu.unc.eventos.exception.IllegalOperationException;
 import edu.unc.eventos.services.DecoracionService;
 import edu.unc.eventos.util.ApiResponse;
 import edu.unc.eventos.util.EntityValidator;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -40,9 +39,6 @@ public class DecoracionController {
 
     @Autowired
     private ModelMapper modelMapper;
-
-    @Autowired
-    private Validator validator;
 
     /**
      * Obtiene todas las decoraciones existentes
@@ -85,13 +81,10 @@ public class DecoracionController {
      * @throws IllegalOperationException Sí se genera una operación ilegal
      */
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody DecoracionDTO decoracionDTO) throws IllegalOperationException {
+    public ResponseEntity<?> create(@RequestBody @Valid DecoracionDTO decoracionDTO, BindingResult result) throws IllegalOperationException {
+        if (result.hasErrors()) return new EntityValidator().validate(result);
+
         Decoracion decoracion = modelMapper.map(decoracionDTO, Decoracion.class);
-        Set<ConstraintViolation<Decoracion>> violations = validator.validate(decoracion);
-        if (!violations.isEmpty()) {
-            EntityValidator entityValidator = new EntityValidator();
-            return entityValidator.validate(violations);
-        }
         decoracionService.save(decoracion);
         DecoracionDTO saveDTO = modelMapper.map(decoracion, DecoracionDTO.class);
         ApiResponse<DecoracionDTO> response = new ApiResponse<>(true, "Decoración guardada", saveDTO);
@@ -108,13 +101,11 @@ public class DecoracionController {
      * @throws IllegalOperationException Sí hay una operación ilegal
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody DecoracionDTO decoracionDTO) throws EntityNotFoundException, IllegalOperationException {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody @Valid DecoracionDTO decoracionDTO, BindingResult result)
+            throws EntityNotFoundException, IllegalOperationException {
+        if (result.hasErrors()) return new EntityValidator().validate(result);
+
         Decoracion decoracion = modelMapper.map(decoracionDTO, Decoracion.class);
-        Set<ConstraintViolation<Decoracion>> violations = validator.validate(decoracion);
-        if (!violations.isEmpty()) {
-            EntityValidator entityValidator = new EntityValidator();
-            return entityValidator.validate(violations);
-        }
         decoracionService.update(id, decoracion);
         DecoracionDTO updateDTO = modelMapper.map(decoracion, DecoracionDTO.class);
         ApiResponse<DecoracionDTO> response = new ApiResponse<>(true, "Decoración actualizada", updateDTO);

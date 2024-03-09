@@ -12,16 +12,15 @@ import edu.unc.eventos.exception.IllegalOperationException;
 import edu.unc.eventos.services.SeguroService;
 import edu.unc.eventos.util.ApiResponse;
 import edu.unc.eventos.util.EntityValidator;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -33,9 +32,6 @@ public class SeguroController {
 
     @Autowired
     private ModelMapper modelMapper;
-
-    @Autowired
-    private Validator validator;
 
     /**
      * Obtiene todos los seguros.
@@ -74,13 +70,10 @@ public class SeguroController {
      * @throws IllegalOperationException Si hay una operación ilegal.
      */
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody SeguroDTO seguroDTO) throws IllegalOperationException {
+    public ResponseEntity<?> create(@RequestBody @Valid SeguroDTO seguroDTO, BindingResult result) throws IllegalOperationException {
+        if (result.hasErrors()) return new EntityValidator().validate(result);
+
         Seguro seguro = modelMapper.map(seguroDTO, Seguro.class);
-        Set<ConstraintViolation<Seguro>> violations = validator.validate(seguro);
-        if (!violations.isEmpty()) {
-            EntityValidator entityValidator = new EntityValidator();
-            return entityValidator.validate(violations);
-        }
         seguro = seguroService.save(seguro);
         SeguroDTO createdDTO = modelMapper.map(seguro, SeguroDTO.class);
         ApiResponse<SeguroDTO> response = new ApiResponse<>(true, "Seguro creado con éxito", createdDTO);
@@ -97,14 +90,11 @@ public class SeguroController {
      * @throws IllegalOperationException Si hay una operación ilegal.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody SeguroDTO seguroDTO)
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody @Valid SeguroDTO seguroDTO, BindingResult result)
             throws EntityNotFoundException, IllegalOperationException {
+        if (result.hasErrors()) return new EntityValidator().validate(result);
+
         Seguro seguro = modelMapper.map(seguroDTO, Seguro.class);
-        Set<ConstraintViolation<Seguro>> violations = validator.validate(seguro);
-        if (!violations.isEmpty()) {
-            EntityValidator entityValidator = new EntityValidator();
-            return entityValidator.validate(violations);
-        }
         seguroService.update(id, seguro);
         SeguroDTO updateDTO = modelMapper.map(seguro, SeguroDTO.class);
         ApiResponse<SeguroDTO> response = new ApiResponse<>(true, "Seguro actualizado con éxito", updateDTO);
@@ -139,11 +129,6 @@ public class SeguroController {
     @PutMapping("/{idSeguro}/addEmpleado/{idEmpleado}")
     public ResponseEntity<?> addEmpleado(@PathVariable Long idEmpleado, @PathVariable Long idSeguro) throws EntityNotFoundException, IllegalOperationException {
         Seguro seguro = seguroService.addEmpleado(idSeguro, idEmpleado);
-        Set<ConstraintViolation<Seguro>> violations = validator.validate(seguro);
-        if (!violations.isEmpty()) {
-            EntityValidator entityValidator = new EntityValidator();
-            return entityValidator.validate(violations);
-        }
         SeguroDTO seguroDTO = modelMapper.map(seguro, SeguroDTO.class);
         ApiResponse<SeguroDTO> response = new ApiResponse<>(true, "Empleado asignado a su seguro correctamente", seguroDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);

@@ -16,16 +16,15 @@ import edu.unc.eventos.exception.IllegalOperationException;
 import edu.unc.eventos.services.LocalService;
 import edu.unc.eventos.util.ApiResponse;
 import edu.unc.eventos.util.EntityValidator;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -36,10 +35,6 @@ public class LocalController {
 
     @Autowired
     private ModelMapper modelMapper;
-
-    @Autowired
-    private Validator validator;
-
 
     /**
      * Obtiene todos los locales existentes
@@ -76,7 +71,7 @@ public class LocalController {
 
     /**
      * Crea un nuevo recurso de Local en el sistema.
-     *
+     * <p>
      * Este método procesa una solicitud POST para guardar un nuevo local en el sistema.
      *
      * @param localDTO El objeto LocalDTO que contiene los datos del local a guardar.
@@ -84,13 +79,10 @@ public class LocalController {
      * @throws IllegalOperationException Si ocurre una operación ilegal durante el proceso de guardado del local.
      */
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody LocalDTO localDTO) throws IllegalOperationException {
+    public ResponseEntity<?> create(@RequestBody @Valid LocalDTO localDTO, BindingResult result) throws IllegalOperationException {
+        if (result.hasErrors()) return new EntityValidator().validate(result);
+
         Local local = modelMapper.map(localDTO, Local.class);
-        Set<ConstraintViolation<Local>> violations = validator.validate(local);
-        if(!violations.isEmpty()){
-            EntityValidator entityValidator = new EntityValidator();
-            return entityValidator.validate(violations);
-        }
         localService.save(local);
         LocalDTO saveDTO = modelMapper.map(local, LocalDTO.class);
         ApiResponse<LocalDTO> response = new ApiResponse<>(true, "Local guardado", saveDTO);
@@ -99,23 +91,20 @@ public class LocalController {
 
     /**
      * Actualiza un recurso de Local en el sistema.
-     *
+     * <p>
      * Este método procesa una solicitud PUT para actualizar un local existente en el sistema.
      *
-     * @param id El identificador único del local a actualizar.
+     * @param id       El identificador único del local a actualizar.
      * @param localDTO El objeto LocalDTO que contiene los datos actualizados del local.
      * @return ResponseEntity que contiene un objeto ApiResponse con información sobre el resultado de la operación.
-     * @throws EntityNotFoundException Si no se encuentra el local con el identificador proporcionado.
+     * @throws EntityNotFoundException   Si no se encuentra el local con el identificador proporcionado.
      * @throws IllegalOperationException Si ocurre una operación ilegal durante el proceso de actualización del local.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody LocalDTO localDTO) throws EntityNotFoundException, IllegalOperationException {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody @Valid LocalDTO localDTO, BindingResult result) throws EntityNotFoundException, IllegalOperationException {
+        if (result.hasErrors()) return new EntityValidator().validate(result);
+
         Local local = modelMapper.map(localDTO, Local.class);
-        Set<ConstraintViolation<Local>> violations = validator.validate(local);
-        if(!violations.isEmpty()){
-            EntityValidator entityValidator = new EntityValidator();
-            return entityValidator.validate(violations);
-        }
         localService.update(id, local);
         LocalDTO updateDTO = modelMapper.map(local, LocalDTO.class);
         ApiResponse<LocalDTO> response = new ApiResponse<>(true, "Local actualizado", updateDTO);

@@ -13,17 +13,16 @@ import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
 import edu.unc.eventos.services.EventoService;
 import edu.unc.eventos.util.ApiResponse;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
 import edu.unc.eventos.util.EntityValidator;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -35,9 +34,6 @@ class EventoController {
 
     @Autowired
     private ModelMapper modelMapper;
-
-    @Autowired
-    private Validator validator;
 
     /**
      * Obtiene todos los eventos existentes
@@ -86,8 +82,8 @@ class EventoController {
     @GetMapping("/{eventoId}/platos")
     public ResponseEntity<?> getPlatosByEventoId(@PathVariable Long eventoId) {
         List<Plato> platos = eventoService.getPlatosByEventoId(eventoId);
-        List<PlatoDTO> platoDTOS = platos.stream().map(plato -> modelMapper.map(plato,PlatoDTO.class)).collect(Collectors.toList());
-        ApiResponse<List<PlatoDTO>> response =new ApiResponse<>(true,"Lista de platos",platoDTOS);
+        List<PlatoDTO> platoDTOS = platos.stream().map(plato -> modelMapper.map(plato, PlatoDTO.class)).collect(Collectors.toList());
+        ApiResponse<List<PlatoDTO>> response = new ApiResponse<>(true, "Lista de platos", platoDTOS);
         return ResponseEntity.ok(response);
     }
 
@@ -110,7 +106,6 @@ class EventoController {
         return ResponseEntity.ok(response);
     }
 
-
     /**
      * Crear un nuevo Evento
      *
@@ -119,15 +114,10 @@ class EventoController {
      * @throws IllegalOperationException Si hay una operación ilegal
      */
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody EventoDTO eventoDTO) throws IllegalOperationException {
-        Evento evento = modelMapper.map(eventoDTO, Evento.class);
+    public ResponseEntity<?> create(@RequestBody @Valid EventoDTO eventoDTO, BindingResult result) throws IllegalOperationException {
+        if (result.hasErrors()) return new EntityValidator().validate(result);
 
-        // Realiza la validación, si hay errores de validación, maneja los errores
-        Set<ConstraintViolation<Evento>> violations = validator.validate(evento);
-        if (!violations.isEmpty()) {
-            EntityValidator entityValidator = new EntityValidator();
-            return entityValidator.validate(violations);
-        }
+        Evento evento = modelMapper.map(eventoDTO, Evento.class);
         eventoService.save(evento);
         EventoDTO createdDTO = modelMapper.map(evento, EventoDTO.class);
         ApiResponse<EventoDTO> response = new ApiResponse<>(true, "Evento creado con éxito", createdDTO);
@@ -144,14 +134,11 @@ class EventoController {
      * @throws IllegalOperationException Si hay una operación ilegal
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody EventoDTO eventoDTO) throws EntityNotFoundException, IllegalOperationException {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody @Valid EventoDTO eventoDTO, BindingResult result)
+            throws EntityNotFoundException, IllegalOperationException {
+        if (result.hasErrors()) return new EntityValidator().validate(result);
+
         Evento evento = modelMapper.map(eventoDTO, Evento.class);
-        // Realiza la validación, si hay errores de validación, maneja los errores
-        Set<ConstraintViolation<Evento>> violations = validator.validate(evento);
-        if (!violations.isEmpty()) {
-            EntityValidator entityValidator = new EntityValidator();
-            return entityValidator.validate(violations);
-        }
         eventoService.update(id, evento);
         EventoDTO updateDTO = modelMapper.map(evento, EventoDTO.class);
         ApiResponse<EventoDTO> response = new ApiResponse<>(true, "Evento actualizado", updateDTO);
@@ -183,7 +170,7 @@ class EventoController {
     /**
      * Agrega una decoracion a un evento existente mediante una solicitud PATCH.
      *
-     * @param idEvento Identificador del Evento
+     * @param idEvento     Identificador del Evento
      * @param idDecoracion Identificador de la Decoracion
      * @return Mensaje confirmando la operacion
      * @throws IllegalOperationException Si ocurre una operación ilegal durante la asociación de la decoracion al evento.

@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.List;
 @Data
 
 public class ClienteDTO {
+public class ClienteDTO extends RepresentationModel<ClienteDTO> {
     /**
      * El campo idCliente es el identificador único de cada cliente en la base de datos.
      * Este campo es generado automáticamente por la base de datos cuando se crea un nuevo cliente.
@@ -78,4 +80,7 @@ public class ClienteDTO {
      * Esto representa una relación uno a muchos con la clase Evento.
      */
     private List<Evento> eventos = new ArrayList<>();
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<EventoDTO> eventos;
 }
