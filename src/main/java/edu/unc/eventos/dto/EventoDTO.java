@@ -120,6 +120,7 @@ public class EventoDTO {
      */
     @ManyToOne
     @JoinColumn(name = "id_local")
-    @JsonIgnore
+    //@JsonIgnore
+    @JsonIdentityReference(alwaysAsId = true)
     private Local local;
 }
