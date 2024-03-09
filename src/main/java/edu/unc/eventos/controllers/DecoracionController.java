@@ -17,6 +17,8 @@ import edu.unc.eventos.util.EntityValidator;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -24,6 +26,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 /**
  * Controlador REST que gestiona las operaciones CRUD para 'Decoraciones'.
@@ -46,18 +50,27 @@ public class DecoracionController {
      * @return Lista de decoraciones
      */
     @GetMapping
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<?> getAllDecoraciones() {
         List<Decoracion> decoraciones = decoracionService.getAll();
+
         if (decoraciones == null || decoraciones.isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {
             List<DecoracionDTO> decoracionesDTOs = decoraciones.stream()
-                    .map(decoracion -> modelMapper.map(decoracion, DecoracionDTO.class))
+                    .map(decoracion -> {
+                        DecoracionDTO decoracionDTO = modelMapper.map(decoracion, DecoracionDTO.class);
+                        decoracionDTO.add(WebMvcLinkBuilder.linkTo(methodOn(DecoracionController.class).getById(decoracionDTO.getIdDecoracion())).withSelfRel());
+                        Link eventosLink = WebMvcLinkBuilder.linkTo(methodOn(DecoracionController.class).getAllEventosByIdDecoracion(decoracionDTO.getIdDecoracion())).withRel("decoracion-eventos");
+                        decoracionDTO.add(eventosLink);
+                        return decoracionDTO;
+                    })
                     .collect(Collectors.toList());
+
             ApiResponse<List<DecoracionDTO>> response = new ApiResponse<>(true, "Lista de decoraciones", decoracionesDTOs);
             return ResponseEntity.ok(response);
         }
     }
+
 
     /**
      * Obtiene una decoración por su identificador
@@ -69,9 +82,13 @@ public class DecoracionController {
     public ResponseEntity<?> getById(@PathVariable Long id) {
         Decoracion decoracion = decoracionService.getById(id);
         DecoracionDTO decoracionDTO = modelMapper.map(decoracion, DecoracionDTO.class);
+        Link eventosLink = WebMvcLinkBuilder.linkTo(methodOn(DecoracionController.class).getAllEventosByIdDecoracion(id)).withRel("decoracion-eventos");
+        decoracionDTO.add(eventosLink);
         ApiResponse<DecoracionDTO> response = new ApiResponse<>(true, "Decoración encontrada", decoracionDTO);
         return ResponseEntity.ok(response);
     }
+
+
 
     /**
      * Crea una nueva decoración
