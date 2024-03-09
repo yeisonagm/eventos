@@ -117,7 +117,7 @@ public class RolServiceImp implements RolService {
      */
     @Override
     @Transactional
-    public List<Empleado> getEmpleadosByRol(Long idRol) throws EntityNotFoundException {
+    public List<Empleado> getAllEmpleadosByIdRol(Long idRol) throws EntityNotFoundException {
         Rol rol = rolRepository.findById(idRol)
                 .orElseThrow(() -> new EntityNotFoundException("Rol no encontrado con el ID proporcionado"));
         return rol.getEmpleados();
@@ -131,8 +131,7 @@ public class RolServiceImp implements RolService {
      * @throws EntityNotFoundException Si no se encuentra el empleado asociado al rol.
      */
     @Override
-    @Transactional
-    public Empleado getEmpleadoByRolId(Long idRol, Long idEmpleado) throws EntityNotFoundException {
+    public Empleado getByIdEmpleadoByRolId(Long idRol, Long idEmpleado) throws EntityNotFoundException {
         Rol rol = rolRepository.findById(idRol)
                 .orElseThrow(() -> new EntityNotFoundException("Rol no encontrado con el ID proporcionado"));
 
@@ -150,6 +149,7 @@ public class RolServiceImp implements RolService {
 
         return empleadoOpt.get();
     }
+
 
 
 

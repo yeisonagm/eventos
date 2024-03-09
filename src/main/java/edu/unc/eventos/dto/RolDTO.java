@@ -7,11 +7,13 @@ package edu.unc.eventos.dto;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +25,7 @@ import java.util.List;
  */
 @Data
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idRol")
-public class RolDTO {
+public class RolDTO extends RepresentationModel<RolDTO> {
     /**
      * El campo idRol es el identificador único de cada Rol en la base de datos.
      * Este campo es generado automáticamente por la base de datos cuando se crea un nuevo Rol.
@@ -47,5 +49,6 @@ public class RolDTO {
      * Cuando un empleado es asignado a este Rol, se añade a esta lista.
      */
     @JsonIdentityReference(alwaysAsId = true)
+    @JsonIgnore
     private List<EmpleadoDTO> empleados = new ArrayList<>();
 }
