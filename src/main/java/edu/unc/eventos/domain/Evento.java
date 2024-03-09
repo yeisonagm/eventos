@@ -51,32 +51,47 @@ public class Evento {
     private String total;
 
     /**
-     * El campo 'empleado' representa el empleado asociado al evento.
+     * Relación con Empleado: Representa el empleado asociado al evento.
      */
     @ManyToOne
+    @JoinColumn(name = "id_empleado")
+    @JsonIdentityReference(alwaysAsId = true)
     private Empleado empleado;
 
     /**
-     * El campo 'cliente' representa el cliente asociado al evento.
+     * Relación con Cliente: Representa el cliente asociado al evento.
      */
     @ManyToOne
+    @JoinColumn(name = "id_cliente")
+    @JsonIdentityReference(alwaysAsId = true)
     private Cliente cliente;
 
     /**
-     * El campo 'platos' es una lista de los platos asociados al evento.
+     * Relación con Plato: Representa los platos asociados al evento.
      */
     @ManyToMany
+    @JoinTable(
+            name = "evento_plato",
+            joinColumns = @JoinColumn(name = "id_evento"),
+            inverseJoinColumns = @JoinColumn(name = "id_plato")
+    )
+    @JsonIdentityReference(alwaysAsId = true)
     private List<Plato> platos = new ArrayList<>();
 
+
     /**
-     * El campo 'decoracion' representa la decoración asociada al evento.
+     * Relación con Decoración: Representa la decoración asociada al evento.
      */
     @ManyToOne
+    @JoinColumn(name = "id_decoracion")
+    @JsonIdentityReference(alwaysAsId = true)
     private Decoracion decoracion;
 
     /**
-     * El campo 'local' representa el local donde se llevará a cabo el evento.
+     * Relación con Local: Representa el local asociado al evento.
      */
     @ManyToOne
+    @JoinColumn(name = "id_local")
+    @JsonIdentityReference(alwaysAsId = true)
     private Local local;
 }

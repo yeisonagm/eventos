@@ -5,7 +5,9 @@
  */
 package edu.unc.eventos.dto;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.unc.eventos.domain.Empleado;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -21,6 +23,7 @@ import java.util.List;
  * relevantes para la comunicación entre capas o servicios.
  */
 @Data
+
 public class RolDTO {
     /**
      * El campo idRol es el identificador único de cada Rol en la base de datos.
@@ -44,7 +47,5 @@ public class RolDTO {
      * Esta lista puede estar vacía, lo que significa que actualmente no hay empleados que tengan este Rol.
      * Cuando un empleado es asignado a este Rol, se añade a esta lista.
      */
-    @OneToMany(mappedBy = "rol")
-    @JsonIgnore
     private List<Empleado> empleados = new ArrayList<>();
 }

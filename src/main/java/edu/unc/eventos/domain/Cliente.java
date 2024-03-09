@@ -8,6 +8,8 @@
 package edu.unc.eventos.domain;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -47,8 +49,10 @@ public class Cliente {
     private String telefono;
 
     /**
-     * El campo 'eventos' es una lista de eventos asociados al cliente.
+     * Lista de eventos asociados al cliente.
+     * Esto representa una relación uno a muchos con la clase Evento.
      */
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    @JsonIdentityReference(alwaysAsId = true)
     private List<Evento> eventos = new ArrayList<>();
 }

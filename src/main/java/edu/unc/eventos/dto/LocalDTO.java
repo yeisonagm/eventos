@@ -6,8 +6,10 @@
  */
 package edu.unc.eventos.dto;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.unc.eventos.domain.Evento;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+
 public class LocalDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,8 +63,5 @@ public class LocalDTO {
      * El campo eventos representa la lista de eventos asociados al local.
      * Un local puede tener múltiples eventos asociados.
      */
-    @OneToMany(mappedBy = "local")
-    @JsonIgnore
-    @JsonIdentityReference(alwaysAsId = true)
     private List<Evento> eventos = new ArrayList<>();
 }

@@ -174,7 +174,6 @@ public class DecoracionController {
             EventoDTO eventoDTO = modelMapper.map(evento, EventoDTO.class);
             ApiResponse<EventoDTO> response = new ApiResponse<>(true, "Evento encontrado", eventoDTO);
             return ResponseEntity.ok(response);
-
         }
     }
 }

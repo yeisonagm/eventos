@@ -5,8 +5,7 @@
  */
 package edu.unc.eventos.dto;
 
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import edu.unc.eventos.domain.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -23,6 +22,7 @@ import java.util.List;
  * relevantes para la comunicación entre capas o servicios.
  */
 @Data
+
 public class EventoDTO {
     /**
      * El campo idEvento es el identificador único de cada Evento en la base de datos.
@@ -80,47 +80,36 @@ public class EventoDTO {
     /**
      * Relación con Empleado: Representa el empleado asociado al evento.
      */
-    @ManyToOne
+
     @JoinColumn(name = "id_empleado")
-    @JsonIgnore
     private Empleado empleado;
 
     /**
      * Relación con Cliente: Representa el cliente asociado al evento.
      */
-    @ManyToOne
+
     @JoinColumn(name = "id_cliente")
-    @JsonIgnore
     private Cliente cliente;
 
     /**
      * Relación con Plato: Representa los platos asociados al evento.
      */
-    @ManyToMany
     @JoinTable(
             name = "evento_plato",
             joinColumns = @JoinColumn(name = "id_evento"),
             inverseJoinColumns = @JoinColumn(name = "id_plato")
     )
-    @JsonIdentityReference(alwaysAsId = true)
-    @JsonIgnore
     private List<Plato> platos = new ArrayList<>();
 
 
     /**
      * Relación con Decoración: Representa la decoración asociada al evento.
      */
-    @ManyToOne
-    @JoinColumn(name = "id_decoracion")
-    @JsonIgnore
     private Decoracion decoracion;
 
     /**
      * Relación con Local: Representa el local asociado al evento.
      */
-    @ManyToOne
     @JoinColumn(name = "id_local")
-    //@JsonIgnore
-    @JsonIdentityReference(alwaysAsId = true)
     private Local local;
 }

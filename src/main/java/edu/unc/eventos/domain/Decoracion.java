@@ -6,6 +6,8 @@
 package edu.unc.eventos.domain;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -40,8 +42,9 @@ public class Decoracion {
     private String color;
 
     /**
-     * El campo 'eventos' es una lista de todos los eventos que están asociados a esta decoración.
+     * Relación con Evento.
      */
     @OneToMany(mappedBy = "decoracion", cascade = CascadeType.ALL)
+    @JsonIdentityReference(alwaysAsId = true)
     private List<Evento> eventos = new ArrayList<>();
 }

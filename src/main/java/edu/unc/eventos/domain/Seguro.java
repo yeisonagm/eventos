@@ -8,6 +8,8 @@
 package edu.unc.eventos.domain;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
@@ -38,8 +40,11 @@ public class Seguro {
     private Date fechaInscripcion;
 
     /**
-     * El campo 'empleado' representa el empleado asociado al seguro.
+     * Relación con Empleado.
+     * Representa una relación uno a uno con la clase Empleado.
      */
     @OneToOne
+    @JoinColumn(name = "id_empleado")
+    @JsonIdentityReference(alwaysAsId = true)
     private Empleado empleado;
 }

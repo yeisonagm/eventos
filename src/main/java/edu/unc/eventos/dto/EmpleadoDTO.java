@@ -5,7 +5,9 @@
  */
 package edu.unc.eventos.dto;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.unc.eventos.domain.Empleado;
 import edu.unc.eventos.domain.Evento;
 import edu.unc.eventos.domain.Rol;
@@ -24,6 +26,7 @@ import java.util.List;
  * a la capa de presentación.
  */
 @Data
+
 public class EmpleadoDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -90,37 +93,28 @@ public class EmpleadoDTO {
     /**
      * Relación con Supervisor.
      */
-    @ManyToOne
     @JoinColumn(name = "id_supervisor")
-    @JsonIgnore
     private Empleado supervisor;
 
     /**
      * Relación con Empleado.
      */
-    @OneToMany(mappedBy = "supervisor")
-    @JsonIgnore
     private List<Empleado> empleados_supervisados;
 
     /**
      * Relación con Evento.
      */
-    @OneToMany(mappedBy = "empleado")
-    @JsonIgnore
     private List<Evento> eventos = new ArrayList<>();
 
     /**
      * Relación con Rol.
      */
-    @ManyToOne
     @JoinColumn(name = "id_rol")
-    @JsonIgnore
     private Rol rol;
 
     /**
      * Relación con Seguro.
      */
-    @OneToOne(mappedBy = "empleado")
-    @JsonIgnore
     private Seguro seguro;
+
 }

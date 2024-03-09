@@ -5,7 +5,9 @@
  */
 package edu.unc.eventos.dto;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.unc.eventos.domain.Empleado;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -20,6 +22,7 @@ import java.util.Date;
  */
 
 @Data
+
 public class SeguroDTO {
     /**
      * El campo idSeguro es el identificador único de cada seguro en la base de datos.
@@ -52,8 +55,5 @@ public class SeguroDTO {
      * Relación con Empleado.
      * Representa una relación uno a uno con la clase Empleado.
      */
-    @OneToOne
-    @JoinColumn(name = "id_empleado")
-    @JsonIgnore
     private Empleado empleado;
 }

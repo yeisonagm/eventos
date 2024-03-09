@@ -46,5 +46,6 @@ public class Plato {
      * El campo 'eventos' es una lista de todos los eventos en los que se puede servir este plato.
      */
     @ManyToMany(mappedBy = "platos")
+    @JsonIdentityReference(alwaysAsId = true)
     private List<Evento> eventos = new ArrayList<>();
 }

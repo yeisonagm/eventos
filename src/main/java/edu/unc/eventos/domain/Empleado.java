@@ -60,26 +60,35 @@ public class Empleado {
      */
     @ManyToOne
     @JoinColumn(name = "id_supervisor")
-    @JsonIgnore
+    @JsonIdentityReference(alwaysAsId = true)
     private Empleado supervisor;
+
     /**
-     * El campo 'empleados' es una lista de empleados asociados al empleado.
+     * Relación con Empleado.
      */
     @OneToMany(mappedBy = "supervisor")
-    private List<Empleado> empleados_supervisados = new ArrayList<>();
+    @JsonIdentityReference(alwaysAsId = true)
+    private List<Empleado> empleados_supervisados;
+
     /**
-     * El campo 'eventos' es una lista de eventos asociados al empleado.
+     * Relación con Evento.
      */
     @OneToMany(mappedBy = "empleado")
+    @JsonIdentityReference(alwaysAsId = true)
     private List<Evento> eventos = new ArrayList<>();
+
     /**
-     * El campo 'rol' representa el rol del empleado.
+     * Relación con Rol.
      */
     @ManyToOne
+    @JoinColumn(name = "id_rol")
+    @JsonIdentityReference(alwaysAsId = true)
     private Rol rol;
+
     /**
-     * El campo 'seguro' representa el seguro del empleado.
+     * Relación con Seguro.
      */
     @OneToOne(mappedBy = "empleado")
+    @JsonIdentityReference(alwaysAsId = true)
     private Seguro seguro;
 }

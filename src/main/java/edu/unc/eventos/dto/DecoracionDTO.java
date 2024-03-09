@@ -6,7 +6,10 @@
  */
 package edu.unc.eventos.dto;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.unc.eventos.domain.Evento;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -17,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+
 public class DecoracionDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,6 +45,7 @@ public class DecoracionDTO {
     /**
      * Color predominante de la decoración.
      */
+    @NotNull(message = "El color no puede estar vacío.")
     @Size(min = 3, max = 20, message = "El color de la decoración debe tener entre 3 a 20 caracteres.")
     @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚ\\s]*$", message = "El color solo puede contener letras")
     private String color;
@@ -48,7 +53,5 @@ public class DecoracionDTO {
     /**
      * Relación con Evento.
      */
-    @OneToMany(mappedBy = "decoracion", cascade = CascadeType.ALL)
-    @JsonIgnore
     private List<Evento> eventos = new ArrayList<>();
 }

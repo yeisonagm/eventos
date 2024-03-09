@@ -6,7 +6,7 @@
  */
 package edu.unc.eventos.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import edu.unc.eventos.domain.Evento;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+
 public class PlatoDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,10 +49,8 @@ public class PlatoDTO {
     @Size(min = 5, max = 15, message = "La tipo del plato debe tener entre 5 a 15 caracteres.")
     private String tipo;
 
-    /** Relación con Evento.
-     * Representa la lista de eventos en los que se puede servir el plato.
+    /**
+     * El campo 'eventos' es una lista de todos los eventos en los que se puede servir este plato.
      */
-    @ManyToMany(mappedBy = "platos")
-    @JsonIgnore
     private List<Evento> eventos = new ArrayList<>();
 }

@@ -10,6 +10,8 @@
 package edu.unc.eventos.domain;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -48,9 +50,11 @@ public class Local {
      */
     private String ubicacion;
 
-    /**
-     * El campo 'eventos' es una lista de todos los eventos que están asociados a este local.
+    /** Relación con Evento.
+     * El campo eventos representa la lista de eventos asociados al local.
+     * Un local puede tener múltiples eventos asociados.
      */
     @OneToMany(mappedBy = "local")
+    @JsonIdentityReference(alwaysAsId = true)
     private List<Evento> eventos = new ArrayList<>();
 }

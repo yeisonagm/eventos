@@ -6,10 +6,13 @@
 package edu.unc.eventos.domain;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,8 +37,11 @@ public class Rol {
     private String nombre;
 
     /**
-     * El campo 'empleados' es una lista de los empleados asociados a este rol.
+     * El campo Empleados es una lista de todos los empleados que están asociados a este Rol.
+     * Esta lista puede estar vacía, lo que significa que actualmente no hay empleados que tengan este Rol.
+     * Cuando un empleado es asignado a este Rol, se añade a esta lista.
      */
     @OneToMany(mappedBy = "rol")
-    private List<Empleado> empleados;
+    @JsonIdentityReference(alwaysAsId = true)
+    private List<Empleado> empleados = new ArrayList<>();
 }

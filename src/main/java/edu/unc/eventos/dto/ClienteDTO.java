@@ -5,7 +5,9 @@
  */
 package edu.unc.eventos.dto;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.unc.eventos.domain.Evento;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -22,6 +24,7 @@ import java.util.List;
  */
 
 @Data
+
 public class ClienteDTO {
     /**
      * El campo idCliente es el identificador único de cada cliente en la base de datos.
@@ -74,7 +77,5 @@ public class ClienteDTO {
      * Lista de eventos asociados al cliente.
      * Esto representa una relación uno a muchos con la clase Evento.
      */
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
-    @JsonIgnore
     private List<Evento> eventos = new ArrayList<>();
 }
