@@ -5,7 +5,6 @@
  */
 package edu.unc.eventos.domain;
 
-import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.Data;
 

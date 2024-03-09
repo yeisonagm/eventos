@@ -6,7 +6,6 @@
 package edu.unc.eventos.dto;
 
 import com.fasterxml.jackson.annotation.*;
-import edu.unc.eventos.domain.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -88,8 +87,6 @@ public class EventoDTO {
     /**
      * Relación con Cliente: Representa el cliente asociado al evento.
      */
-
-    @JoinColumn(name = "id_cliente")
     private ClienteDTO cliente;
 
     /**
@@ -111,6 +108,5 @@ public class EventoDTO {
     /**
      * Relación con Local: Representa el local asociado al evento.
      */
-    @JoinColumn(name = "id_local")
     private LocalDTO local;
 }

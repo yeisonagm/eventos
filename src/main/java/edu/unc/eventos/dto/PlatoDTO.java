@@ -7,7 +7,6 @@
 package edu.unc.eventos.dto;
 
 import com.fasterxml.jackson.annotation.*;
-import edu.unc.eventos.domain.Evento;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;

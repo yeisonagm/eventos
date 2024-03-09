@@ -7,10 +7,7 @@
 package edu.unc.eventos.dto;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.unc.eventos.domain.Evento;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
