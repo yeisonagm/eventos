@@ -8,10 +8,12 @@ package edu.unc.eventos.dto;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -19,7 +21,7 @@ import java.util.List;
 
 @Data
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idDecoracion")
-public class DecoracionDTO {
+public class DecoracionDTO extends RepresentationModel<DecoracionDTO> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idDecoracion;
@@ -52,5 +54,6 @@ public class DecoracionDTO {
      * Relación con Evento.
      */
     @JsonIdentityReference(alwaysAsId = true)
+    @JsonIgnore
     private List<EventoDTO> eventos = new ArrayList<>();
 }
