@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idDecoracion")
 public class DecoracionDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,5 +53,6 @@ public class DecoracionDTO {
     /**
      * Relación con Evento.
      */
-    private List<Evento> eventos = new ArrayList<>();
+    @JsonIdentityReference(alwaysAsId = true)
+    private List<EventoDTO> eventos = new ArrayList<>();
 }

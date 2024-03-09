@@ -6,6 +6,7 @@
 package edu.unc.eventos.dto;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.unc.eventos.domain.Empleado;
@@ -26,7 +27,7 @@ import java.util.List;
  * a la capa de presentación.
  */
 @Data
-
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idEmpleado")
 public class EmpleadoDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -94,27 +95,30 @@ public class EmpleadoDTO {
      * Relación con Supervisor.
      */
     @JoinColumn(name = "id_supervisor")
-    private Empleado supervisor;
+    @JsonIdentityReference(alwaysAsId = true)
+    private EmpleadoDTO supervisor;
 
     /**
      * Relación con Empleado.
      */
-    private List<Empleado> empleados_supervisados;
+    @JsonIdentityReference(alwaysAsId = true)
+    private List<EmpleadoDTO> empleados_supervisados;
 
     /**
      * Relación con Evento.
      */
-    private List<Evento> eventos = new ArrayList<>();
+    @JsonIdentityReference(alwaysAsId = true)
+    private List<EventoDTO> eventos = new ArrayList<>();
 
     /**
      * Relación con Rol.
      */
     @JoinColumn(name = "id_rol")
-    private Rol rol;
+    private RolDTO rol;
 
     /**
      * Relación con Seguro.
      */
-    private Seguro seguro;
+    private SeguroDTO seguro;
 
 }

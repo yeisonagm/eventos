@@ -17,7 +17,6 @@ import java.util.List;
 
 @Entity
 @Data
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idDecoracion")
 public class Decoracion {
     /**
      * El campo 'idDecoracion' corresponde al identificador único de la decoración en el sistema.
@@ -45,6 +44,5 @@ public class Decoracion {
      * Relación con Evento.
      */
     @OneToMany(mappedBy = "decoracion", cascade = CascadeType.ALL)
-    @JsonIdentityReference(alwaysAsId = true)
     private List<Evento> eventos = new ArrayList<>();
 }

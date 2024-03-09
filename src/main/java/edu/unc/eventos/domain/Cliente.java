@@ -20,7 +20,6 @@ import java.util.List;
 
 @Entity
 @Data
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idCliente")
 public class Cliente extends RepresentationModel<Cliente> {
     /**
      * El campo 'idCliente' es el identificador único del cliente.
@@ -54,6 +53,5 @@ public class Cliente extends RepresentationModel<Cliente> {
      * Esto representa una relación uno a muchos con la clase Evento.
      */
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
-    @JsonIdentityReference(alwaysAsId = true)
     private List<Evento> eventos = new ArrayList<>();
 }

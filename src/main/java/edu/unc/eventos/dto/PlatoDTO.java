@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idPlato")
 public class PlatoDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,5 +52,6 @@ public class PlatoDTO {
     /**
      * El campo 'eventos' es una lista de todos los eventos en los que se puede servir este plato.
      */
-    private List<Evento> eventos = new ArrayList<>();
+    @JsonIdentityReference(alwaysAsId = true)
+    private List<EventoDTO> eventos = new ArrayList<>();
 }

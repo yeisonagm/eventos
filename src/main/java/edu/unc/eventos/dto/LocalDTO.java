@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idLocal")
 public class LocalDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,5 +63,6 @@ public class LocalDTO {
      * El campo eventos representa la lista de eventos asociados al local.
      * Un local puede tener múltiples eventos asociados.
      */
-    private List<Evento> eventos = new ArrayList<>();
+
+    private List<EventoDTO> eventos = new ArrayList<>();
 }

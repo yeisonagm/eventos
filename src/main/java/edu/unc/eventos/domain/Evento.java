@@ -15,7 +15,7 @@ import java.util.List;
 
 @Entity
 @Data
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idEvento")
+
 public class Evento {
     /**
      * El campo 'idEvento' es el identificador único del evento.
@@ -55,7 +55,6 @@ public class Evento {
      */
     @ManyToOne
     @JoinColumn(name = "id_empleado")
-    @JsonIdentityReference(alwaysAsId = true)
     private Empleado empleado;
 
     /**
@@ -63,7 +62,6 @@ public class Evento {
      */
     @ManyToOne
     @JoinColumn(name = "id_cliente")
-    @JsonIdentityReference(alwaysAsId = true)
     private Cliente cliente;
 
     /**
@@ -75,7 +73,6 @@ public class Evento {
             joinColumns = @JoinColumn(name = "id_evento"),
             inverseJoinColumns = @JoinColumn(name = "id_plato")
     )
-    @JsonIdentityReference(alwaysAsId = true)
     private List<Plato> platos = new ArrayList<>();
 
 
@@ -84,7 +81,6 @@ public class Evento {
      */
     @ManyToOne
     @JoinColumn(name = "id_decoracion")
-    @JsonIdentityReference(alwaysAsId = true)
     private Decoracion decoracion;
 
     /**
@@ -92,6 +88,5 @@ public class Evento {
      */
     @ManyToOne
     @JoinColumn(name = "id_local")
-    @JsonIdentityReference(alwaysAsId = true)
     private Local local;
 }

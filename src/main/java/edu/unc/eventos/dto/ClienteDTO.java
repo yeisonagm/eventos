@@ -6,9 +6,8 @@
 package edu.unc.eventos.dto;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.unc.eventos.domain.Evento;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -16,7 +15,6 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.hateoas.RepresentationModel;
 
-import java.util.ArrayList;
 import java.util.List;
 /**
  * La clase ClienteDTO es un objeto de transferencia de datos (DTO) que se utiliza para representar información
@@ -25,8 +23,7 @@ import java.util.List;
  */
 
 @Data
-
-public class ClienteDTO {
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idCliente")
 public class ClienteDTO extends RepresentationModel<ClienteDTO> {
     /**
      * El campo idCliente es el identificador único de cada cliente en la base de datos.
@@ -79,8 +76,6 @@ public class ClienteDTO extends RepresentationModel<ClienteDTO> {
      * Lista de eventos asociados al cliente.
      * Esto representa una relación uno a muchos con la clase Evento.
      */
-    private List<Evento> eventos = new ArrayList<>();
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
-    @JsonIgnore
+    @JsonIdentityReference(alwaysAsId = true)
     private List<EventoDTO> eventos;
 }

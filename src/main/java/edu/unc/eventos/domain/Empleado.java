@@ -18,7 +18,6 @@ import java.util.List;
  */
 @Entity
 @Data
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idEmpleado")
 public class Empleado {
     /**
      * El campo 'idEmpleado' es el identificador único del empleado.
@@ -60,21 +59,18 @@ public class Empleado {
      */
     @ManyToOne
     @JoinColumn(name = "id_supervisor")
-    @JsonIdentityReference(alwaysAsId = true)
     private Empleado supervisor;
 
     /**
      * Relación con Empleado.
      */
     @OneToMany(mappedBy = "supervisor")
-    @JsonIdentityReference(alwaysAsId = true)
     private List<Empleado> empleados_supervisados;
 
     /**
      * Relación con Evento.
      */
     @OneToMany(mappedBy = "empleado")
-    @JsonIdentityReference(alwaysAsId = true)
     private List<Evento> eventos = new ArrayList<>();
 
     /**
@@ -82,13 +78,11 @@ public class Empleado {
      */
     @ManyToOne
     @JoinColumn(name = "id_rol")
-    @JsonIdentityReference(alwaysAsId = true)
     private Rol rol;
 
     /**
      * Relación con Seguro.
      */
     @OneToOne(mappedBy = "empleado")
-    @JsonIdentityReference(alwaysAsId = true)
     private Seguro seguro;
 }

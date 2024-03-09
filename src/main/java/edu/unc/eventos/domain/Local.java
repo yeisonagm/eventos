@@ -21,7 +21,7 @@ import java.util.List;
 
 @Entity
 @Data
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idLocal")
+
 public class Local {
     /**
      * El campo 'idLocal' corresponde al identificador único del local en el sistema.
@@ -55,6 +55,5 @@ public class Local {
      * Un local puede tener múltiples eventos asociados.
      */
     @OneToMany(mappedBy = "local")
-    @JsonIdentityReference(alwaysAsId = true)
     private List<Evento> eventos = new ArrayList<>();
 }

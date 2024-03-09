@@ -6,6 +6,7 @@
 package edu.unc.eventos.dto;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.unc.eventos.domain.Empleado;
@@ -22,7 +23,7 @@ import java.util.Date;
  */
 
 @Data
-
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idSeguro")
 public class SeguroDTO {
     /**
      * El campo idSeguro es el identificador único de cada seguro en la base de datos.
@@ -55,5 +56,5 @@ public class SeguroDTO {
      * Relación con Empleado.
      * Representa una relación uno a uno con la clase Empleado.
      */
-    private Empleado empleado;
+    private EmpleadoDTO empleado;
 }

@@ -71,7 +71,6 @@ public class ClienteController {
     public ResponseEntity<?> getById(@PathVariable Long id) {
         Cliente cliente = clienteService.getById(id);
         ClienteDTO clienteDTO = modelMapper.map(cliente, ClienteDTO.class);
-
         // Mapear los eventos de cada cliente y agregarlos al DTO
         List<EventoDTO> eventoDTOs = cliente.getEventos().stream()
                 .map(evento -> modelMapper.map(evento, EventoDTO.class))
@@ -81,7 +80,6 @@ public class ClienteController {
         ApiResponse<ClienteDTO> response = new ApiResponse<>(true, "Cliente", clienteDTO);
         return ResponseEntity.ok(response);
     }
-
 
     /**
      * Crea un nuevo cliente.

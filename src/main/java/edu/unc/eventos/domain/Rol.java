@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Entity
 @Data
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idRol")
+
 public class Rol {
     /**
      * El campo 'idRol' es el identificador único del rol.
@@ -42,6 +42,5 @@ public class Rol {
      * Cuando un empleado es asignado a este Rol, se añade a esta lista.
      */
     @OneToMany(mappedBy = "rol")
-    @JsonIdentityReference(alwaysAsId = true)
     private List<Empleado> empleados = new ArrayList<>();
 }

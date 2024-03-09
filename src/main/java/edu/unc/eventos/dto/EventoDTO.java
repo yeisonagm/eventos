@@ -22,7 +22,7 @@ import java.util.List;
  * relevantes para la comunicación entre capas o servicios.
  */
 @Data
-
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idEvento")
 public class EventoDTO {
     /**
      * El campo idEvento es el identificador único de cada Evento en la base de datos.
@@ -82,14 +82,15 @@ public class EventoDTO {
      */
 
     @JoinColumn(name = "id_empleado")
-    private Empleado empleado;
+    @JsonIdentityReference(alwaysAsId = true)
+    private EmpleadoDTO empleado;
 
     /**
      * Relación con Cliente: Representa el cliente asociado al evento.
      */
 
     @JoinColumn(name = "id_cliente")
-    private Cliente cliente;
+    private ClienteDTO cliente;
 
     /**
      * Relación con Plato: Representa los platos asociados al evento.
@@ -99,17 +100,17 @@ public class EventoDTO {
             joinColumns = @JoinColumn(name = "id_evento"),
             inverseJoinColumns = @JoinColumn(name = "id_plato")
     )
-    private List<Plato> platos = new ArrayList<>();
+    private List<PlatoDTO> platos = new ArrayList<>();
 
 
     /**
      * Relación con Decoración: Representa la decoración asociada al evento.
      */
-    private Decoracion decoracion;
+    private DecoracionDTO decoracion;
 
     /**
      * Relación con Local: Representa el local asociado al evento.
      */
     @JoinColumn(name = "id_local")
-    private Local local;
+    private LocalDTO local;
 }

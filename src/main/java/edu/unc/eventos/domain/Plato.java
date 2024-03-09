@@ -18,7 +18,7 @@ import java.util.List;
 
 @Entity
 @Data
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idPlato")
+
 public class Plato {
     /**
      * El campo 'idPlato' corresponde al identificador único del plato en el sistema.
@@ -46,6 +46,5 @@ public class Plato {
      * El campo 'eventos' es una lista de todos los eventos en los que se puede servir este plato.
      */
     @ManyToMany(mappedBy = "platos")
-    @JsonIdentityReference(alwaysAsId = true)
     private List<Evento> eventos = new ArrayList<>();
 }

@@ -20,7 +20,7 @@ import java.util.Date;
 
 @Entity
 @Data
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idSeguro")
+
 public class Seguro {
     /**
      * El campo 'idSeguro' es el identificador único del seguro.
@@ -45,6 +45,5 @@ public class Seguro {
      */
     @OneToOne
     @JoinColumn(name = "id_empleado")
-    @JsonIdentityReference(alwaysAsId = true)
     private Empleado empleado;
 }
