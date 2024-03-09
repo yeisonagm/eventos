@@ -121,6 +121,7 @@ class EventoController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody EventoDTO eventoDTO) throws IllegalOperationException {
         Evento evento = modelMapper.map(eventoDTO, Evento.class);
+
         // Realiza la validación, si hay errores de validación, maneja los errores
         Set<ConstraintViolation<Evento>> violations = validator.validate(evento);
         if (!violations.isEmpty()) {

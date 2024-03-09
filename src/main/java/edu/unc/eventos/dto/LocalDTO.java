@@ -6,6 +6,7 @@
  */
 package edu.unc.eventos.dto;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.unc.eventos.domain.Evento;
 import jakarta.persistence.*;
@@ -61,5 +62,6 @@ public class LocalDTO {
      */
     @OneToMany(mappedBy = "local")
     @JsonIgnore
+    @JsonIdentityReference(alwaysAsId = true)
     private List<Evento> eventos = new ArrayList<>();
 }

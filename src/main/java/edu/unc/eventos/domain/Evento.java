@@ -37,6 +37,7 @@ public class Evento {
     /**
      * El campo 'fecha' representa la fecha en la que se llevará a cabo el evento.
      */
+    @Temporal(TemporalType.DATE)
     private Date fecha;
 
     /**
