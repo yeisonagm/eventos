@@ -19,16 +19,15 @@ import edu.unc.eventos.exception.IllegalOperationException;
 import edu.unc.eventos.services.PlatoService;
 import edu.unc.eventos.util.ApiResponse;
 import edu.unc.eventos.util.EntityValidator;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -40,9 +39,6 @@ public class PlatoController {
 
     @Autowired
     private ModelMapper modelMapper;
-
-    @Autowired
-    private Validator validator;
 
     /**
      * Obtiene todos los platos disponibles.
@@ -100,8 +96,8 @@ public class PlatoController {
     @GetMapping("/{platoId}/eventos")
     public ResponseEntity<?> getEventosByPlatoId(@PathVariable Long platoId) {
         List<Evento> eventos = platoService.getEventosByPlatoId(platoId);
-        List<EventoDTO> eventoDTOS = eventos.stream().map(evento -> modelMapper.map(evento,EventoDTO.class)).collect(Collectors.toList());
-        ApiResponse<List<EventoDTO>> response = new ApiResponse<>(true,"Lista de Eventos",eventoDTOS);
+        List<EventoDTO> eventoDTOS = eventos.stream().map(evento -> modelMapper.map(evento, EventoDTO.class)).collect(Collectors.toList());
+        ApiResponse<List<EventoDTO>> response = new ApiResponse<>(true, "Lista de Eventos", eventoDTOS);
         return ResponseEntity.ok(response);
     }
 
@@ -119,8 +115,8 @@ public class PlatoController {
     @GetMapping("/{platoId}/eventos/{eventoId}")
     public ResponseEntity<?> getEventoByPlatoId(@PathVariable Long platoId, @PathVariable Long eventoId) {
         Evento evento = platoService.getEventoByPlatoId(platoId, eventoId);
-        EventoDTO eventoDTO = modelMapper.map(evento,EventoDTO.class);
-        ApiResponse<EventoDTO> response = new ApiResponse<>(true,"Evento Encontrado",eventoDTO);
+        EventoDTO eventoDTO = modelMapper.map(evento, EventoDTO.class);
+        ApiResponse<EventoDTO> response = new ApiResponse<>(true, "Evento Encontrado", eventoDTO);
         return ResponseEntity.ok(response);
     }
 
@@ -138,13 +134,10 @@ public class PlatoController {
      * @throws IllegalOperationException Si ocurre una operación ilegal durante la creación del plato.
      */
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody PlatoDTO platoDTO) throws IllegalOperationException {
+    public ResponseEntity<?> create(@RequestBody @Valid PlatoDTO platoDTO, BindingResult result) throws IllegalOperationException {
+        if (result.hasErrors()) return new EntityValidator().validate(result);
+
         Plato plato = modelMapper.map(platoDTO, Plato.class);
-        Set<ConstraintViolation<Plato>> violations = validator.validate(plato);
-        if (!violations.isEmpty()) {
-            EntityValidator entityValidator = new EntityValidator();
-            return entityValidator.validate(violations);
-        }
         platoService.save(plato);
         PlatoDTO saveDTO = modelMapper.map(plato, PlatoDTO.class);
         ApiResponse<PlatoDTO> response = new ApiResponse<>(true, "Plato guardado", saveDTO);
@@ -167,13 +160,10 @@ public class PlatoController {
      * @throws IllegalOperationException Si ocurre una operación ilegal durante la actualización del plato.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody PlatoDTO platoDTO) throws EntityNotFoundException, IllegalOperationException {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody @Valid PlatoDTO platoDTO, BindingResult result) throws EntityNotFoundException, IllegalOperationException {
+        if (result.hasErrors()) return new EntityValidator().validate(result);
+
         Plato plato = modelMapper.map(platoDTO, Plato.class);
-        Set<ConstraintViolation<Plato>> violations = validator.validate(plato);
-        if (!violations.isEmpty()) {
-            EntityValidator entityValidator = new EntityValidator();
-            return entityValidator.validate(violations);
-        }
         platoService.update(id, plato);
         PlatoDTO updateDTO = modelMapper.map(plato, PlatoDTO.class);
         ApiResponse<PlatoDTO> response = new ApiResponse<>(true, "Plato actualizado", updateDTO);

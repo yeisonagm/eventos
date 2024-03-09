@@ -8,16 +8,15 @@ import edu.unc.eventos.exception.IllegalOperationException;
 import edu.unc.eventos.services.ClienteService;
 import edu.unc.eventos.util.ApiResponse;
 import edu.unc.eventos.util.EntityValidator;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -29,9 +28,6 @@ public class ClienteController {
 
     @Autowired
     private ModelMapper modelMapper;
-
-    @Autowired
-    private Validator validator;
 
     /**
      * Obtiene todos los clientes.
@@ -70,18 +66,14 @@ public class ClienteController {
      * @throws IllegalOperationException Sí hay una operación ilegal.
      */
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody ClienteDTO clienteDTO) throws IllegalOperationException {
+    public ResponseEntity<?> create(@RequestBody @Valid ClienteDTO clienteDTO, BindingResult result) throws IllegalOperationException {
+        if (result.hasErrors()) return new EntityValidator().validate(result);
+
         Cliente cliente = modelMapper.map(clienteDTO, Cliente.class);
-        Set<ConstraintViolation<Cliente>> violations = validator.validate(cliente);
-        if(!violations.isEmpty()){
-            EntityValidator entityValidator=new EntityValidator();
-            return entityValidator.validate(violations);
-        }
         cliente = clienteService.save(cliente);
         ClienteDTO createdDTO = modelMapper.map(cliente, ClienteDTO.class);
         ApiResponse<ClienteDTO> response = new ApiResponse<>(true, "Cliente creado con éxito", createdDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
-
     }
 
     /**
@@ -94,14 +86,11 @@ public class ClienteController {
      * @throws IllegalOperationException Si hay una operación ilegal.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody ClienteDTO clienteDTO)
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody @Valid ClienteDTO clienteDTO, BindingResult result)
             throws EntityNotFoundException, IllegalOperationException {
+        if (result.hasErrors()) return new EntityValidator().validate(result);
+
         Cliente cliente = modelMapper.map(clienteDTO, Cliente.class);
-        Set<ConstraintViolation<Cliente>> violations = validator.validate(cliente);
-        if(!violations.isEmpty()){
-            EntityValidator entityValidator=new EntityValidator();
-            return entityValidator.validate(violations);
-        }
         clienteService.update(id, cliente);
         ClienteDTO updateDTO = modelMapper.map(cliente, ClienteDTO.class);
         ApiResponse<ClienteDTO> response = new ApiResponse<>(true, "Cliente actualizado con éxito", updateDTO);

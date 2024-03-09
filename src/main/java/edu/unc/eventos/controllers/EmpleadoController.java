@@ -12,16 +12,15 @@ import edu.unc.eventos.exception.IllegalOperationException;
 import edu.unc.eventos.services.EmpleadoService;
 import edu.unc.eventos.util.ApiResponse;
 import edu.unc.eventos.util.EntityValidator;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -38,9 +37,6 @@ public class EmpleadoController {
 
     @Autowired
     private ModelMapper modelMapper;
-
-    @Autowired
-    private Validator validator;
 
     /**
      * Obtiene todas los empleados existentes
@@ -83,14 +79,10 @@ public class EmpleadoController {
      * @throws IllegalOperationException Sí se genera una operación ilegal
      */
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody EmpleadoDTO empleadoDTO) throws IllegalOperationException {
+    public ResponseEntity<?> create(@RequestBody @Valid EmpleadoDTO empleadoDTO, BindingResult result) throws IllegalOperationException {
+        if (result.hasErrors()) return new EntityValidator().validate(result);
+
         Empleado empleado = modelMapper.map(empleadoDTO, Empleado.class);
-        // Realiza la validación, si hay errores de validación, maneja los errores
-        Set<ConstraintViolation<Empleado>> violations = validator.validate(empleado);
-        if (!violations.isEmpty()) {
-            EntityValidator entityValidator = new EntityValidator();
-            return entityValidator.validate(violations);
-        }
         empleadoService.save(empleado);
         EmpleadoDTO saveDTO = modelMapper.map(empleado, EmpleadoDTO.class);
         ApiResponse<EmpleadoDTO> response = new ApiResponse<>(true, "Empleado guardado", saveDTO);
@@ -107,14 +99,11 @@ public class EmpleadoController {
      * @throws IllegalOperationException Sí se genera una operación ilegal
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody EmpleadoDTO empleadoDTO) throws EntityNotFoundException, IllegalOperationException {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody @Valid EmpleadoDTO empleadoDTO, BindingResult result)
+            throws EntityNotFoundException, IllegalOperationException {
+        if (result.hasErrors()) return new EntityValidator().validate(result);
+
         Empleado empleado = modelMapper.map(empleadoDTO, Empleado.class);
-        // Realiza la validación, si hay errores de validación, maneja los errores
-        Set<ConstraintViolation<Empleado>> violations = validator.validate(empleado);
-        if (!violations.isEmpty()) {
-            EntityValidator entityValidator = new EntityValidator();
-            return entityValidator.validate(violations);
-        }
         empleadoService.update(id, empleado);
         EmpleadoDTO updateDTO = modelMapper.map(empleado, EmpleadoDTO.class);
         ApiResponse<EmpleadoDTO> response = new ApiResponse<>(true, "Decoración actualizada", updateDTO);

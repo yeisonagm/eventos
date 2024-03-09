@@ -14,16 +14,15 @@ import edu.unc.eventos.exception.IllegalOperationException;
 import edu.unc.eventos.services.RolService;
 import edu.unc.eventos.util.ApiResponse;
 import edu.unc.eventos.util.EntityValidator;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -41,9 +40,6 @@ public class RolController {
 
     @Autowired
     private ModelMapper modelMapper;
-
-    @Autowired
-    private Validator validator;
 
     /**
      * Obtiene todos los roles existentes
@@ -87,14 +83,10 @@ public class RolController {
      * @throws IllegalOperationException Si hay una operación ilegal
      */
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody RolDTO rolDTO) throws IllegalOperationException {
+    public ResponseEntity<?> create(@RequestBody @Valid RolDTO rolDTO, BindingResult result) throws IllegalOperationException {
+        if (result.hasErrors()) return new EntityValidator().validate(result);
+
         Rol rol = modelMapper.map(rolDTO, Rol.class);
-        // Realiza la validación, si hay errores de validación, maneja los errores
-        Set<ConstraintViolation<Rol>> violations = validator.validate(rol);
-        if (!violations.isEmpty()) {
-            EntityValidator entityValidator = new EntityValidator();
-            return entityValidator.validate(violations);
-        }
         rolService.save(rol);
         RolDTO createdDTO = modelMapper.map(rol, RolDTO.class);
         ApiResponse<RolDTO> response = new ApiResponse<>(true, "Rol creado con éxito", createdDTO);
@@ -111,14 +103,11 @@ public class RolController {
      * @throws IllegalOperationException Si hay una operación ilegal
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody RolDTO rolDTO) throws EntityNotFoundException, IllegalOperationException {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody @Valid RolDTO rolDTO, BindingResult result)
+            throws EntityNotFoundException, IllegalOperationException {
+        if (result.hasErrors()) return new EntityValidator().validate(result);
+
         Rol rol = modelMapper.map(rolDTO, Rol.class);
-        // Realiza la validación, si hay errores de validación, maneja los errores
-        Set<ConstraintViolation<Rol>> violations = validator.validate(rol);
-        if (!violations.isEmpty()) {
-            EntityValidator entityValidator = new EntityValidator();
-            return entityValidator.validate(violations);
-        }
         rolService.update(id, rol);
         RolDTO updateDTO = modelMapper.map(rol, RolDTO.class);
         ApiResponse<RolDTO> response = new ApiResponse<>(true, "Rol actualizado", updateDTO);
@@ -160,6 +149,7 @@ public class RolController {
             return ResponseEntity.ok(response);
         }
     }
+
     /**
      * Obtiene todos los empleados asociados a un rol específico por su ID.
      *
@@ -178,7 +168,4 @@ public class RolController {
             return ResponseEntity.ok(response);
         }
     }
-
-
-
 }
