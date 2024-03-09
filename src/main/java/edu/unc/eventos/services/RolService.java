@@ -8,10 +8,12 @@
 package edu.unc.eventos.services;
 
 import edu.unc.eventos.domain.Empleado;
+import edu.unc.eventos.domain.Evento;
 import edu.unc.eventos.domain.Rol;
 import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface RolService {
@@ -44,9 +46,9 @@ public interface RolService {
      * Actualiza un rol existente en el sistema.
      *
      * @param idRol Identificador único del rol que se va a actualizar.
-     * @param rol Objeto Rol con los nuevos datos.
+     * @param rol   Objeto Rol con los nuevos datos.
      * @return Objeto Rol actualizado.
-     * @throws EntityNotFoundException Si no se encuentra ningún rol con el identificador especificado.
+     * @throws EntityNotFoundException   Si no se encuentra ningún rol con el identificador especificado.
      * @throws IllegalOperationException Si hay algún problema con los datos del rol que impide su actualización.
      */
     Rol update(Long idRol, Rol rol) throws EntityNotFoundException, IllegalOperationException;
@@ -55,7 +57,7 @@ public interface RolService {
      * Elimina un rol del sistema según su identificador único.
      *
      * @param idRol Identificador único del rol que se va a eliminar.
-     * @throws EntityNotFoundException Si no se encuentra ningún rol con el identificador especificado.
+     * @throws EntityNotFoundException   Si no se encuentra ningún rol con el identificador especificado.
      * @throws IllegalOperationException Si hay algún problema que impide la eliminación del rol.
      */
     void delete(Long idRol) throws EntityNotFoundException, IllegalOperationException;
@@ -67,7 +69,8 @@ public interface RolService {
      * @return Lista de empleados asociados al rol.
      * @throws EntityNotFoundException Si el rol no se encuentra en la base de datos.
      */
-    List<Empleado> getEmpleadosByRol(Long idRol) throws EntityNotFoundException;
+    List<Empleado> getAllEmpleadosByIdRol(Long idRol) throws EntityNotFoundException;
+
     /**
      * Obtiene un empleado asociado a un rol específico por su ID.
      *
@@ -75,6 +78,7 @@ public interface RolService {
      * @param idEmpleado ID del empleado que se desea obtener.
      * @return Objeto Empleado asociado al rol con el ID especificado.
      */
-    Empleado getEmpleadoByRolId(Long idRol, Long idEmpleado);
 
+    
+    Empleado getByIdEmpleadoByRolId(Long idRol, Long idEmpleado) throws EntityNotFoundException;
 }

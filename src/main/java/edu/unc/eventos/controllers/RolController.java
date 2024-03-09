@@ -4,12 +4,9 @@
  * @created: Mar 04, 2024 00:04:45 AM
  */
 package edu.unc.eventos.controllers;
-
 import edu.unc.eventos.domain.Empleado;
-import edu.unc.eventos.domain.Evento;
 import edu.unc.eventos.domain.Rol;
 import edu.unc.eventos.dto.EmpleadoDTO;
-import edu.unc.eventos.dto.EventoDTO;
 import edu.unc.eventos.dto.RolDTO;
 import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
@@ -29,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 /**
  * Controlador REST que gestiona las operaciones CRUD para 'Roles'.
@@ -142,6 +138,12 @@ public class RolController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    /**
+     * Obtiene todos los empleados asociados a un Rol por su ID
+     *
+     * @param idRol Identificador del Rol
+     * @return Lista de empleados
+     */
     @GetMapping("/{idRol}/empleados")
     public ResponseEntity<?> getAllEmpleadosByIdRol(@PathVariable Long idRol) {
         List<Empleado> empleados = rolService.getAllEmpleadosByIdRol(idRol);
@@ -155,7 +157,13 @@ public class RolController {
             return ResponseEntity.ok(response);
         }
     }
-
+    /**
+     * Obtiene un empleado por su ID y el ID de su Rol asociado
+     *
+     * @param idRol     Identificador del Rol
+     * @param idEmpleado Identificador del Empleado
+     * @return Empleado
+     */
     @GetMapping("/{idRol}/empleados/{idEmpleado}")
     public ResponseEntity<?> getByIdEmpleadoByRolId(@PathVariable Long idRol, @PathVariable Long idEmpleado) {
         Empleado empleado = rolService.getByIdEmpleadoByRolId(idRol, idEmpleado);
