@@ -8,12 +8,10 @@
 package edu.unc.eventos.services;
 
 import edu.unc.eventos.domain.Empleado;
-import edu.unc.eventos.domain.Evento;
 import edu.unc.eventos.domain.Rol;
 import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface RolService {
@@ -79,6 +77,6 @@ public interface RolService {
      * @return Objeto Empleado asociado al rol con el ID especificado.
      */
 
-    
+
     Empleado getByIdEmpleadoByRolId(Long idRol, Long idEmpleado) throws EntityNotFoundException;
 }

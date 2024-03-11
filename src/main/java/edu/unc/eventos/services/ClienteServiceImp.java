@@ -6,6 +6,7 @@
 package edu.unc.eventos.services;
 
 import edu.unc.eventos.domain.Cliente;
+import edu.unc.eventos.domain.Evento;
 import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
 import edu.unc.eventos.repositories.ClienteRepository;
@@ -115,4 +116,13 @@ public class ClienteServiceImp implements ClienteService {
 
         clienteRepository.deleteById(idCliente);
     }
+
+    @Override
+    public List<Evento> getAllEventosByIdCliente(Long idCliente) throws EntityNotFoundException {
+        Cliente cliente = clienteRepository.findById(idCliente)
+                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con ID: " + idCliente));
+
+        return cliente.getEventos();
+    }
+
 }

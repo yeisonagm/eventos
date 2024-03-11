@@ -2,6 +2,7 @@ package edu.unc.eventos.controllers;
 
 import edu.unc.eventos.domain.Cliente;
 
+import edu.unc.eventos.domain.Evento;
 import edu.unc.eventos.dto.ClienteDTO;
 import edu.unc.eventos.dto.EventoDTO;
 import edu.unc.eventos.exception.EntityNotFoundException;
@@ -14,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -47,18 +49,23 @@ public class ClienteController {
     @GetMapping
     public ResponseEntity<?> getAll() {
         List<Cliente> clientes = clienteService.getAll();
-        List<ClienteDTO> clienteDTOs = clientes.stream()
-                .map(cliente -> {
-                    ClienteDTO clienteDTO = modelMapper.map(cliente, ClienteDTO.class);
-                    clienteDTO.add(WebMvcLinkBuilder.linkTo(methodOn(ClienteController.class).getById(clienteDTO.getIdCliente())).withSelfRel());
-                    return clienteDTO;
-                })
-                .collect(Collectors.toList());
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Api-Version", "1");
+        if (clientes == null || clientes.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            List<ClienteDTO> clienteDTOs = clientes.stream()
+                    .map(cliente -> {
+                        ClienteDTO clienteDTO = modelMapper.map(cliente, ClienteDTO.class);
+                        clienteDTO.add(WebMvcLinkBuilder.linkTo(methodOn(ClienteController.class).getById(clienteDTO.getIdCliente())).withSelfRel());
+                        Link eventosLink = WebMvcLinkBuilder.linkTo(methodOn(ClienteController.class).getAllEventosByIdCliente(clienteDTO.getIdCliente())).withRel("cliente-eventos");
+                        clienteDTO.add(eventosLink);
+                        return clienteDTO;
+                    })
+                    .collect(Collectors.toList());
 
-        return ResponseEntity.ok().headers(headers).body(clienteDTOs);
+            ApiResponse<List<ClienteDTO>> response = new ApiResponse<>(true, "Lista de clientes", clienteDTOs);
+            return ResponseEntity.ok(response);
+        }
     }
 
     /**
@@ -71,15 +78,14 @@ public class ClienteController {
     public ResponseEntity<?> getById(@PathVariable Long id) {
         Cliente cliente = clienteService.getById(id);
         ClienteDTO clienteDTO = modelMapper.map(cliente, ClienteDTO.class);
-        // Mapear los eventos de cada cliente y agregarlos al DTO
-        List<EventoDTO> eventoDTOs = cliente.getEventos().stream()
-                .map(evento -> modelMapper.map(evento, EventoDTO.class))
-                .collect(Collectors.toList());
-        clienteDTO.setEventos(eventoDTOs);
 
-        ApiResponse<ClienteDTO> response = new ApiResponse<>(true, "Cliente", clienteDTO);
+        Link eventosLink = WebMvcLinkBuilder.linkTo(methodOn(ClienteController.class).getAllEventosByIdCliente(id)).withRel("cliente-eventos");
+        clienteDTO.add(eventosLink);
+
+        ApiResponse<ClienteDTO> response = new ApiResponse<>(true, "Cliente encontrado", clienteDTO);
         return ResponseEntity.ok(response);
     }
+
 
     /**
      * Crea un nuevo cliente.
@@ -135,4 +141,20 @@ public class ClienteController {
         ApiResponse<String> response = new ApiResponse<>(true, "Cliente eliminado con éxito", null);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @GetMapping("/{idCliente}/eventos")
+    public ResponseEntity<?> getAllEventosByIdCliente(@PathVariable Long idCliente) throws EntityNotFoundException {
+        List<Evento> eventos = clienteService.getAllEventosByIdCliente(idCliente);
+        if (eventos == null || eventos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            List<EventoDTO> eventoDTOs = eventos.stream()
+                    .map(evento -> modelMapper.map(evento, EventoDTO.class))
+                    .collect(Collectors.toList());
+            ApiResponse<List<EventoDTO>> response = new ApiResponse<>(true, "Eventos asociados al cliente", eventoDTOs);
+            return ResponseEntity.ok(response);
+        }
+    }
+
+
 }

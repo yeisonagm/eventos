@@ -6,6 +6,7 @@
 package edu.unc.eventos.services;
 
 import edu.unc.eventos.domain.Cliente;
+import edu.unc.eventos.domain.Evento;
 import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
 
@@ -63,5 +64,6 @@ public interface ClienteService {
     void delete(Long idCliente) throws EntityNotFoundException, IllegalOperationException;
 
 
+    List<Evento> getAllEventosByIdCliente(Long idCliente)throws EntityNotFoundException;
 
 }
