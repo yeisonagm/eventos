@@ -63,7 +63,13 @@ public interface ClienteService {
      */
     void delete(Long idCliente) throws EntityNotFoundException, IllegalOperationException;
 
-
-    List<Evento> getAllEventosByIdCliente(Long idCliente)throws EntityNotFoundException;
+    /**
+     * Obtiene todos los eventos asociados a un cliente por su identificador.
+     *
+     * @param idCliente Identificador del cliente.
+     * @return Lista de eventos asociados al cliente.
+     * @throws EntityNotFoundException Si el cliente no se encuentra en la base de datos.
+     */
+    List<Evento> getAllEventosByIdCliente(Long idCliente) throws EntityNotFoundException;
 
 }

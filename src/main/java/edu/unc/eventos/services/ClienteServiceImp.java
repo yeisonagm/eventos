@@ -19,10 +19,9 @@ import java.util.Optional;
 
 /**
  * Esta clase es la implementación concreta de la interfaz ClienteService.
- * <p>Se encarga de la lógica de negocio relacionada con las entidades de tipo Cliente.
+ * Se encarga de la lógica de negocio relacionada con las entidades de tipo Cliente.
  * Las operaciones incluyen la obtención de todos los clientes, la búsqueda de un cliente por su ID,
- * la creación de un nuevo cliente, la actualización de un cliente existente y la eliminación de un cliente.</p>
- * <p>
+ * la creación de un nuevo cliente, la actualización de un cliente existente y la eliminación de un cliente.
  * La anotación @Service indica que esta clase es un componente de servicio en la capa de negocio.
  * Spring Boot utiliza esta anotación para realizar la inyección de dependencias automáticamente.
  */
@@ -117,12 +116,19 @@ public class ClienteServiceImp implements ClienteService {
         clienteRepository.deleteById(idCliente);
     }
 
+    /**
+     * Obtiene todos los eventos asociados a un cliente por su identificador.
+     *
+     * @param idCliente Identificador del cliente.
+     * @return Lista de eventos asociados al cliente.
+     * @throws EntityNotFoundException Si el cliente no se encuentra en la base de datos.
+     */
     @Override
+    @Transactional
     public List<Evento> getAllEventosByIdCliente(Long idCliente) throws EntityNotFoundException {
         Cliente cliente = clienteRepository.findById(idCliente)
                 .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con ID: " + idCliente));
 
         return cliente.getEventos();
     }
-
 }

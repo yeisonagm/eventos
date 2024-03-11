@@ -1,7 +1,6 @@
 package edu.unc.eventos.controllers;
 
 import edu.unc.eventos.domain.Cliente;
-
 import edu.unc.eventos.domain.Evento;
 import edu.unc.eventos.dto.ClienteDTO;
 import edu.unc.eventos.dto.EventoDTO;
@@ -13,19 +12,13 @@ import edu.unc.eventos.util.EntityValidator;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-
-
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpHeaders;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
-
-
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,7 +38,6 @@ public class ClienteController {
      *
      * @return Lista de clientes.
      */
-
     @GetMapping
     public ResponseEntity<?> getAll() {
         List<Cliente> clientes = clienteService.getAll();
@@ -85,7 +77,6 @@ public class ClienteController {
         ApiResponse<ClienteDTO> response = new ApiResponse<>(true, "Cliente encontrado", clienteDTO);
         return ResponseEntity.ok(response);
     }
-
 
     /**
      * Crea un nuevo cliente.
@@ -142,6 +133,13 @@ public class ClienteController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    /**
+     * Obtiene todos los eventos asociados a un cliente por su identificador.
+     *
+     * @param idCliente Identificador del cliente.
+     * @return Lista de eventos asociados al cliente.
+     * @throws EntityNotFoundException Si el cliente no se encuentra en la base de datos.
+     */
     @GetMapping("/{idCliente}/eventos")
     public ResponseEntity<?> getAllEventosByIdCliente(@PathVariable Long idCliente) throws EntityNotFoundException {
         List<Evento> eventos = clienteService.getAllEventosByIdCliente(idCliente);
@@ -155,6 +153,4 @@ public class ClienteController {
             return ResponseEntity.ok(response);
         }
     }
-
-
 }
