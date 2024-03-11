@@ -80,5 +80,5 @@ public interface DecoracionService {
      * @return El evento que se encontró
      * @throws EntityNotFoundException Si el Identificador de la decoración o del evento no existe
      */
-    Evento getByIdEventoByIdEvento(Long idDecoracion, Long idEvento) throws EntityNotFoundException;
+    Evento getByIdDecoracionByIdEvento(Long idDecoracion, Long idEvento) throws EntityNotFoundException;
 }

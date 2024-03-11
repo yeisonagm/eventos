@@ -143,7 +143,7 @@ public class DecoracionServiceImp implements DecoracionService {
      * @throws EntityNotFoundException Si el identificador de la decoración o el evento no es válido
      */
     @Override
-    public Evento getByIdEventoByIdEvento(Long idDecoracion, Long idEvento) throws EntityNotFoundException {
+    public Evento getByIdDecoracionByIdEvento(Long idDecoracion, Long idEvento) throws EntityNotFoundException {
         Decoracion decoracion = decoracionRepository.findById(idDecoracion).orElseThrow(
                 () -> new EntityNotFoundException("La decoración con el ID proporcionado no se encontró.")
         );

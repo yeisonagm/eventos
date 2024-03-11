@@ -84,6 +84,7 @@ public class DecoracionController {
         DecoracionDTO decoracionDTO = modelMapper.map(decoracion, DecoracionDTO.class);
         Link eventosLink = WebMvcLinkBuilder.linkTo(methodOn(DecoracionController.class).getAllEventosByIdDecoracion(id)).withRel("decoracion-eventos");
         decoracionDTO.add(eventosLink);
+
         ApiResponse<DecoracionDTO> response = new ApiResponse<>(true, "Decoración encontrada", decoracionDTO);
         return ResponseEntity.ok(response);
     }
@@ -174,7 +175,7 @@ public class DecoracionController {
      */
     @GetMapping("/{idDecoracion}/eventos/{idEvento}")
     public ResponseEntity<?> getByIdEventoByIdEvento(@PathVariable Long idDecoracion, @PathVariable Long idEvento) {
-        Evento evento = decoracionService.getByIdEventoByIdEvento(idDecoracion, idEvento);
+        Evento evento = decoracionService.getByIdDecoracionByIdEvento(idDecoracion, idEvento);
         if (evento == null) {
             ApiResponse<String> response = new ApiResponse<>(false, "Evento no encontrado", null);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
