@@ -73,13 +73,6 @@ public class Empleado {
     private List<Evento> eventos = new ArrayList<>();
 
     /**
-     * Relación con Rol.
-     */
-    @ManyToOne
-    @JoinColumn(name = "id_rol")
-    private Rol rol;
-
-    /**
      * Relación con Seguro.
      */
     @OneToOne(mappedBy = "empleado")

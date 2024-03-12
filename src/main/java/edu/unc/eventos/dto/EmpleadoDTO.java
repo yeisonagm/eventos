@@ -106,12 +106,6 @@ public class EmpleadoDTO {
     private List<EventoDTO> eventos = new ArrayList<>();
 
     /**
-     * Relación con Rol.
-     */
-    @JoinColumn(name = "id_rol")
-    private RolDTO rol;
-
-    /**
      * Relación con Seguro.
      */
     private SeguroDTO seguro;

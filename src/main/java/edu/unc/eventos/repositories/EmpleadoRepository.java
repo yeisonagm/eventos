@@ -37,22 +37,6 @@ public interface EmpleadoRepository extends JpaRepository<Empleado, Long> {
     List<Empleado> findByApellidos(String apellidos);
 
     /**
-     * Busca empleados por rol.
-     *
-     * @param rolNombre El nombre del rol del empleado.
-     * @return Lista de empleados con el rol proporcionado.
-     */
-    List<Empleado> findByRolNombre(String rolNombre);
-
-    /**
-     * Busca empleados por dirección.
-     *
-     * @param direccion La dirección del empleado.
-     * @return Lista de empleados con la dirección proporcionada.
-     */
-    List<Empleado> findByDireccion(String direccion);
-
-    /**
      * Busca un empleado por número de teléfono.
      *
      * @param telefono El número de teléfono del empleado.
