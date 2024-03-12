@@ -82,14 +82,46 @@ public class DecoracionController {
     public ResponseEntity<?> getById(@PathVariable Long id) {
         Decoracion decoracion = decoracionService.getById(id);
         DecoracionDTO decoracionDTO = modelMapper.map(decoracion, DecoracionDTO.class);
+
+        // Obtener el ID de la decoración anterior si existe
+        Long previousId = decoracionService.getPreviousDecoracionId(id);
+        if (previousId != null) {
+            // Construir el enlace "previous"
+            Link previousLink = WebMvcLinkBuilder.linkTo(methodOn(DecoracionController.class).getById(previousId)).withRel("previous");
+            decoracionDTO.add(previousLink);
+        }
+
+        // Obtener el ID de la siguiente decoración si existe
+        Long nextId = decoracionService.getNextDecoracionId(id);
+        if (nextId != null) {
+            // Construir el enlace "next"
+            Link nextLink = WebMvcLinkBuilder.linkTo(methodOn(DecoracionController.class).getById(nextId)).withRel("next");
+            decoracionDTO.add(nextLink);
+        }
+
         Link eventosLink = WebMvcLinkBuilder.linkTo(methodOn(DecoracionController.class).getAllEventosByIdDecoracion(id)).withRel("decoracion-eventos");
         decoracionDTO.add(eventosLink);
+
+        // Obtener el ID de la primera decoración
+        Long firstId = decoracionService.getFirstDecoracionId();
+        if (firstId != null && !firstId.equals(id)) {
+            // Construir el enlace "first"
+            Link firstLink = WebMvcLinkBuilder.linkTo(methodOn(DecoracionController.class).getById(firstId)).withRel("first");
+            decoracionDTO.add(firstLink);
+        }
+
+        // Obtener el ID de la última decoración
+        Long lastId = decoracionService.getLastDecoracionId();
+        if (lastId != null && !lastId.equals(id)) {
+            // Construir el enlace "last"
+            Link lastLink = WebMvcLinkBuilder.linkTo(methodOn(DecoracionController.class).getById(lastId)).withRel("last");
+            decoracionDTO.add(lastLink);
+        }
+
 
         ApiResponse<DecoracionDTO> response = new ApiResponse<>(true, "Decoración encontrada", decoracionDTO);
         return ResponseEntity.ok(response);
     }
-
-
 
     /**
      * Crea una nueva decoración

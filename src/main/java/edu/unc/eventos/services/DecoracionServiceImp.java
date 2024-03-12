@@ -13,6 +13,7 @@ import edu.unc.eventos.repositories.DecoracionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -157,5 +158,50 @@ public class DecoracionServiceImp implements DecoracionService {
         }
 
         return eventoOpt.get();
+    }
+
+    /**
+     * Obtiene el ID de la siguiente decoración, si existe.
+     *
+     * @param id ID de la decoración actual.
+     * @return El ID de la siguiente decoración, o null si no hay siguiente.
+     */
+    public Long getNextDecoracionId(Long id) {
+        List<Decoracion> decoraciones = getAll();
+        for (int i = 0; i < decoraciones.size() - 1; i++) {
+            if (decoraciones.get(i).getIdDecoracion().equals(id)) {
+                return decoraciones.get(i + 1).getIdDecoracion();
+            }
+        }
+        return null; // Si no se encuentra la decoración o es la última, retorna null
+    }
+
+    @Override
+    public Long getPreviousDecoracionId(Long id) {
+        List<Decoracion> decoraciones = decoracionRepository.findAll(Sort.by(Sort.Direction.ASC, "idDecoracion"));
+        for (int i = 1; i < decoraciones.size(); i++) {
+            if (decoraciones.get(i).getIdDecoracion().equals(id)) {
+                return decoraciones.get(i - 1).getIdDecoracion();
+            }
+        }
+        return null; // Si no se encuentra la decoración o es la primera, retorna null
+    }
+
+    @Override
+    public Long getFirstDecoracionId() {
+        List<Decoracion> decoraciones = decoracionRepository.findAll(Sort.by(Sort.Direction.ASC, "idDecoracion"));
+        if (!decoraciones.isEmpty()) {
+            return decoraciones.get(0).getIdDecoracion();
+        }
+        return null; // Si no hay decoraciones, retorna null
+    }
+
+    @Override
+    public Long getLastDecoracionId() {
+        List<Decoracion> decoraciones = decoracionRepository.findAll(Sort.by(Sort.Direction.ASC, "idDecoracion"));
+        if (!decoraciones.isEmpty()) {
+            return decoraciones.get(decoraciones.size() - 1).getIdDecoracion();
+        }
+        return null; // Si no hay decoraciones, retorna null
     }
 }

@@ -81,4 +81,35 @@ public interface DecoracionService {
      * @throws EntityNotFoundException Si el Identificador de la decoración o del evento no existe
      */
     Evento getByIdDecoracionByIdEvento(Long idDecoracion, Long idEvento) throws EntityNotFoundException;
+
+    /**
+     * Obtiene el ID de la siguiente decoración, si existe.
+     *
+     * @param id ID de la decoración actual.
+     * @return El ID de la siguiente decoración, o null si no hay siguiente.
+     */
+    Long getNextDecoracionId(Long id);
+
+    /**
+     * Obtiene el ID de la decoración anterior, si existe.
+     *
+     * @param id ID de la decoración actual.
+     * @return El ID de la decoración anterior, o null si no hay anterior.
+     */
+    Long getPreviousDecoracionId(Long id);
+
+    /**
+     * Obtiene el ID de la primera decoración.
+     *
+     * @return El ID de la primera decoración.
+     */
+    Long getFirstDecoracionId();
+
+    /**
+     * Obtiene el ID de la última decoración.
+     *
+     * @return El ID de la última decoración.
+     */
+    Long getLastDecoracionId();
+
 }
