@@ -5,6 +5,7 @@
  */
 package edu.unc.eventos.exception;
 
+import feign.FeignException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -55,4 +56,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    /**
+     * Maneja la excepción FeignException.
+     *
+     * @param e la excepción Feign.
+     * @return una respuesta HTTP personalizada con detalles de error.
+     */
+    @ExceptionHandler(FeignException.class)
+    public ResponseEntity<?> handleFeignStatusException(FeignException e) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.valueOf(e.status()),"Acceso denegado",e.getMessage());
+        return new ResponseEntity<>(message, HttpStatus.valueOf(e.status()));
+    }
 }

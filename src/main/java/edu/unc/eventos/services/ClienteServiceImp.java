@@ -87,6 +87,10 @@ public class ClienteServiceImp implements ClienteService {
     @Override
     @Transactional
     public Cliente update(Long idCliente, Cliente cliente) throws EntityNotFoundException, IllegalOperationException {
+        Optional<Cliente> clienteOpt = clienteRepository.findById(idCliente);
+        if (clienteOpt.isEmpty()) {
+            throw new EntityNotFoundException("El cliente con el Id proporcionado no se encontró.");
+        }
         Cliente clienteConNuevoDi = clienteRepository.findByDi(cliente.getDi());
         if (clienteConNuevoDi != null) {
             throw new IllegalOperationException("El documento de identidad ya se encuentra registrado.");
@@ -112,7 +116,6 @@ public class ClienteServiceImp implements ClienteService {
         if (!cliente.getEventos().isEmpty()) {
             throw new IllegalOperationException("El cliente tiene eventos asociados.");
         }
-
         clienteRepository.deleteById(idCliente);
     }
 

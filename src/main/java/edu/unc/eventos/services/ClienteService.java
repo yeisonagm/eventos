@@ -71,5 +71,4 @@ public interface ClienteService {
      * @throws EntityNotFoundException Si el cliente no se encuentra en la base de datos.
      */
     List<Evento> getAllEventosByIdCliente(Long idCliente) throws EntityNotFoundException;
-
 }
