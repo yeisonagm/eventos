@@ -71,4 +71,35 @@ public interface ClienteService {
      * @throws EntityNotFoundException Si el cliente no se encuentra en la base de datos.
      */
     List<Evento> getAllEventosByIdCliente(Long idCliente) throws EntityNotFoundException;
+
+    /**
+     * Obtiene el ID del cliente siguiente al proporcionado.
+     *
+     * @param id ID del cliente actual.
+     * @return El ID del cliente siguiente, o null si no hay ninguno.
+     */
+    Long getNextClienteId(Long id);
+
+    /**
+     * Obtiene el ID del cliente anterior al proporcionado.
+     *
+     * @param id ID del cliente actual.
+     * @return El ID del cliente anterior, o null si no hay ninguno.
+     */
+    Long getPreviousClienteId(Long id);
+
+    /**
+     * Obtiene el ID del primer cliente.
+     *
+     * @return El ID del primer cliente.
+     */
+    Long getFirstClienteId();
+
+    /**
+     * Obtiene el ID del último cliente.
+     *
+     * @return El ID del último cliente.
+     */
+    Long getLastClienteId();
+
 }

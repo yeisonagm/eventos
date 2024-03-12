@@ -11,6 +11,7 @@ import edu.unc.eventos.exception.EntityNotFoundException;
 import edu.unc.eventos.exception.IllegalOperationException;
 import edu.unc.eventos.repositories.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -134,4 +135,45 @@ public class ClienteServiceImp implements ClienteService {
 
         return cliente.getEventos();
     }
+
+    @Override
+    public Long getNextClienteId(Long id) {
+        List<Cliente> clientes = clienteRepository.findAll(Sort.by(Sort.Direction.ASC, "idCliente"));
+        for (int i = 0; i < clientes.size() - 1; i++) {
+            if (clientes.get(i).getIdCliente().equals(id)) {
+                return clientes.get(i + 1).getIdCliente();
+            }
+        }
+        return null; // Si no hay cliente siguiente, retorna null
+    }
+
+    @Override
+    public Long getPreviousClienteId(Long id) {
+        List<Cliente> clientes = clienteRepository.findAll(Sort.by(Sort.Direction.ASC, "idCliente"));
+        for (int i = 1; i < clientes.size(); i++) {
+            if (clientes.get(i).getIdCliente().equals(id)) {
+                return clientes.get(i - 1).getIdCliente();
+            }
+        }
+        return null; // Si no hay cliente anterior, retorna null
+    }
+
+    @Override
+    public Long getFirstClienteId() {
+        List<Cliente> clientes = clienteRepository.findAll(Sort.by(Sort.Direction.ASC, "idCliente"));
+        if (!clientes.isEmpty()) {
+            return clientes.get(0).getIdCliente();
+        }
+        return null; // Si no hay clientes, retorna null
+    }
+
+    @Override
+    public Long getLastClienteId() {
+        List<Cliente> clientes = clienteRepository.findAll(Sort.by(Sort.Direction.ASC, "idCliente"));
+        if (!clientes.isEmpty()) {
+            return clientes.get(clientes.size() - 1).getIdCliente();
+        }
+        return null; // Si no hay clientes, retorna null
+    }
+
 }

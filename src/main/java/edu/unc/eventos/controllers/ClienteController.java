@@ -17,7 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 
 import java.util.List;
@@ -71,12 +73,46 @@ public class ClienteController {
         Cliente cliente = clienteService.getById(id);
         ClienteDTO clienteDTO = modelMapper.map(cliente, ClienteDTO.class);
 
+        // Obtener el ID del cliente siguiente
+        Long nextId = clienteService.getNextClienteId(id);
+        if (nextId != null) {
+            // Construir el enlace "next"
+            Link nextLink = WebMvcLinkBuilder.linkTo(methodOn(ClienteController.class).getById(nextId)).withRel("next");
+            clienteDTO.add(nextLink);
+        }
+
+// Obtener el ID del cliente anterior
+        Long previousId = clienteService.getPreviousClienteId(id);
+        if (previousId != null) {
+            // Construir el enlace "previous"
+            Link previousLink = WebMvcLinkBuilder.linkTo(methodOn(ClienteController.class).getById(previousId)).withRel("previous");
+            clienteDTO.add(previousLink);
+        }
+
+// Obtener el ID del primer cliente
+        Long firstId = clienteService.getFirstClienteId();
+        if (firstId != null && !firstId.equals(id)) {
+            // Construir el enlace "first"
+            Link firstLink = WebMvcLinkBuilder.linkTo(methodOn(ClienteController.class).getById(firstId)).withRel("first");
+            clienteDTO.add(firstLink);
+        }
+
+// Obtener el ID del último cliente
+        Long lastId = clienteService.getLastClienteId();
+        if (lastId != null && !lastId.equals(id)) {
+            // Construir el enlace "last"
+            Link lastLink = WebMvcLinkBuilder.linkTo(methodOn(ClienteController.class).getById(lastId)).withRel("last");
+            clienteDTO.add(lastLink);
+        }
+
+        // Enlace a eventos relacionados con el cliente
         Link eventosLink = WebMvcLinkBuilder.linkTo(methodOn(ClienteController.class).getAllEventosByIdCliente(id)).withRel("cliente-eventos");
         clienteDTO.add(eventosLink);
 
         ApiResponse<ClienteDTO> response = new ApiResponse<>(true, "Cliente encontrado", clienteDTO);
         return ResponseEntity.ok(response);
     }
+
 
     /**
      * Crea un nuevo cliente.
