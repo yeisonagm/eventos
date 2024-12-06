@@ -10,7 +10,7 @@
     </parent>
     <groupId>edu.unc.eventos</groupId>
     <artifactId>eventos</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>eventos</name>
     <description>eventos</description>
     <properties>
@@ -46,9 +46,9 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.mariadb.jdbc</groupId>
-            <artifactId>mariadb-java-client</artifactId>
-            <scope>runtime</scope>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
