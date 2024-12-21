@@ -37,6 +37,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
  */
 @RestController
 @RequestMapping(value = "/api/decoraciones", headers = "Api-Version=1")
+@CrossOrigin(origins = "http://localhost:3000")
 public class DecoracionController {
     @Autowired
     private DecoracionService decoracionService;

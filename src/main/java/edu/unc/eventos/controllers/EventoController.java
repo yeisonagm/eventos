@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/eventos", headers = "Api-Version=1")
+@CrossOrigin(origins = "http://localhost:3000")
 class EventoController {
 
     @Autowired

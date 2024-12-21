@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping(value = "/api/empleados", headers = "Api-Version=1")
+@CrossOrigin(origins = "http://localhost:3000")
 public class EmpleadoController {
     @Autowired
     private EmpleadoService empleadoService;

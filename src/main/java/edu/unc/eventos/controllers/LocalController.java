@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/locales", headers = "Api-Version=1")
+@CrossOrigin(origins = "http://localhost:3000")
 public class LocalController {
     @Autowired
     private LocalService localService;
