@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Appenders -->
+    <appender name="SECURITY_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/app/logs/security.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [SECURITY] %-5level - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/app/logs/security.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="USER_ACTIVITY" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/app/logs/user-activity.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [USER] %-5level - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/app/logs/user-activity.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="SYSTEM_ALERTS" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/app/logs/system-alerts.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [SYSTEM] %-5level - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/app/logs/system-alerts.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="WAZUH" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/app/logs/wazuh.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [WAZUH] %-5level - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/app/logs/wazuh.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- Loggers -->
+    <logger name="edu.unc.eventos.security" level="INFO" additivity="false">
+        <appender-ref ref="SECURITY_FILE" />
+        <appender-ref ref="WAZUH" />
+    </logger>
+
+    <logger name="edu.unc.eventos.user" level="INFO" additivity="false">
+        <appender-ref ref="USER_ACTIVITY" />
+        <appender-ref ref="WAZUH" />
+    </logger>
+
+    <logger name="edu.unc.eventos.system" level="INFO" additivity="false">
+        <appender-ref ref="SYSTEM_ALERTS" />
+        <appender-ref ref="WAZUH" />
+    </logger>
+
+    <!-- Loggers for controllers -->
+    <logger name="edu.unc.eventos.controllers" level="DEBUG" additivity="false">
+        <appender-ref ref="USER_ACTIVITY" />
+        <appender-ref ref="WAZUH" />
+    </logger>
+
+    <!-- Loggers for services -->
+    <logger name="edu.unc.eventos.services" level="DEBUG" additivity="false">
+        <appender-ref ref="SYSTEM_ALERTS" />
+        <appender-ref ref="WAZUH" />
+    </logger>
+
+    <!-- Root logger -->
+    <root level="INFO">
+        <appender-ref ref="SECURITY_FILE" />
+        <appender-ref ref="USER_ACTIVITY" />
+        <appender-ref ref="SYSTEM_ALERTS" />
+        <appender-ref ref="WAZUH" />
+    </root>
+</configuration>
